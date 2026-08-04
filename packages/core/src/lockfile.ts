@@ -41,9 +41,11 @@ export function skillDigest(files: LockedFile[]): string {
 }
 
 export function lockSkill(skill: Skill, relPath: string): LockedSkill {
+  // Hash over raw file bytes (computed at load time), so binary, oversized, and
+  // non-UTF-8 files are pinned exactly rather than by their lossy decoding.
   const files: LockedFile[] = skill.files.map((f) => ({
     path: f.path,
-    sha256: sha256(f.content),
+    sha256: f.sha256,
     size: f.size,
   }));
   files.sort((a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0));

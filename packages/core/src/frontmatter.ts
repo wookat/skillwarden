@@ -7,8 +7,14 @@ import type { SkillFrontmatter } from './types.js';
  * including folded/literal block scalars (`>-`, `|`) and quoted values.
  * Not a general YAML parser by design — no external dependency.
  */
+
+/** Strip a UTF-8 BOM, which otherwise hides the opening `---` fence. */
+function stripBom(content: string): string {
+  return content.charCodeAt(0) === 0xfeff ? content.slice(1) : content;
+}
+
 export function parseFrontmatter(content: string): SkillFrontmatter {
-  const match = /^---\r?\n([\s\S]*?)\r?\n---(\r?\n|$)/.exec(content);
+  const match = /^---\r?\n([\s\S]*?)\r?\n---(\r?\n|$)/.exec(stripBom(content));
   if (!match || match[1] === undefined) return {};
   const body = match[1];
   const result: SkillFrontmatter = {};
@@ -47,5 +53,5 @@ export function parseFrontmatter(content: string): SkillFrontmatter {
 
 /** Strip the frontmatter block, returning only the markdown body. */
 export function stripFrontmatter(content: string): string {
-  return content.replace(/^---\r?\n[\s\S]*?\r?\n---(\r?\n|$)/, '');
+  return stripBom(content).replace(/^---\r?\n[\s\S]*?\r?\n---(\r?\n|$)/, '');
 }

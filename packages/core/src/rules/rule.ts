@@ -4,6 +4,20 @@ export interface PatternSpec {
   pattern: RegExp;
   severity: Severity;
   message: string;
+  /** Optional veto: return false to drop a match (e.g. negated phrasing). */
+  guard?: (match: string, content: string, index: number) => boolean;
+}
+
+/**
+ * Phrasing that negates a following verb ("cannot exfiltrate", "never leaks").
+ * Checked against the text immediately preceding a match.
+ */
+const NEGATION_BEFORE =
+  /\b(cannot|can'?t|could\s+not|couldn'?t|never|not|n'?t|no|without|prevents?|prevented|preventing|avoids?|avoiding|blocks?|blocked|blocking|refus\w*|must\s+not|do\s+not|don'?t|should\s+not|shouldn'?t|instead\s+of|rather\s+than|protects?\s+against|guards?\s+against)(?:\s+\S{1,20}){0,3}\s*$/i;
+
+/** True when the 60 characters before `index` negate the matched phrase. */
+export function isNegated(content: string, index: number): boolean {
+  return NEGATION_BEFORE.test(content.slice(Math.max(0, index - 60), index));
 }
 
 /** Line number (1-based) of a match index within `content`. */
@@ -30,6 +44,7 @@ export function matchPatterns(ruleId: string, file: SkillFile, specs: PatternSpe
   for (const spec of specs) {
     const regex = new RegExp(spec.pattern.source, spec.pattern.flags.includes('g') ? spec.pattern.flags : `${spec.pattern.flags}g`);
     for (const match of file.content.matchAll(regex)) {
+      if (spec.guard && !spec.guard(match[0], file.content, match.index)) continue;
       findings.push({
         ruleId,
         severity: spec.severity,
@@ -43,8 +58,16 @@ export function matchPatterns(ruleId: string, file: SkillFile, specs: PatternSpe
   return findings;
 }
 
-const SCRIPT_EXT = /\.(sh|bash|zsh|py|js|mjs|cjs|ts|mts|cts|rb|pl|ps1|bat|cmd)$/i;
+const SCRIPT_EXT =
+  /\.(sh|bash|zsh|ksh|csh|fish|py|pyw|js|mjs|cjs|jsx|ts|mts|cts|tsx|rb|pl|pm|php|lua|awk|sed|tcl|r|jl|nu|ps1|psm1|bat|cmd|vbs|applescript|scpt|ipynb)$/i;
+
+/** Documentation-like files: the text the agent reads as instructions. */
+const DOC_EXT = /\.(md|mdx|mdc|markdown|txt|text|rst|adoc|json|jsonc|ya?ml|toml)$/i;
 
 export function isScriptFile(path: string): boolean {
   return SCRIPT_EXT.test(path);
+}
+
+export function isDocFile(path: string): boolean {
+  return DOC_EXT.test(path);
 }

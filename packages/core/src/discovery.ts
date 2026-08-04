@@ -1,6 +1,7 @@
-import { readdirSync, readFileSync, statSync, existsSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { readdirSync, readFileSync, statSync, existsSync, realpathSync, openSync, readSync, closeSync } from 'node:fs';
 import { homedir } from 'node:os';
-import { basename, dirname, join, relative } from 'node:path';
+import { basename, dirname, join, relative, resolve, sep } from 'node:path';
 import { parseFrontmatter } from './frontmatter.js';
 import type { Skill, SkillFile } from './types.js';
 
@@ -17,12 +18,19 @@ export const KNOWN_SKILL_DIRS = [
 ] as const;
 
 const TEXT_EXTENSIONS = new Set([
-  '.md', '.txt', '.sh', '.bash', '.zsh', '.py', '.js', '.mjs', '.cjs', '.ts',
-  '.mts', '.cts', '.json', '.yaml', '.yml', '.toml', '.xml', '.html', '.css',
-  '.rb', '.pl', '.ps1', '.bat', '.cmd', '.env', '.cfg', '.ini', '.sql', '.csv',
+  '.md', '.mdx', '.markdown', '.mdc', '.txt', '.text', '.rst', '.adoc',
+  '.sh', '.bash', '.zsh', '.ksh', '.csh', '.fish', '.py', '.pyw', '.js', '.mjs',
+  '.cjs', '.jsx', '.ts', '.mts', '.cts', '.tsx', '.json', '.jsonc', '.yaml',
+  '.yml', '.toml', '.xml', '.html', '.htm', '.css', '.scss', '.rb', '.pl', '.pm',
+  '.php', '.lua', '.awk', '.sed', '.tcl', '.r', '.jl', '.go', '.rs', '.java',
+  '.kt', '.swift', '.c', '.h', '.cc', '.cpp', '.cs', '.ps1', '.psm1', '.psd1',
+  '.bat', '.cmd', '.vbs', '.applescript', '.scpt', '.nu', '.env', '.cfg', '.ini',
+  '.conf', '.properties', '.sql', '.csv', '.tsv', '.ipynb', '.patch', '.diff',
+  '.gradle', '.tf', '.dockerfile', '.mk', '.gitignore', '.gitattributes',
 ]);
 
-const MAX_FILE_BYTES = 1024 * 1024; // 1 MiB per file cap
+/** Content beyond this size is not decoded for rules, but is still hashed. */
+const MAX_FILE_BYTES = 1024 * 1024; // 1 MiB
 const SKIP_DIRS = new Set(['node_modules', '.git', 'dist', '__pycache__']);
 
 function extensionOf(name: string): string {
@@ -30,12 +38,94 @@ function extensionOf(name: string): string {
   return idx === -1 ? '' : name.slice(idx).toLowerCase();
 }
 
-function isProbablyText(name: string, buf: Buffer): boolean {
+/** Extensions that are always binary, even when the head happens to be NUL-free. */
+const BINARY_EXTENSIONS = new Set([
+  '.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp', '.ico', '.tiff', '.avif',
+  '.pdf', '.zip', '.gz', '.tgz', '.bz2', '.xz', '.7z', '.rar', '.jar', '.war',
+  '.ttf', '.otf', '.woff', '.woff2', '.eot', '.mp3', '.mp4', '.mov', '.wav',
+  '.webm', '.avi', '.so', '.dylib', '.dll', '.exe', '.bin', '.o', '.a', '.class',
+  '.pyc', '.wasm', '.db', '.sqlite', '.parquet', '.xlsx', '.docx', '.pptx',
+]);
+
+function isProbablyText(name: string, head: Buffer): boolean {
+  // NUL bytes mean the content is not scannable text, whatever the name says —
+  // a UTF-16 or NUL-padded `SKILL.md` must not be treated as reviewed text.
+  if (head.includes(0)) return false;
   const ext = extensionOf(name);
   if (TEXT_EXTENSIONS.has(ext)) return true;
-  if (ext !== '') return false;
-  // Extension-less file: treat as text when there are no NUL bytes in the head.
-  return !buf.subarray(0, 8192).includes(0);
+  if (BINARY_EXTENSIONS.has(ext)) return false;
+  // Unknown or missing extension: sniff, so an attacker cannot hide a payload
+  // behind an unusual extension (.lua, .awk, .fish, ...).
+  let control = 0;
+  for (const byte of head) {
+    if (byte < 0x09 || (byte > 0x0d && byte < 0x20)) control++;
+  }
+  return head.length === 0 || control / head.length < 0.1;
+}
+
+function hashFile(path: string): string {
+  return createHash('sha256').update(readFileSync(path)).digest('hex');
+}
+
+function readHead(path: string, bytes: number): Buffer {
+  const fd = openSync(path, 'r');
+  try {
+    const buf = Buffer.alloc(bytes);
+    const read = readSync(fd, buf, 0, bytes, 0);
+    return buf.subarray(0, read);
+  } finally {
+    closeSync(fd);
+  }
+}
+
+/** True when the utf8 decoding of `buf` round-trips, i.e. the bytes are valid UTF-8. */
+function isValidUtf8(buf: Buffer): boolean {
+  return Buffer.compare(Buffer.from(buf.toString('utf8'), 'utf8'), buf) === 0;
+}
+
+function loadFile(full: string, root: string, name: string, isLink: boolean): SkillFile | undefined {
+  let stat;
+  try {
+    stat = statSync(full); // follows symlinks
+  } catch {
+    return undefined; // broken symlink or unreadable entry
+  }
+  if (!stat.isFile()) return undefined;
+  const size = stat.size;
+  const head = readHead(full, Math.min(size, 8192));
+  const text = isProbablyText(name, head);
+  const file: SkillFile = {
+    path: relative(root, full).split(sep).join('/'),
+    content: '',
+    size,
+    sha256: hashFile(full),
+  };
+  if (!text) {
+    file.binary = true;
+  } else if (size > MAX_FILE_BYTES) {
+    file.content = readHead(full, MAX_FILE_BYTES).toString('utf8');
+    file.truncated = true;
+  } else {
+    const buf = readFileSync(full);
+    file.content = buf.toString('utf8');
+    // Undecodable bytes in a "text" file: keep the lossy content for the rules
+    // but mark it — a reviewer's editor and the agent may see different text.
+    if (!isValidUtf8(buf)) file.invalidUtf8 = true;
+  }
+  if (isLink) {
+    file.symlink = true;
+    try {
+      const target = realpathSync(full);
+      const rootReal = realpathSync(root);
+      if (target !== rootReal && !target.startsWith(rootReal + sep)) {
+        file.escapesSkillDir = true;
+        file.linkTarget = target;
+      }
+    } catch {
+      /* unresolvable target: still reported as a symlink */
+    }
+  }
+  return file;
 }
 
 function collectFiles(dir: string, root: string, out: SkillFile[]): void {
@@ -45,37 +135,59 @@ function collectFiles(dir: string, root: string, out: SkillFile[]): void {
       if (!SKIP_DIRS.has(entry.name)) collectFiles(full, root, out);
       continue;
     }
-    if (!entry.isFile()) continue;
-    const size = statSync(full).size;
-    if (size > MAX_FILE_BYTES) continue;
-    const buf = readFileSync(full);
-    if (!isProbablyText(entry.name, buf)) continue;
-    out.push({
-      path: relative(root, full).split('\\').join('/'),
-      content: buf.toString('utf8'),
-      size,
-    });
+    // Symlinked directories are not traversed (loop safety); symlinked files are
+    // read, because the agent reads through them just the same.
+    if (entry.isSymbolicLink()) {
+      let target;
+      try {
+        target = statSync(full);
+      } catch {
+        continue;
+      }
+      if (target.isDirectory()) continue;
+    } else if (!entry.isFile()) {
+      continue;
+    }
+    const file = loadFile(full, root, entry.name, entry.isSymbolicLink());
+    if (file) out.push(file);
   }
+}
+
+/** Name of the SKILL.md entrypoint in `dir`, matched case-insensitively. */
+function findSkillManifest(dir: string): string | undefined {
+  let entries;
+  try {
+    entries = readdirSync(dir, { withFileTypes: true });
+  } catch {
+    return undefined;
+  }
+  const match = entries.find(
+    (e) => e.name.toLowerCase() === 'skill.md' && (e.isFile() || e.isSymbolicLink()),
+  );
+  return match?.name;
 }
 
 /** Load one skill from a directory containing SKILL.md (or from a SKILL.md path). */
 export function loadSkill(path: string): Skill {
   const stat = statSync(path);
   const dir = stat.isDirectory() ? path : dirname(path);
-  const skillMd = join(dir, 'SKILL.md');
-  if (!existsSync(skillMd)) {
+  const manifest = findSkillManifest(dir);
+  if (!manifest) {
     throw new Error(`No SKILL.md found in ${dir}`);
   }
   const files: SkillFile[] = [];
   collectFiles(dir, dir, files);
-  files.sort((a, b) => (a.path === 'SKILL.md' ? -1 : b.path === 'SKILL.md' ? 1 : (a.path < b.path ? -1 : a.path > b.path ? 1 : 0)));
-  const main = files.find((f) => f.path === 'SKILL.md')!;
+  const main = files.find((f) => f.path === manifest);
+  if (!main) {
+    throw new Error(`SKILL.md in ${dir} could not be read`);
+  }
+  files.sort((a, b) => (a === main ? -1 : b === main ? 1 : a.path < b.path ? -1 : a.path > b.path ? 1 : 0));
   const frontmatter = parseFrontmatter(main.content);
   return { name: frontmatter.name ?? basename(dir), dir, frontmatter, files };
 }
 
 function isSkillDir(path: string): boolean {
-  return existsSync(join(path, 'SKILL.md'));
+  return findSkillManifest(path) !== undefined;
 }
 
 /**
@@ -109,7 +221,7 @@ export function discoverSkills(root: string, options: DiscoverOptions = {}): Ski
   const skills: Skill[] = [];
   for (const r of roots) {
     for (const rel of KNOWN_SKILL_DIRS) {
-      const dir = join(r, rel);
+      const dir = resolve(r, rel);
       if (!existsSync(dir)) continue;
       for (const skill of loadSkillsFromPath(dir)) {
         if (seen.has(skill.dir)) continue;
@@ -120,3 +232,5 @@ export function discoverSkills(root: string, options: DiscoverOptions = {}): Ski
   }
   return skills;
 }
+
+export { MAX_FILE_BYTES };
