@@ -1,0 +1,47 @@
+name: 'SkillGate'
+description: 'Scan, lock, and gate Agent Skills (SKILL.md) — security findings + lockfile drift gate for CI'
+author: 'wookat'
+branding:
+  icon: 'shield'
+  color: 'green'
+
+inputs:
+  command:
+    description: 'Subcommand to run: ci (default), scan, or diff'
+    required: false
+    default: 'ci'
+  paths:
+    description: 'Space-separated skill paths (default: auto-discover well-known skills directories)'
+    required: false
+    default: ''
+  fail-on:
+    description: 'Severity threshold that fails the gate: low | medium | high | critical'
+    required: false
+    default: 'high'
+  lockfile:
+    description: 'Path to skillgate.lock'
+    required: false
+    default: 'skillgate.lock'
+  version:
+    description: 'skill-gate npm package version to run'
+    required: false
+    default: 'latest'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Run skillgate
+      shell: bash
+      run: |
+        ARGS=(${{ inputs.paths }})
+        case "${{ inputs.command }}" in
+          scan)
+            npx --yes skill-gate@${{ inputs.version }} scan "${ARGS[@]}" --fail-on "${{ inputs.fail-on }}"
+            ;;
+          diff)
+            npx --yes skill-gate@${{ inputs.version }} diff "${ARGS[@]}" --lockfile "${{ inputs.lockfile }}"
+            ;;
+          ci|*)
+            npx --yes skill-gate@${{ inputs.version }} ci "${ARGS[@]}" --lockfile "${{ inputs.lockfile }}" --fail-on "${{ inputs.fail-on }}"
+            ;;
+        esac

@@ -1,0 +1,42 @@
+{
+  "name": "skill-gate-core",
+  "version": "0.1.0",
+  "description": "SkillGate core engine: Agent Skills (SKILL.md) security scanning rules, lockfile spec, skill directory discovery",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wookat/skillgate.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://github.com/wookat/skillgate",
+  "bugs": "https://github.com/wookat/skillgate/issues",
+  "keywords": ["agent-skills", "skill-md", "security", "supply-chain", "lockfile", "scanner", "prompt-injection"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.2",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.10"
+  }
+}
