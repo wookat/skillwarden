@@ -12,7 +12,9 @@
     "typecheck": "pnpm --filter '!@skillgate/site' -r typecheck",
     "test": "pnpm --filter '!@skillgate/site' -r test",
     "site:dev": "pnpm --filter @skillgate/site dev",
-    "site:build": "pnpm --filter @skillgate/site build"
+    "site:build": "pnpm --filter @skillgate/site build",
+    "changeset": "changeset",
+    "release": "pnpm build && pnpm --filter '!@skillgate/site' -r publish --access public --no-git-checks"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -22,6 +24,7 @@
     "globals": "^17.9.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.46.0",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.10",
+    "@changesets/cli": "^2.31.1"
   }
 }
