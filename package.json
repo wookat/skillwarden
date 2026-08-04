@@ -7,12 +7,14 @@
   },
   "packageManager": "pnpm@11.9.0",
   "scripts": {
-    "build": "pnpm -r build",
+    "build": "pnpm --filter '!@skillgate/site' -r build",
     "lint": "eslint .",
-    "typecheck": "pnpm -r typecheck",
-    "test": "pnpm -r test",
+    "typecheck": "pnpm --filter '!@skillgate/site' -r typecheck",
+    "test": "pnpm --filter '!@skillgate/site' -r test",
+    "site:dev": "pnpm --filter @skillgate/site dev",
+    "site:build": "pnpm --filter @skillgate/site build",
     "changeset": "changeset",
-    "release": "pnpm build && pnpm -r publish --access public --no-git-checks"
+    "release": "pnpm build && pnpm --filter '!@skillgate/site' -r publish --access public --no-git-checks"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

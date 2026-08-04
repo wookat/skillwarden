@@ -1,5 +1,9 @@
 packages:
   - packages/*
+  - site
+allowBuilds:
+  esbuild: true
+  sharp: true
 minimumReleaseAgeExclude:
   - '@rolldown/binding-android-arm64@1.2.2'
   - '@rolldown/binding-linux-arm-gnueabihf@1.2.2'
