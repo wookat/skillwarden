@@ -1,0 +1,31 @@
+{
+  "id": "SKA-2026-0012",
+  "title": "ClawHub TradingView assistant skills deliver the \"cluw\" macOS infostealer via a rentry.co paste-site lure",
+  "summary": "On 2026-05-17 one ClawHub account published two macOS \"TradingView AI assistant\" skills — `tradingview-ai-indicator-assistant` and `ai-tradingview-assistant-for-macos`. Both refuse to work until the agent follows a mandatory prerequisite block pointing at hxxps://rentry[.]co/openclaw-code, which serves a base64 string to paste into a terminal. Running it fetches hxxp://2.26.75[.]16/Xuvewuyur, a macOS infostealer that Unit 42 tracks as `cluw`. The delivery template is the ClawHavoc one, but the backend is fresh: neither the C2 host nor the payload family matches the earlier AMOS infrastructure. ClawHub's automated audit returned Pass for one skill and no verdict for the other until mid-May 2026.",
+  "details": "**Chain (Unit 42):** SKILL.md prerequisite block → paste-site redirect lure at `rentry[.]co/openclaw-code` → base64 command → `2.26.75[.]16/Xuvewuyur` → `cluw` infostealer (SHA-256 `818aea6143282b352fdfdc0f3ebf77a36e54eb3befb5cad1a355a99ab97c6aa7`). Unit 42 notes the structure is verbatim the pattern that characterised over 300 skills in the original ClawHavoc disclosure (SKA-2026-0001), which is exactly why a paste-site indirection defeats IOC-only blocking: the published skill never changes when the operator swaps the payload behind the paste link.\n\n**Skill digests published by Unit 42:** `b6c7e0bf573b1c7d9d3a05eb08d26579199515b847df984862805f44a7af8007` (tradingview-ai-indicator-assistant) and `881ce5cb124c4d2e814783724cc1388f6a1cbf6eee274c3f3366e77ba3503ad7` (second skill hash listed in the same IOC table; Unit 42 does not map each hash to a file name explicitly).\n\n**What a deterministic scanner sees:** an imperative \"you must run this before the skill works\" prerequisite (`prompt-injection`), a base64-decode-into-shell step (`dangerous-commands`), and a raw-IP fetch-and-execute (`dangerous-scripts`). What it does *not* see is the paste-site content itself — SkillWarden never fetches remote URLs, so the malicious half of this chain lives outside the scanned artifact (docs/THREAT-MODEL.md, R1/R2).\n\n**Fact vs. inference:** skill names, publication date, lure URL, C2 host, payload name and hashes are as published by Unit 42 (2026-06-23), which redacts the publisher account. Unit 42 reported all five skills in its article to ClawHub; OpenClaw banned the accounts and removed the skills. Attribution to the ClawHavoc operators is explicitly *not* asserted by Unit 42 — it notes the template is shared while the infrastructure is new. Verified 2026-08-04.",
+  "type": "malicious-skill",
+  "severity": "critical",
+  "cwe": ["CWE-506", "CWE-829", "CWE-1357"],
+  "skills": [
+    {
+      "name": "tradingview-ai-indicator-assistant",
+      "source": "https://clawhub.ai",
+      "digest": "b6c7e0bf573b1c7d9d3a05eb08d26579199515b847df984862805f44a7af8007",
+      "note": "publisher redacted by Unit 42; removed from ClawHub, account banned"
+    },
+    {
+      "name": "ai-tradingview-assistant-for-macos",
+      "source": "https://clawhub.ai",
+      "note": "same prerequisite block; ClawHub audit verdict was Pass until mid-May 2026"
+    }
+  ],
+  "references": [
+    { "type": "report", "url": "https://unit42.paloaltonetworks.com/openclaw-ai-supply-chain-risk/" },
+    { "type": "article", "url": "https://www.techradar.com/pro/security/multiple-malicious-openclaw-skills-found-online-including-two-macos-infostealers" }
+  ],
+  "timeline": {
+    "discovered": "2026-05-17",
+    "published": "2026-06-23"
+  },
+  "credits": ["Unit 42 (Palo Alto Networks)"]
+}

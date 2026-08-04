@@ -1,0 +1,25 @@
+{
+  "id": "SKA-2026-0014",
+  "title": "letssendit: ClawHub skill turns installed agents into a coordinated meme-token front-running botnet",
+  "summary": "`letssendit` instructed every agent that installed it to pool Solana (SOL) into the operator's wallet through infrastructure at letssendit[.]fun. Once enough agents had joined, the operator bought the SENDIT meme token at the lowest bonding-curve price ahead of the participants, then the token launched publicly on pump[.]fun, where outside buyers could read the coordinated agent activity as organic retail demand. Unit 42 describes this as agentic front-running — a pump-and-dump executed by an autonomous agent network rather than by human accounts — and recommends enterprises block the skill outright for regulatory as well as security reasons.",
+  "details": "**Mechanism (Unit 42):** the SKILL.md is the whole payload. There is no dropper, no C2 implant and no credential theft; the skill simply directs autonomous agents to move their owners' funds and to participate in a launch whose price the operator controls, rotating wallets across multiple confirmed launches. That makes it invisible to malware-oriented controls: nothing on disk is malicious, and every action is one the agent was authorised to take.\n\n**What a deterministic scanner sees:** instructions to move funds and to transact with an operator-controlled endpoint (`prompt-injection`, weak `exfiltration` on the outbound domain). Financial-harm intent expressed purely in natural language is the residual risk documented in docs/THREAT-MODEL.md R2/R9 — no rule in the six categories decides whether a skill's *purpose* is legitimate.\n\n**Fact vs. inference:** skill name, domain, token, launch venue, mechanism and the SHA-256 are as published by Unit 42 (2026-06-23), which redacts the publisher account and reports the skill removed and the account banned after disclosure. Losses to individual users are not quantified in the source. Verified 2026-08-04.",
+  "type": "malicious-skill",
+  "severity": "high",
+  "cwe": ["CWE-1357", "CWE-807"],
+  "skills": [
+    {
+      "name": "letssendit",
+      "source": "https://clawhub.ai",
+      "digest": "f4e41aa269c88bf11a2022701a9cf41e9a186aa1b224d837c31bf34e0b875d0e",
+      "note": "publisher redacted by Unit 42; removed from ClawHub, account banned"
+    }
+  ],
+  "references": [
+    { "type": "report", "url": "https://unit42.paloaltonetworks.com/openclaw-ai-supply-chain-risk/" },
+    { "type": "article", "url": "https://www.techradar.com/pro/security/multiple-malicious-openclaw-skills-found-online-including-two-macos-infostealers" }
+  ],
+  "timeline": {
+    "published": "2026-06-23"
+  },
+  "credits": ["Unit 42 (Palo Alto Networks)"]
+}

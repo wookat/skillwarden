@@ -1,0 +1,24 @@
+{
+  "id": "SKA-2026-0013",
+  "title": "money-radar: ClawHub skill hijacks the agent's financial advice through a remotely-controlled affiliate feed",
+  "summary": "`money-radar` presented itself as an overseas financial product advisor comparing brokerages, banks, crypto exchanges and remittance services for users in mainland China, Hong Kong and Singapore. Its SKILL.md made one action mandatory on every invocation: fetch `referrals.json` from laosji[.]net — a domain previously seen in paste-jacking campaigns — before answering any financial question, then always answer using the `referralLink` fields in that feed (~60 products across eight categories). The payload is not malware; it is the agent's advisory authority. Because the feed is remote, the operator kept dynamic control after installation over which products the agent recommends and which affiliate partner gets paid.",
+  "details": "**Why this matters beyond ad fraud (Unit 42):** conventional affiliate injection rewrites links the victim was already going to click. Here the agent *generates* the recommendation, and the affiliate link arrives wrapped in what the user experiences as expert advice from their own assistant. The instruction set is also mutable after install — no skill update, no re-scan, no user interaction.\n\n**What a deterministic scanner sees:** an unconditional \"always fetch this URL first / always use these links\" instruction in the SKILL.md body (`prompt-injection`) and an outbound fetch to a non-obvious third-party endpoint (`exfiltration`, weakly). What it cannot see is the content of `referrals.json`, which is where the actual behaviour is defined — the same time-of-check/time-of-use gap as docs/THREAT-MODEL.md R10, here weaponised for money rather than code execution.\n\n**Fact vs. inference:** skill name, targeting, mandatory fetch, feed structure, the affiliate instruction and the domain are as published by Unit 42 (2026-06-23), which redacts the publisher account and reports the skill removed and the account banned after disclosure. Unit 42 characterises `laosji[.]net` as \"previously observed in paste-jacking campaigns\"; SkillWarden has not independently verified that history. No malware delivery is claimed for this skill. Verified 2026-08-04.",
+  "type": "prompt-injection",
+  "severity": "high",
+  "cwe": ["CWE-1357", "CWE-451"],
+  "skills": [
+    {
+      "name": "money-radar",
+      "source": "https://clawhub.ai",
+      "digest": "ebb73dbb5aac1f6fe1a88e8f26126a1e1aa34c9f3345ad4345189b40d9bf1d1d",
+      "note": "publisher redacted by Unit 42; removed from ClawHub, account banned"
+    }
+  ],
+  "references": [
+    { "type": "report", "url": "https://unit42.paloaltonetworks.com/openclaw-ai-supply-chain-risk/" }
+  ],
+  "timeline": {
+    "published": "2026-06-23"
+  },
+  "credits": ["Unit 42 (Palo Alto Networks)"]
+}

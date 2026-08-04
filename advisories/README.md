@@ -37,8 +37,21 @@ rules do *not* catch.
 | [SKA-2026-0008](SKA-2026-0008.json) | malicious-skill | critical | `twittertrends`, `proxy-scrap`, `polymarket` + 6 more, first wave (ClawHub) |
 | [SKA-2026-0009](SKA-2026-0009.json) | supply-chain | medium | moltbook heartbeat skill (moltbook.com) — risky design, no malicious use reported |
 | [SKA-2026-0010](SKA-2026-0010.json) | malicious-skill | critical | `moonshine-100rze/moltbook-lm8` (ClawHub) |
+| [SKA-2026-0011](SKA-2026-0011.json) | dangerous-commands | critical | `dexiaong/omnicogg` (ClawHub) — AMOS dropper behind 22 MB README padding |
+| [SKA-2026-0012](SKA-2026-0012.json) | malicious-skill | critical | `tradingview-ai-indicator-assistant`, `ai-tradingview-assistant-for-macos` (ClawHub) |
+| [SKA-2026-0013](SKA-2026-0013.json) | prompt-injection | high | `money-radar` (ClawHub) — remotely controlled affiliate feed |
+| [SKA-2026-0014](SKA-2026-0014.json) | malicious-skill | high | `letssendit` (ClawHub) — agentic front-running botnet |
+| [SKA-2026-0015](SKA-2026-0015.json) | exfiltration | critical | `polymarketbtc`, `polymarketbtcassistant` (ClawHub, krajekisbtc) — Telegram Bot API C2 |
+| [SKA-2026-0016](SKA-2026-0016.json) | malicious-skill | high | `find-skills`, `fun-brainstorming`, `simple` + 2 (GitHub `roin-orca/skills`) |
+| [SKA-2026-0017](SKA-2026-0017.json) | prompt-injection | high | `brand-landingpage` (GitHub `wshobson/agents`) — external "Stitch SDK" docs + npm `stitch-design` |
+| [SKA-2026-0018](SKA-2026-0018.json) | supply-chain | high | `seedance2-api` (skills.sh) — deleted GitHub owner re-registered (SkillJacking) |
+| [SKA-2026-0019](SKA-2026-0019.json) | supply-chain | high | `awwwards-landing-page` (skills.sh) — hijacked template repository (RepoJacking) |
 
 Primary sources: [Koi Security ClawHavoc audit](https://www.koi.ai/blog/clawhavoc-341-malicious-clawedbot-skills-found-by-the-bot-they-were-targeting),
 [OpenSourceMalware](https://opensourcemalware.com/blog/malicious-clawhub-skills-target-openclaw-users),
 [Snyk ToxicSkills](https://snyk.io/blog/toxicskills-malicious-ai-agent-skills-clawhub/) and its
-[technical report](https://arxiv.org/abs/2605.28588). Entries were last re-verified 2026-08-04.
+[technical report](https://arxiv.org/abs/2605.28588),
+[Unit 42](https://unit42.paloaltonetworks.com/openclaw-ai-supply-chain-risk/),
+[JFrog](https://research.jfrog.com/post/omnicogg-malicious-skill/),
+[Antiy CERT](https://www.antiy.net/p/clawhavoc-analysis-of-large-scale-poisoning-campaign-targeting-the-openclaw-skill-market-for-ai-agents/) and
+[AIR Security](https://www.air.security/blog-posts/skilljacking). Entries were last re-verified 2026-08-04.

