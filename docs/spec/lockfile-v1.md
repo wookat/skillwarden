@@ -1,4 +1,4 @@
-# skillgate.lock — Lockfile Specification v1
+# skillwarden.lock — Lockfile Specification v1
 
 Status: **v1, frozen.** Any breaking change bumps `version` and ships a migration.
 
@@ -6,11 +6,11 @@ Status: **v1, frozen.** Any breaking change bumps `version` and ships a migratio
 
 Pin the exact content of every approved Agent Skill so that any upstream change —
 a description tweak, an added script, a modified payload — is detected as drift and
-fails the CI gate until a human re-approves with `skillgate lock`.
+fails the CI gate until a human re-approves with `skillwarden lock`.
 
 ## Location & format
 
-- Default filename: `skillgate.lock`, written to the working directory
+- Default filename: `skillwarden.lock`, written to the working directory
   (override with `lock -o` / `diff --lockfile` / `ci --lockfile`).
 - JSON, UTF-8, two-space indent, trailing newline. Deterministic: skills and files
   are sorted by code-point order of their paths, so re-locking unchanged content
@@ -64,7 +64,7 @@ markdown, scripts, config formats, and extension-less text files up to 1 MiB eac
 `node_modules`, `.git`, `dist`, and `__pycache__` are excluded. Binary files are
 excluded (a future spec version may add binary digests).
 
-## Drift semantics (`skillgate diff` / `skillgate ci`)
+## Drift semantics (`skillwarden diff` / `skillwarden ci`)
 
 - A skill present in the lockfile but not on disk → **removed** (drift).
 - A skill on disk but not in the lockfile → **added** (drift).

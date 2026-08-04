@@ -10,10 +10,10 @@ labels: bug
 
 **Reproduction**
 
-<!-- Minimal skill content / commands. `skillgate scan --format json` output helps. -->
+<!-- Minimal skill content / commands. `skillwarden scan --format json` output helps. -->
 
 **Environment**
 
-- skill-gate version:
+- skillwarden version:
 - Node version:
 - OS:

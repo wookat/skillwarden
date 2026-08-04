@@ -6,7 +6,7 @@ import { discoverSkills, loadSkill, loadSkillsFromPath } from '../src/discovery.
 import { BENIGN_SKILL_MD } from './helpers.js';
 
 function makeProject(): string {
-  const root = mkdtempSync(join(tmpdir(), 'skillgate-proj-'));
+  const root = mkdtempSync(join(tmpdir(), 'skillwarden-proj-'));
   for (const [rel, content] of Object.entries({
     '.claude/skills/deploy/SKILL.md': BENIGN_SKILL_MD,
     '.claude/skills/deploy/scripts/run.sh': 'echo deploy\n',
@@ -44,7 +44,7 @@ describe('loadSkill', () => {
   });
 
   it('throws when SKILL.md is missing', () => {
-    const dir = mkdtempSync(join(tmpdir(), 'skillgate-empty-'));
+    const dir = mkdtempSync(join(tmpdir(), 'skillwarden-empty-'));
     expect(() => loadSkill(dir)).toThrow(/No SKILL.md/);
   });
 });

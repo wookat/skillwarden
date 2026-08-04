@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
 import type { Skill } from './types.js';
 
-export const LOCKFILE_NAME = 'skillgate.lock';
+export const LOCKFILE_NAME = 'skillwarden.lock';
 export const LOCKFILE_VERSION = 1;
 
 export interface LockedFile {

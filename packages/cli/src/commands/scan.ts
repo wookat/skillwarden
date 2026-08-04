@@ -1,5 +1,5 @@
 import { writeFileSync } from 'node:fs';
-import { hasFindingsAtOrAbove, scanSkills, toSarif, type Severity } from 'skill-gate-core';
+import { hasFindingsAtOrAbove, scanSkills, toSarif, type Severity } from 'skillwarden-core';
 import { EXIT_GATE_FAILURE, EXIT_OK, EXIT_USAGE_ERROR, resolveSkills } from '../context.js';
 import { renderScanTable } from '../output.js';
 import { VERSION } from '../version.js';

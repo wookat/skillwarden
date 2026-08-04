@@ -1,6 +1,6 @@
 # CLI Contract
 
-The committed interface for the `skillgate` command (npm package `skill-gate`).
+The committed interface for the `skillwarden` command (npm package `skillwarden`).
 Scripts and CI configs may rely on everything documented here; changes are semver-major.
 
 ## Exit codes (all subcommands)
@@ -21,7 +21,7 @@ directories under the current working directory are discovered: `.claude/skills`
 
 ## Subcommands
 
-### `skillgate scan [paths...]`
+### `skillwarden scan [paths...]`
 
 | Flag | Default | Description |
 |---|---|---|
@@ -32,17 +32,17 @@ directories under the current working directory are discovered: `.claude/skills`
 JSON output: array of `{ skill, path, findings: [{ ruleId, severity, message, file, line?, snippet? }] }`.
 SARIF output: SARIF 2.1.0, suitable for GitHub code scanning upload.
 
-### `skillgate lock [paths...]`
+### `skillwarden lock [paths...]`
 
-Writes `skillgate.lock` ([spec](lockfile-v1.md)). `-o, --output <file>` overrides the path.
+Writes `skillwarden.lock` ([spec](lockfile-v1.md)). `-o, --output <file>` overrides the path.
 
-### `skillgate diff [paths...]`
+### `skillwarden diff [paths...]`
 
 Compares current content against the lockfile (`--lockfile <file>`, default
-`skillgate.lock`). Human-readable drift report on stdout; exit 1 on drift, 2 when the
+`skillwarden.lock`). Human-readable drift report on stdout; exit 1 on drift, 2 when the
 lockfile is missing.
 
-### `skillgate ci [paths...]`
+### `skillwarden ci [paths...]`
 
 Drift gate + scan gate in one command for CI. Flags: `--lockfile <file>`,
 `--fail-on <severity>` (default `high`). A missing lockfile skips the drift gate with

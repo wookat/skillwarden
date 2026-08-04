@@ -9,7 +9,7 @@ import {
   readLockfile,
   scanSkills,
   type Severity,
-} from 'skill-gate-core';
+} from 'skillwarden-core';
 import { EXIT_GATE_FAILURE, EXIT_OK, EXIT_USAGE_ERROR, resolveSkills } from '../context.js';
 import { renderDrift, renderScanTable } from '../output.js';
 
@@ -39,7 +39,7 @@ export function runCi(paths: string[], options: CiCommandOptions, cwd: string): 
     process.stdout.write(`${renderDrift(report)}\n\n`);
     drifted = report.drifted;
   } else {
-    process.stdout.write(`${pc.yellow('!')} No ${LOCKFILE_NAME} found — drift gate skipped. Run \`skillgate lock\` to enable it.\n\n`);
+    process.stdout.write(`${pc.yellow('!')} No ${LOCKFILE_NAME} found — drift gate skipped. Run \`skillwarden lock\` to enable it.\n\n`);
   }
 
   const results = scanSkills(entries.map((e) => e.skill));

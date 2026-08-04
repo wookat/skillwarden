@@ -1,13 +1,13 @@
 # Governance
 
-SkillGate is an open-source project released under the Apache-2.0 license.
+SkillWarden is an open-source project released under the Apache-2.0 license.
 This document describes how the project is run today; it will evolve as the
 contributor base grows.
 
 ## Roles
 
 ### Users
-Anyone using SkillGate. Users are encouraged to file issues, propose advisories,
+Anyone using SkillWarden. Users are encouraged to file issues, propose advisories,
 and join discussions.
 
 ### Contributors

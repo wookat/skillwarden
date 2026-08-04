@@ -1,7 +1,7 @@
 # Agent Skills Threat Model
 
 > **Scope:** threats to a user or organisation that installs and runs third-party Agent
-> Skills (`SKILL.md` packages), and how SkillGate's six deterministic rule categories map
+> Skills (`SKILL.md` packages), and how SkillWarden's six deterministic rule categories map
 > onto them.
 > **Method (SOP-02):** every claim below carries a public source link; statements are
 > marked as *observed* (documented by a named researcher, with a link) or *inference*
@@ -143,9 +143,9 @@ Two chains bypass stages 2–3 entirely and are why prose-only scanning matters:
 
 ---
 
-## 6. Mapping to SkillGate's six rule categories
+## 6. Mapping to SkillWarden's six rule categories
 
-SkillGate scans **every text file in the skill directory**, not just `SKILL.md` — the
+SkillWarden scans **every text file in the skill directory**, not just `SKILL.md` — the
 `better-polymarket` backdoor sat around line 180 of a bundled Python file.
 
 | Rule | Threat it addresses | Representative real payload | Detected? |
@@ -159,10 +159,10 @@ SkillGate scans **every text file in the skill directory**, not just `SKILL.md` 
 
 Plus two non-rule controls that address threats no scanner can see:
 
-- **`skillgate.lock`** — per-file SHA-256 of every approved skill. This is the answer to
+- **`skillwarden.lock`** — per-file SHA-256 of every approved skill. This is the answer to
   T4 (rug pull): content changing under an approved name is the *only* reliable signal
   for a skill that was benign at review time.
-- **`skillgate ci`** — fails the build on drift or on findings at the configured severity
+- **`skillwarden ci`** — fails the build on drift or on findings at the configured severity
   threshold, so the check is enforced rather than advisory.
 
 ### Verification of the table above
@@ -192,7 +192,7 @@ Stated plainly, because a green scan that is read as "safe" is worse than no sca
 **R1. Untrusted download / unknown publisher provenance.** Snyk's taxonomy has a separate
 CRITICAL "Suspicious Download Detection" policy — GitHub releases from unfamiliar users,
 password-protected archives, unknown domains — and it fired on **100%** of their confirmed
-malicious skills ([arXiv:2605.28588](https://arxiv.org/abs/2605.28588)). SkillGate has no
+malicious skills ([arXiv:2605.28588](https://arxiv.org/abs/2605.28588)). SkillWarden has no
 equivalent rule: a `SKILL.md` that merely links to
 `github.com/<throwaway>/openclaw-agent/releases/…` with `pass: openclaw` and no shell
 command in sight currently produces at most a `medium` prompt-injection hit. This is our
@@ -224,7 +224,7 @@ where repository-controlled configuration triggered command execution or key exf
 and Claude Code's official marketplace has been reported to auto-sync new plugins into a
 user's environment without a consent prompt
 ([anthropics/claude-code#37340](https://github.com/anthropics/claude-code/issues/37340)).
-SkillGate scans skills; it does not gate hooks, plugins or MCP servers — for MCP, see the
+SkillWarden scans skills; it does not gate hooks, plugins or MCP servers — for MCP, see the
 sister project [AgentGate](https://github.com/wookat/agentgate).
 
 **R5. Agent-specific credential paths.** `exfiltration` knows `~/.ssh`, `~/.aws`,
@@ -249,7 +249,7 @@ exploitability ([Rehberger](https://embracethered.com/blog/posts/2026/scary-agen
 demonstrates it working against several models). Expect occasional benign hits (emoji
 variation selectors, RTL text) and triage them rather than blanket-suppressing the rule.
 
-**R9. Trust decisions SkillGate cannot make.** Whether a crypto-trading skill *should*
+**R9. Trust decisions SkillWarden cannot make.** Whether a crypto-trading skill *should*
 have wallet access, whether a skill's declared purpose matches what it does, and whether
 its author is who they claim to be, are all outside a deterministic file scanner. Snyk
 runs "Direct Money Access" and purpose-mismatch policies with LLM judges for this; we
@@ -266,13 +266,13 @@ instruction channel as permanently unreviewed.
 
 ## 8. Recommended posture
 
-1. **Gate in CI, not on a laptop.** `skillgate scan` + `skillgate lock` + `skillgate ci`
+1. **Gate in CI, not on a laptop.** `skillwarden scan` + `skillwarden lock` + `skillwarden ci`
    in the pipeline; a green local run that nobody enforces changes nothing.
 2. **Never follow a skill's install prerequisites.** No legitimate skill needs you to
    download a password-protected archive or paste a base64 command. This single rule
    defeats the entire dominant campaign class (stages 2–4 in §5).
 3. **Treat removal-and-republication as the norm.** Blocklists by name age out within a
-   day; content pinning (`skillgate.lock`) and per-review approval do not.
+   day; content pinning (`skillwarden.lock`) and per-review approval do not.
 4. **Scope the agent.** Assume any installed skill can read every credential the agent
    can. Separate agent credentials from personal ones and prefer short-lived tokens —
    this is what limits blast radius when detection fails (R1–R10).

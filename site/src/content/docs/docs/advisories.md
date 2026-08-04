@@ -6,15 +6,15 @@ description: A public, structured database of security advisories for Agent Skil
 A public, structured database of security advisories for Agent Skills (`SKILL.md`) —
 malicious skills, prompt-injection payloads, hidden-Unicode smuggling, credential
 theft, and supply-chain incidents across skill registries. It lives in the
-[`advisories/`](https://github.com/wookat/skillgate/tree/main/advisories) directory of
-the SkillGate repository.
+[`advisories/`](https://github.com/wookat/skillwarden/tree/main/advisories) directory of
+the SkillWarden repository.
 
 ## Format
 
 - One JSON file per advisory, named `SKA-YYYY-NNNN.json`, validated against
-  [`schema/advisory.schema.json`](https://github.com/wookat/skillgate/tree/main/advisories/schema)
+  [`schema/advisory.schema.json`](https://github.com/wookat/skillwarden/tree/main/advisories/schema)
   in CI.
-- Categories mirror SkillGate's [scan rule IDs](/docs/rules/) so advisories can be
+- Categories mirror SkillWarden's [scan rule IDs](/docs/rules/) so advisories can be
   cross-checked at scan time.
 - Sister database:
   [AgentGate MCP advisories](https://github.com/wookat/agentgate/tree/main/advisories).
@@ -27,7 +27,7 @@ the SkillGate repository.
    conservative; pattern write-ups without a concrete affected skill belong in docs,
    not here.
 3. Open a PR against
-   [wookat/skillgate](https://github.com/wookat/skillgate). Schema validation runs
+   [wookat/skillwarden](https://github.com/wookat/skillwarden). Schema validation runs
    automatically.
 
 ## Status

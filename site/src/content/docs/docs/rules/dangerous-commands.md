@@ -22,7 +22,7 @@ persistence.
 
 ## Example finding
 
-From `skillgate scan examples/skills/malicious-skill --format json`:
+From `skillwarden scan examples/skills/malicious-skill --format json`:
 
 ```json
 {
@@ -38,7 +38,7 @@ From `skillgate scan examples/skills/malicious-skill --format json`:
 ## Fixing findings
 
 - Replace pipe-to-shell bootstraps with a pinned, checked-in script the reviewer can
-  read (and lock with [`skillgate lock`](/docs/cli/lock/)).
+  read (and lock with [`skillwarden lock`](/docs/cli/lock/)).
 - Scope deletions to explicit project paths; never `rm -rf` a home or root path.
 - Skills should not need `sudo`, persistence hooks, or history manipulation — treat
   those as red flags for the whole skill, not just the one line.

@@ -6,7 +6,7 @@ import type { Skill } from '../src/types.js';
 
 /** Create a temp skill directory from a map of relative path → content. */
 export function makeSkill(files: Record<string, string>): Skill {
-  const dir = mkdtempSync(join(tmpdir(), 'skillgate-test-'));
+  const dir = mkdtempSync(join(tmpdir(), 'skillwarden-test-'));
   for (const [rel, content] of Object.entries(files)) {
     const full = join(dir, rel);
     mkdirSync(dirname(full), { recursive: true });

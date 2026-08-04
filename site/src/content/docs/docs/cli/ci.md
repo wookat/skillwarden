@@ -1,10 +1,10 @@
 ---
-title: skillgate ci
+title: skillwarden ci
 description: Drift gate + scan gate in one command for CI.
 ---
 
 ```bash
-skillgate ci [paths...]
+skillwarden ci [paths...]
 ```
 
 Runs the drift gate ([`diff`](/docs/cli/diff/)) and the scan gate
@@ -15,7 +15,7 @@ findings at/above `--fail-on`.
 
 | Flag | Default | Description |
 |---|---|---|
-| `--lockfile <file>` | `skillgate.lock` | Lockfile path |
+| `--lockfile <file>` | `skillwarden.lock` | Lockfile path |
 | `--fail-on <low\|medium\|high\|critical>` | `high` | Severity threshold that fails the gate |
 
 A missing lockfile skips the drift gate with a warning (the scan gate still applies).
@@ -23,7 +23,7 @@ A missing lockfile skips the drift gate with a warning (the scan gate still appl
 ## Example workflow step
 
 ```yaml
-- run: skillgate ci --fail-on high
+- run: skillwarden ci --fail-on high
 ```
 
 Or use the [GitHub Action](/docs/github-action/) which wraps this command.

@@ -1,6 +1,6 @@
 import Table from 'cli-table3';
 import pc from 'picocolors';
-import type { DriftReport, Severity, SkillScanResult } from 'skill-gate-core';
+import type { DriftReport, Severity, SkillScanResult } from 'skillwarden-core';
 
 export function severityLabel(severity: Severity): string {
   switch (severity) {
@@ -41,7 +41,7 @@ export function renderScanTable(results: SkillScanResult[]): string {
 }
 
 export function renderDrift(report: DriftReport): string {
-  if (!report.drifted) return pc.green('✓ No drift — skills match skillgate.lock');
+  if (!report.drifted) return pc.green('✓ No drift — skills match skillwarden.lock');
   const lines: string[] = [pc.red(`✗ Drift detected in ${report.skills.length} skill${report.skills.length > 1 ? 's' : ''}:`), ''];
   for (const drift of report.skills) {
     const tag = drift.kind === 'added' ? pc.green('+ added') : drift.kind === 'removed' ? pc.red('- removed') : pc.yellow('~ modified');
@@ -52,6 +52,6 @@ export function renderDrift(report: DriftReport): string {
     }
   }
   lines.push('');
-  lines.push(pc.dim('Review the changes, then re-approve with: skillgate lock'));
+  lines.push(pc.dim('Review the changes, then re-approve with: skillwarden lock'));
   return lines.join('\n');
 }

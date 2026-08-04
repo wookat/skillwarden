@@ -1,10 +1,10 @@
 ---
-title: skillgate diff
+title: skillwarden diff
 description: Compare current skill content against the lockfile and report drift.
 ---
 
 ```bash
-skillgate diff [paths...]
+skillwarden diff [paths...]
 ```
 
 Compares current skill content against the lockfile. Human-readable drift report on
@@ -14,7 +14,7 @@ stdout; exit `1` on drift, `2` when the lockfile is missing.
 
 | Flag | Default | Description |
 |---|---|---|
-| `--lockfile <file>` | `skillgate.lock` | Lockfile to compare against |
+| `--lockfile <file>` | `skillwarden.lock` | Lockfile to compare against |
 
 ## Drift semantics
 
@@ -27,6 +27,6 @@ stdout; exit `1` on drift, `2` when the lockfile is missing.
 ## Example
 
 ```bash
-skillgate lock examples/skills/benign-skill
-skillgate diff examples/skills/benign-skill   # exit 0 — content matches lock
+skillwarden lock examples/skills/benign-skill
+skillwarden diff examples/skills/benign-skill   # exit 0 — content matches lock
 ```

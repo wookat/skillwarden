@@ -1,15 +1,15 @@
 {
-  "name": "skill-gate",
+  "name": "skillwarden",
   "version": "0.2.0",
   "description": "Scan, lock, and gate your Agent Skills (SKILL.md) — npm audit + lockfile + CI drift gate for the agent skills era",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wookat/skillgate.git",
+    "url": "git+https://github.com/wookat/skillwarden.git",
     "directory": "packages/cli"
   },
-  "homepage": "https://github.com/wookat/skillgate",
-  "bugs": "https://github.com/wookat/skillgate/issues",
+  "homepage": "https://github.com/wookat/skillwarden",
+  "bugs": "https://github.com/wookat/skillwarden/issues",
   "keywords": [
     "agent-skills",
     "skill-md",
@@ -25,7 +25,7 @@
   },
   "type": "module",
   "bin": {
-    "skillgate": "./dist/index.js"
+    "skillwarden": "./dist/index.js"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -41,7 +41,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "skill-gate-core": "workspace:*",
+    "skillwarden-core": "workspace:*",
     "cli-table3": "^0.6.5",
     "commander": "^15.0.0",
     "picocolors": "^1.1.1"
