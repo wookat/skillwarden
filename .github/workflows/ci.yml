@@ -23,6 +23,8 @@ jobs:
       - run: pnpm lint
       - run: pnpm typecheck
       - run: pnpm test
+      - name: Core coverage gate (≥90% stmts/lines, ≥85% funcs, ≥75% branches)
+        run: pnpm --filter skillwarden-core test:coverage
       - name: Validate advisories against schema
         run: node scripts/validate-advisories.mjs
       - name: Dogfood — scan the example skills
@@ -35,3 +37,20 @@ jobs:
         run: |
           node packages/cli/dist/index.js lock examples/skills/benign-skill
           node packages/cli/dist/index.js diff examples/skills/benign-skill
+      - name: E2E — install packed tarballs and run the full gate chain
+        run: |
+          set -euo pipefail
+          workdir=$(mktemp -d)
+          pnpm --filter skillwarden-core --filter skillwarden exec pnpm pack --pack-destination "$workdir"
+          mkdir "$workdir/app" && cd "$workdir/app" && npm init -y >/dev/null
+          npm install "$workdir"/skillwarden-core-*.tgz "$workdir"/skillwarden-0*.tgz
+          cp -r "$GITHUB_WORKSPACE/examples/skills/benign-skill" .
+          npx skillwarden --version
+          npx skillwarden scan benign-skill
+          npx skillwarden lock benign-skill
+          npx skillwarden diff benign-skill
+          npx skillwarden ci benign-skill
+          echo 'tampered' >> benign-skill/SKILL.md
+          if npx skillwarden ci benign-skill; then
+            echo 'expected drift to fail the gate' && exit 1
+          fi

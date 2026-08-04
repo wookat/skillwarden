@@ -6,6 +6,7 @@
 
 [![CI](https://github.com/wookat/skillwarden/actions/workflows/ci.yml/badge.svg)](https://github.com/wookat/skillwarden/actions)
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+[![npm](https://img.shields.io/npm/v/skillwarden)](https://www.npmjs.com/package/skillwarden)
 [![Node >= 22](https://img.shields.io/badge/node-%3E%3D22-brightgreen)](package.json)
 
 Sister project of [AgentGate](https://github.com/wookat/agentgate) (the same loop for MCP servers).
@@ -34,17 +35,12 @@ No account, no API key, no LLM, no network: results are reproducible and CI-frie
 > name "SkillGate") is not affiliated with skillgate.sh or the npm package `skillgate`,
 > an unrelated cloud LLM-audit tool by another author.
 
+![skillwarden demo: scan, lock, then ci catches drift](docs/assets/demo.svg)
+
 ## Quick start
 
-From source today (npm release upcoming — the CLI below is the committed interface):
-
 ```bash
-git clone https://github.com/wookat/skillwarden.git
-cd skillwarden
-pnpm install
-pnpm build
-
-alias skillwarden="node $PWD/packages/cli/dist/index.js"
+npm install -g skillwarden    # or: npx skillwarden
 ```
 
 Scan the skills in your project — `.claude/skills`, `.agents/skills`, `.codex/skills`,
@@ -58,7 +54,7 @@ skillwarden scan --format json            # machine-readable report
 skillwarden scan --format sarif -o report.sarif   # GitHub code scanning
 ```
 
-Try it on the bundled examples:
+Try it on the bundled examples (in a clone of this repo):
 
 ```bash
 skillwarden scan examples/skills/benign-skill      # exit 0, clean
