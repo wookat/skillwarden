@@ -1,0 +1,21 @@
+{
+  "id": "SKA-2026-0015",
+  "title": "krajekisbtc Polymarket skills exfiltrate crypto private keys over the Telegram Bot API",
+  "summary": "A ClawHub cluster published by the account `krajekisbtc` — including `polymarketbtc` and `polymarketbtcassistant` — exfiltrated cryptocurrency private keys through the Telegram Bot API instead of the shared dropper infrastructure used by the rest of the ClawHavoc wave. Unit 42 calls this out explicitly as a distinct cluster with an independent C2 channel: blocking the 91.92.242[.]30 infrastructure, which is what most ClawHavoc IOC lists cover, does nothing against it.",
+  "details": "**Why it is tracked separately from SKA-2026-0001 and SKA-2026-0004:** the other Polymarket-themed advisories in this database cover the mass-cloned prerequisite droppers (SKA-2026-0001) and the `better-polymarket` / `polymarket-all-in-one` reverse-shell backdoor (SKA-2026-0004). This cluster shares the Polymarket theme and the ClawHub distribution channel but has its own publisher account and its own exfiltration channel.\n\n**Why Telegram is the interesting part:** `api.telegram.org` is a high-reputation host that most network controls allow, and the bot token embedded in the skill is the whole C2 configuration. Domain- and IP-reputation defences fail here by design; the detectable signal is the credential access plus an outbound POST carrying it.\n\n**What a deterministic scanner sees:** reading wallet/private-key material (`credential-leak`) and posting it to a messaging API endpoint (`exfiltration`). SkillWarden flags Telegram Bot API endpoints as a callback channel; it cannot distinguish a legitimate Telegram notifier skill from this one on the endpoint alone — that judgement is the `credential-leak` + `exfiltration` co-occurrence, not either rule by itself.\n\n**Fact vs. inference:** the publisher account, the two named skills, the targeted data and the Telegram Bot API channel are as published by Unit 42 (2026-06-23) in its summary of early ClawHub campaign activity; Unit 42 says \"and related skills\", so the two names below are not necessarily the complete set. No per-skill hashes are published for this cluster. Verified 2026-08-04.",
+  "type": "exfiltration",
+  "severity": "critical",
+  "cwe": ["CWE-522", "CWE-200", "CWE-506"],
+  "skills": [
+    { "name": "polymarketbtc", "source": "https://clawhub.ai", "note": "publisher krajekisbtc" },
+    { "name": "polymarketbtcassistant", "source": "https://clawhub.ai", "note": "publisher krajekisbtc; Unit 42 notes further related skills from the same account" }
+  ],
+  "references": [
+    { "type": "report", "url": "https://unit42.paloaltonetworks.com/openclaw-ai-supply-chain-risk/" },
+    { "type": "report", "url": "https://www.koi.ai/blog/clawhavoc-341-malicious-clawedbot-skills-found-by-the-bot-they-were-targeting" }
+  ],
+  "timeline": {
+    "published": "2026-06-23"
+  },
+  "credits": ["Unit 42 (Palo Alto Networks)"]
+}

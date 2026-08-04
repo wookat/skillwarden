@@ -1,0 +1,25 @@
+{
+  "id": "SKA-2026-0018",
+  "title": "seedance2-api: top skills.sh video skill installs from a GitHub account whose username was deleted and re-registered (SkillJacking)",
+  "summary": "`seedance2-api` wraps the Seedance video-generation API and is, by install count, the most popular video skill on skills.sh (11,483 installs at AIR Security's report, 11,824 at our re-check). Installing it with `npx skills` pulls files live from `github.com/hexiaochun/seedance2-api`, so whoever owns that GitHub username controls what every install and every re-run fetches. The original owner's account was deleted, which returns the username to GitHub's public pool. AIR Security registered `hexiaochun`, recreated the repository and pushed a deliberately obvious, harmless test to prove control. The marketplace listing, the install count and the reputation never changed, and no scanner flagged the takeover itself.",
+  "details": "**The primitive:** skill distribution that resolves a mutable, human-claimable identifier (a GitHub username) at run time, with no pinning, no signature and no publisher-continuity check. AIR reports 925 skills built on dependencies that were hijackable at the time of writing, affecting ~134K agents, across four families (deleted/renamed GitHub accounts, non-existent packages, expired domains, unclaimed handles). `seedance2-api` is the concrete, named, highest-impact instance.\n\n**Scope of the demonstration:** AIR states verbatim: \"This is a PoC built in our lab, demonstrating how the takeover could have been weaponized. No malicious content was ever pushed to the real, public skill.\" No user compromise is claimed or implied. What is real, and the reason this advisory exists, is that the distribution source of a skill with five figures of installs was transferred to a third party through a username re-registration that nothing in the ecosystem detected.\n\n**Verified on 2026-08-04:** skills.sh lists `hexiaochun/seedance2-api/seedance2-api` with 11,824 installs. `github.com/hexiaochun/seedance2-api` resolves; the account `hexiaochun` exists with a `created_at` of 2026-05-24 — later than commits dated from 2026-03 in the repository's history, which is consistent with a re-registered username hosting a recreated repository, though we cannot attribute the current account from public metadata alone.\n\n**What a deterministic scanner sees:** nothing. The SKILL.md content can be identical before and after the takeover; the risk lives in the provenance of the source, not in the text. This is docs/THREAT-MODEL.md R10 (time-of-check vs time-of-use) plus an unmodelled asset — publisher-identity continuity. Practical mitigation is pinning skills to a content digest (SkillWarden's lockfile) and re-verifying on every fetch, which turns a silent takeover into a digest mismatch.\n\n**Fact vs. inference:** install counts, the deleted-account mechanism, the takeover and the PoC framing are as published by AIR Security (2026-07-02); the current-state observations above are ours. Verified 2026-08-04.",
+  "type": "supply-chain",
+  "severity": "high",
+  "cwe": ["CWE-829", "CWE-494", "CWE-1104"],
+  "skills": [
+    {
+      "name": "seedance2-api",
+      "source": "https://skills.sh/hexiaochun/seedance2-api",
+      "note": "files served live from github.com/hexiaochun/seedance2-api; username was freed by account deletion and re-registered by researchers"
+    }
+  ],
+  "references": [
+    { "type": "report", "url": "https://www.air.security/blog-posts/skilljacking" },
+    { "type": "source", "url": "https://github.com/hexiaochun/seedance2-api" }
+  ],
+  "timeline": {
+    "published": "2026-07-02",
+    "updated": "2026-08-04"
+  },
+  "credits": ["Or Nevo, Dor Granat, Eliad Mualem (AIR Security)"]
+}

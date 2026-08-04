@@ -1,0 +1,27 @@
+{
+  "id": "SKA-2026-0019",
+  "title": "awwwards-landing-page: clean skill clones a template repository whose owner handle was freed by a rename and re-claimed (RepoJacking)",
+  "summary": "`awwwards-landing-page` (skills.sh, ~1,100 installs) is an unmodified, legitimately authored skill: its SKILL.md tells the agent to `git clone --depth 1 https://github.com/Eng0AI/awwwards-landing-page-template.git` and then `npm install`. The template repository's owner renamed itself from `Eng0AI` to `rebyteai-template`; GitHub kept redirecting the old URL, and simultaneously released `Eng0AI` back into the username pool. AIR Security registered `Eng0AI`, created a same-named repository — which shadows GitHub's redirect — and thereby controlled the code every run of the skill clones and installs. The skill never changed, its author never did anything wrong, and no public scanner detected the takeover. AIR counted 124 abandoned repositories referenced by skills, affecting 178 skills and 23,812 agents.",
+  "details": "**Why this is worse than a compromised skill:** installing early is no protection. The clone happens on every run, so a copy installed months ago fetches the new owner's code the next time it is used. There is no publish event, no version bump and no diff for a one-time scan to catch — the ownership change happens entirely outside the skill's repository.\n\n**Independently verified on 2026-08-04.** The skill on skills.sh is `eng0ai/eng0-template-skills/awwwards-landing-page` (1,100 installs); its live SKILL.md still contains the `git clone --depth 1 https://github.com/Eng0AI/awwwards-landing-page-template.git .` setup step. In the template repository's commit history (owner now normalised to `eng0ai`):\n\n- `d6adab4` (2026-07-05) \"Add template setup and dev config\" adds `setup.js` and a `checkLicense()` block in `next.config.js`. `setup.js` POSTs `{ email: \"<username>@<hostname>\", source: \"awwwards_setup\", event: \"activate\" }` to `eng0ai-sdk.vercel.app/api/telemetry`; `next.config.js` throws unless `.env.local` exists, with a message instructing the user to run `node setup.js` — a coercion loop into the beacon.\n- `00e1cf0` (2026-07-07) \"Remove telemetry beacons from setup.js and next.config.js\" deletes it again, describing `setup.js` as a \"pure phone-home beacon\".\n\nThe repository history before those commits dates back to 2023, while the `eng0ai` account's `created_at` is 2026-05-24 — consistent with the freed-handle re-registration AIR describes. `eng0ai-sdk.vercel.app/api/telemetry` returned HTTP 404 at check time, so the beacon currently fails.\n\n**Scope:** AIR presents this as demonstrated control of the dependency, not as a criminal campaign; the code we verified in the window above is a host/username beacon, consistent with proof of reach rather than data theft. The mechanism, the reach and the invisibility to scanners are real.\n\n**What a deterministic scanner sees:** a `git clone` plus `npm install` of a third-party repository — at most a low-signal \"installs code from a remote repository\" finding, and nothing at all about who owns that repository today. This is the residual risk in docs/THREAT-MODEL.md R1 (download provenance) and R10 (time-of-check vs time-of-use), applied one hop out into the skill's dependencies.\n\n**Fact vs. inference:** the takeover, its mechanism, install count and ecosystem-wide numbers are as published by AIR Security (2026-07-30); the commit-level payload evidence and the account/registry metadata above are our own direct observations. We do not assert who authored those commits beyond the GitHub author field. Verified 2026-08-04.",
+  "type": "supply-chain",
+  "severity": "high",
+  "cwe": ["CWE-829", "CWE-494", "CWE-1104"],
+  "skills": [
+    {
+      "name": "awwwards-landing-page",
+      "source": "https://skills.sh/eng0ai/eng0-template-skills",
+      "note": "skill itself unmodified; risk is the cloned dependency github.com/Eng0AI/awwwards-landing-page-template"
+    }
+  ],
+  "references": [
+    { "type": "report", "url": "https://www.air.security/blog-posts/repojacking" },
+    { "type": "source", "url": "https://github.com/eng0ai/eng0-template-skills/blob/main/awwwards-landing-page/SKILL.md" },
+    { "type": "source", "url": "https://github.com/eng0ai/awwwards-landing-page-template/commit/d6adab4cf5851330e544d7709a74a040965ee00a" },
+    { "type": "fix", "url": "https://github.com/eng0ai/awwwards-landing-page-template/commit/00e1cf0d4273c69714fd68ae41e3f991f05f5d19" }
+  ],
+  "timeline": {
+    "published": "2026-07-30",
+    "updated": "2026-08-04"
+  },
+  "credits": ["Dor Granat, Eliad Mualem (AIR Security)"]
+}

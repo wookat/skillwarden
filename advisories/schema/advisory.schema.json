@@ -85,6 +85,11 @@
       "properties": {
         "discovered": { "type": "string", "format": "date" },
         "published": { "type": "string", "format": "date" },
+        "updated": {
+          "type": "string",
+          "format": "date",
+          "description": "Last time this entry was materially changed (new affected skills, new sources, re-verification)."
+        },
         "withdrawn": { "type": "string", "format": "date" }
       }
     },
