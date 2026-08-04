@@ -19,9 +19,26 @@ theft, and supply-chain incidents across skill registries.
    not here.
 3. Open a PR. Schema validation runs automatically.
 
-## Status
+Pattern-level analysis that cannot be tied to a named skill lives in
+[docs/THREAT-MODEL.md](../docs/THREAT-MODEL.md), which also documents what SkillGate's
+rules do *not* catch.
 
-The database currently ships the schema and validation pipeline. Verified incident
-entries are added as they are confirmed; see the
-[Snyk skills-ecosystem threat report](https://github.com/snyk/agent-scan) for the
-class of attacks being tracked.
+## Index
+
+| ID | Type | Severity | Affected skills (source) |
+|---|---|---|---|
+| [SKA-2026-0001](SKA-2026-0001.json) | malicious-skill | critical | ClawHavoc — 335 mass-published ClawHub skills (crypto, YouTube, CLI typosquats, auto-updaters) |
+| [SKA-2026-0002](SKA-2026-0002.json) | malicious-skill | critical | `Aslaep123/base-agent`, `bybit-agent`, `polymarket-traiding-bot`, `reddit-trends`, `axiom-agent` (ClawHub) |
+| [SKA-2026-0003](SKA-2026-0003.json) | supply-chain | critical | `zaycv/clawhub`, `clawhub1`, `clawhud` + 4 more (ClawHub) |
+| [SKA-2026-0004](SKA-2026-0004.json) | dangerous-scripts | critical | `better-polymarket`, `polymarket-all-in-one` (ClawHub) |
+| [SKA-2026-0005](SKA-2026-0005.json) | exfiltration | critical | `rankaj` (ClawHub) |
+| [SKA-2026-0006](SKA-2026-0006.json) | prompt-injection | critical | `google-qx4`, `whatsapp-mgv`, `coding-agent-1gx`, `clawhub` (GitHub `aztr0nutzs/NET_NiNjA.v1.2`) |
+| [SKA-2026-0007](SKA-2026-0007.json) | hidden-unicode | high | `pepe276/moltbookagent`, `publish-dist` (ClawHub) |
+| [SKA-2026-0008](SKA-2026-0008.json) | malicious-skill | critical | `twittertrends`, `proxy-scrap`, `polymarket` + 6 more, first wave (ClawHub) |
+| [SKA-2026-0009](SKA-2026-0009.json) | supply-chain | medium | moltbook heartbeat skill (moltbook.com) — risky design, no malicious use reported |
+| [SKA-2026-0010](SKA-2026-0010.json) | malicious-skill | critical | `moonshine-100rze/moltbook-lm8` (ClawHub) |
+
+Primary sources: [Koi Security ClawHavoc audit](https://www.koi.ai/blog/clawhavoc-341-malicious-clawedbot-skills-found-by-the-bot-they-were-targeting),
+[OpenSourceMalware](https://opensourcemalware.com/blog/malicious-clawhub-skills-target-openclaw-users),
+[Snyk ToxicSkills](https://snyk.io/blog/toxicskills-malicious-ai-agent-skills-clawhub/) and its
+[technical report](https://arxiv.org/abs/2605.28588). Entries were last re-verified 2026-08-04.
