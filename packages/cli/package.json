@@ -1,0 +1,45 @@
+{
+  "name": "skill-gate",
+  "version": "0.1.0",
+  "description": "Scan, lock, and gate your Agent Skills (SKILL.md) — npm audit + lockfile + CI drift gate for the agent skills era",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wookat/skillgate.git",
+    "directory": "packages/cli"
+  },
+  "homepage": "https://github.com/wookat/skillgate",
+  "bugs": "https://github.com/wookat/skillgate/issues",
+  "keywords": ["agent-skills", "skill-md", "security", "supply-chain", "lockfile", "scanner", "cli", "prompt-injection"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "bin": {
+    "skillgate": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "skill-gate-core": "workspace:*",
+    "cli-table3": "^0.6.5",
+    "commander": "^15.0.0",
+    "picocolors": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.2",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.10"
+  }
+}

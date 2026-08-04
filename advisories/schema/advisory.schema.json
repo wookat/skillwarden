@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/wookat/skillgate/main/advisories/schema/advisory.schema.json",
+  "title": "SkillGate Agent Skill Advisory",
+  "description": "Schema for entries in the SkillGate public Agent Skills advisory database (advisories/*.json).",
+  "type": "object",
+  "required": ["id", "title", "summary", "type", "severity", "skills", "references", "timeline"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "SkillGate advisory ID.",
+      "pattern": "^SKA-[0-9]{4}-[0-9]{4}$"
+    },
+    "title": { "type": "string", "minLength": 1 },
+    "summary": { "type": "string", "minLength": 1, "description": "One-paragraph plain-language summary." },
+    "details": { "type": "string", "description": "Extended technical details (Markdown allowed)." },
+    "type": {
+      "type": "string",
+      "description": "Advisory category, aligned with SkillGate scan rule categories.",
+      "enum": [
+        "prompt-injection",
+        "hidden-unicode",
+        "dangerous-commands",
+        "credential-leak",
+        "exfiltration",
+        "dangerous-scripts",
+        "malicious-skill",
+        "supply-chain"
+      ]
+    },
+    "severity": { "type": "string", "enum": ["critical", "high", "medium", "low"] },
+    "aliases": {
+      "type": "array",
+      "description": "Other identifiers for the same issue (CVE, GHSA, registry takedown IDs, ...).",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "cwe": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^CWE-[0-9]+$" },
+      "uniqueItems": true
+    },
+    "skills": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Affected skills, identified by name plus the distribution source.",
+      "items": {
+        "type": "object",
+        "required": ["name", "source"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string", "minLength": 1, "description": "Skill name (frontmatter `name`)." },
+          "source": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Where the affected skill was distributed: a repository URL, registry URL, or registry slug."
+          },
+          "digest": {
+            "type": "string",
+            "description": "SkillGate aggregate SHA-256 digest of the malicious skill content, when captured.",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "note": { "type": "string", "description": "Free-text note, e.g. 'removed from registry'." }
+        }
+      }
+    },
+    "references": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["type", "url"],
+        "additionalProperties": false,
+        "properties": {
+          "type": { "type": "string", "enum": ["advisory", "report", "article", "fix", "source", "other"] },
+          "url": { "type": "string", "format": "uri" }
+        }
+      }
+    },
+    "timeline": {
+      "type": "object",
+      "required": ["published"],
+      "additionalProperties": false,
+      "properties": {
+        "discovered": { "type": "string", "format": "date" },
+        "published": { "type": "string", "format": "date" },
+        "withdrawn": { "type": "string", "format": "date" }
+      }
+    },
+    "credits": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    }
+  }
+}
