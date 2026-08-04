@@ -34,6 +34,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # npm auth: prefer OIDC trusted publishing; NPM_TOKEN is a fallback until
-          # trusted publishing is enabled for skill-gate / skill-gate-core.
+          # trusted publishing is enabled for skillwarden / skillwarden-core.
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_CONFIG_PROVENANCE: 'true'

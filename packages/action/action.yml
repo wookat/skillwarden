@@ -1,4 +1,4 @@
-name: 'SkillGate'
+name: 'SkillWarden'
 description: 'Scan, lock, and gate Agent Skills (SKILL.md) — security findings + lockfile drift gate for CI'
 author: 'wookat'
 branding:
@@ -19,29 +19,29 @@ inputs:
     required: false
     default: 'high'
   lockfile:
-    description: 'Path to skillgate.lock'
+    description: 'Path to skillwarden.lock'
     required: false
-    default: 'skillgate.lock'
+    default: 'skillwarden.lock'
   version:
-    description: 'skill-gate npm package version to run'
+    description: 'skillwarden npm package version to run'
     required: false
     default: 'latest'
 
 runs:
   using: 'composite'
   steps:
-    - name: Run skillgate
+    - name: Run skillwarden
       shell: bash
       run: |
         ARGS=(${{ inputs.paths }})
         case "${{ inputs.command }}" in
           scan)
-            npx --yes skill-gate@${{ inputs.version }} scan "${ARGS[@]}" --fail-on "${{ inputs.fail-on }}"
+            npx --yes skillwarden@${{ inputs.version }} scan "${ARGS[@]}" --fail-on "${{ inputs.fail-on }}"
             ;;
           diff)
-            npx --yes skill-gate@${{ inputs.version }} diff "${ARGS[@]}" --lockfile "${{ inputs.lockfile }}"
+            npx --yes skillwarden@${{ inputs.version }} diff "${ARGS[@]}" --lockfile "${{ inputs.lockfile }}"
             ;;
           ci|*)
-            npx --yes skill-gate@${{ inputs.version }} ci "${ARGS[@]}" --lockfile "${{ inputs.lockfile }}" --fail-on "${{ inputs.fail-on }}"
+            npx --yes skillwarden@${{ inputs.version }} ci "${ARGS[@]}" --lockfile "${{ inputs.lockfile }}" --fail-on "${{ inputs.fail-on }}"
             ;;
         esac

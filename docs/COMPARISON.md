@@ -3,7 +3,7 @@
 > Last verified: 2026-08-04. Every claim below was checked against the competitor's
 > public README / repository source code / npm registry metadata on that date (links in
 > each section). Star counts are from the GitHub API on the same date and will drift.
-> SkillGate is under active development — rows not yet shipped are marked "planned".
+> SkillWarden is under active development — rows not yet shipped are marked "planned".
 
 ## TL;DR
 
@@ -19,14 +19,14 @@ The Agent Skills (`SKILL.md`) tool landscape splits into two camps:
    cloud-gated, and have **no lockfile and no CI drift gate**: a skill you approved
    last week that quietly changes upstream is invisible to them.
 
-SkillGate's bet: one local, deterministic, offline tool that closes the whole loop —
+SkillWarden's bet: one local, deterministic, offline tool that closes the whole loop —
 **scan → lock → gate → advise** — for the skills ecosystem, mirroring what
 [AgentGate](https://github.com/wookat/agentgate) does for MCP servers. No competitor
 covers more than one of the four.
 
 ## Feature matrix
 
-| Capability | SkillGate | [Snyk Agent Scan](https://github.com/snyk/agent-scan) | [loris-fo/skillgate](https://github.com/loris-fo/skillgate) | [skill-tools](https://github.com/skill-tools/skill-tools) | [skill-check](https://github.com/thedaviddias/skill-check) | [skillmds](https://www.npmjs.com/package/skillmds) |
+| Capability | SkillWarden | [Snyk Agent Scan](https://github.com/snyk/agent-scan) | [loris-fo/skillgate](https://github.com/loris-fo/skillgate) | [skill-tools](https://github.com/skill-tools/skill-tools) | [skill-check](https://github.com/thedaviddias/skill-check) | [skillmds](https://www.npmjs.com/package/skillmds) |
 |---|---|---|---|---|---|---|
 | Security scan of SKILL.md (prompt injection, override attempts) | ✅ deterministic rules | ✅ (proprietary analysis, Snyk platform) | ✅ (LLM-as-judge via skillgate.sh API) | ❌ | ⚠️ delegates to Snyk agent-scan | ⚠️ basic `scan` |
 | Hidden Unicode / invisible character detection | ✅ | ✅ | ⚠️ prompt asks the LLM to look | ❌ | ⚠️ via agent-scan | ❓ unverifiable (closed source, bundled `vendor/index.js`) |
@@ -34,9 +34,9 @@ covers more than one of the four.
 | Credential/secret patterns | ✅ | ✅ | ⚠️ LLM judgement | ⚠️ 1 lint rule (embedded secrets) | ✅ own rule + agent-scan | ❓ |
 | Works offline / no account / no API key | ✅ | ❌ Snyk account + auth required | ❌ requires skillgate.sh API (Anthropic-backed) | ✅ | ⚠️ lint offline; security scan needs uv + Snyk | ⚠️ CLI local, publish needs skillmd.com |
 | Deterministic, reproducible results | ✅ | ⚠️ ML/LLM components | ❌ LLM audit | ✅ | ⚠️ mixed | ❓ |
-| Lockfile of skill content (per-file SHA-256) | ✅ `skillgate.lock` | ❌ | ❌ | ❌ | ❌ | ❌ |
-| CI drift gate (non-zero exit on upstream change) | ✅ `skillgate ci` | ❌ | ❌ | ❌ | ⚠️ `diff` compares diagnostics of two dirs, not content drift vs a baseline | ❌ |
-| Human-readable drift diff | ✅ `skillgate diff` | ❌ | ❌ | ❌ | ⚠️ diagnostics diff only | ❌ |
+| Lockfile of skill content (per-file SHA-256) | ✅ `skillwarden.lock` | ❌ | ❌ | ❌ | ❌ | ❌ |
+| CI drift gate (non-zero exit on upstream change) | ✅ `skillwarden ci` | ❌ | ❌ | ❌ | ⚠️ `diff` compares diagnostics of two dirs, not content drift vs a baseline | ❌ |
+| Human-readable drift diff | ✅ `skillwarden diff` | ❌ | ❌ | ❌ | ⚠️ diagnostics diff only | ❌ |
 | Public structured advisory DB + auto cross-check | ✅ `advisories/` | ⚠️ proprietary Snyk intel | ❌ | ❌ | ❌ | ❌ |
 | Multi-ecosystem skill dir discovery (.claude/.agents/.codex/.gemini/.opencode/.cursor) | ✅ | ✅ broad harness discovery | ❌ `.claude` only | ⚠️ path input | ✅ paths + GitHub URLs | ⚠️ install targets several |
 | Quality lint / scoring | ❌ out of scope (use skill-tools) | ❌ | ❌ | ✅ 20 checks, 10 rules, 0-100 score | ✅ score + autofix | ✅ lint |
@@ -55,25 +55,27 @@ Legend: ✅ confirmed in their README or source · ⚠️ partial (see notes) ·
 - Since 0.4 scans **agent skills** (single SKILL.md, `~/.claude/skills`, machine-wide
   discovery) for prompt injection, sensitive-data handling, and hidden payloads, and
   published a skills-ecosystem threat report — the strongest security competitor.
-- Weaknesses vs SkillGate: requires the Snyk platform (account/auth); Python/uvx
+- Weaknesses vs SkillWarden: requires the Snyk platform (account/auth); Python/uvx
   runtime; CLI output "experimental and subject to change" per their README; no
   lockfile, no drift gate, no public advisory DB; scanning MCP configs executes
   commands (their own security warning).
 
-### loris-fo/skillgate (npm `skillgate`, 0★, published 2026-03)
+### skillgate.sh — loris-fo/skillgate (npm `skillgate`, 0★, published 2026-03)
 
 - Same name, same niche — verified by reading its source: the CLI posts skill content
   to `https://skillgate.sh/api`, which runs a **Claude (Anthropic) structured audit**
   (5 categories, safe/warn/critical) with Upstash Redis caching; `install` gates
   installation into `.claude/`, `scan` audits a project. Node >= 18.
-- Weaknesses vs SkillGate: cloud dependency (their API + Anthropic; dead service =
+- Weaknesses vs SkillWarden: cloud dependency (their API + Anthropic; dead service =
   dead tool), non-deterministic LLM verdicts, single-file audits capped at 100KB (no
   bundled-script analysis), `.claude` only, no lockfile/diff/ci, no SARIF, no Action,
   no advisory DB, no license file, zero community. Project appears inactive
   (last push 2026-03-13).
-- **Naming consequence**: the bare npm name `skillgate` is taken; we publish as
-  `skill-gate` (verified 404 on the registry 2026-08-04), keep the SkillGate brand,
-  and state the distinction prominently in the README.
+- **Naming consequence**: `skillgate` is taken and npm's moniker rule strips
+  punctuation, so `skill-gate` would also be rejected (403). We renamed the project
+  to **SkillWarden** and publish as `skillwarden` / `skillwarden-core` (all variants,
+  including `skill-warden`/`skill_warden`, verified 404 on the registry 2026-08-04),
+  and state the non-affiliation prominently in the README.
 
 ### skill-tools (`skill-tools/skill-tools`, 9★)
 
@@ -102,27 +104,27 @@ Legend: ✅ confirmed in their README or source · ⚠️ partial (see notes) ·
 
 - **tech-leads-club/agent-skills** (4,982★): curated "secure, validated" skill
   registry — validation happens at their curation time, not in your CI; installing
-  from anywhere else is unprotected. A future SkillGate advisory-DB consumer, not a
+  from anywhere else is unprotected. A future SkillWarden advisory-DB consumer, not a
   gate.
-- **AgentGate** (ours): same loop for MCP servers; SkillGate reuses its engineering
+- **AgentGate** (ours): same loop for MCP servers; SkillWarden reuses its engineering
   standards and, later, shares the Gate-family advisory infrastructure.
 
-## Honest gaps (where competitors beat SkillGate today)
+## Honest gaps (where competitors beat SkillWarden today)
 
 - **Shipped vs planned**: Snyk, skill-tools, skill-check, skillmds all have working
-  releases today; SkillGate is under construction. Re-verify this document against our
+  releases today; SkillWarden is under construction. Re-verify this document against our
   shipped feature set before acceptance.
 - **LLM-judge depth**: a good LLM audit (loris-fo, Snyk) can catch semantic attacks
-  that deterministic rules miss. SkillGate is deterministic-first by design; an
+  that deterministic rules miss. SkillWarden is deterministic-first by design; an
   optional local-LLM engine is a possible later route.
 - **Quality linting**: skill-tools/skill-check do quality far better; we deliberately
   don't compete there and recommend running both.
-- **Ecosystem breadth**: Snyk also inventories harnesses and MCP servers; SkillGate
+- **Ecosystem breadth**: Snyk also inventories harnesses and MCP servers; SkillWarden
   scopes to skills (AgentGate covers MCP).
 
 ## What "winning" requires (acceptance bar)
 
-Per CHARTER §7, SkillGate v1 must ship: scan with ≥6 deterministic rule categories
+Per CHARTER §7, SkillWarden v1 must ship: scan with ≥6 deterministic rule categories
 (prompt-injection, hidden-unicode, dangerous-commands, credential-leak,
 dangerous-scripts, exfiltration) at least matching Snyk's documented skills checks in
 category coverage; lock + diff + ci (unique in this ecosystem); the advisory DB

@@ -17,7 +17,7 @@ QA + security cross-review of `packages/core/src/rules/` (six rule families), `d
   | Findings ≥ `medium` on the 31 real skills | 31 | 2 (both explained below) |
   | Edge-case fixtures behaving correctly | 5 / 20 | 20 / 20 |
 
-Severity labels below describe the **impact of the defect in SkillGate**, not the severity a
+Severity labels below describe the **impact of the defect in SkillWarden**, not the severity a
 finding would carry in a report.
 
 ---
@@ -115,7 +115,7 @@ Fixed (12 shapes added). See also FP-4 on placeholder handling and FN-13 on snip
 without any drift being reported. Padding a payload past a size cap is a one-line bypass.
 
 Repro: `scripts/big.sh` = 1.1 MiB of `echo padding` + `curl … | bash` → 0 findings, and the
-file absent from `skillgate.lock`.
+file absent from `skillwarden.lock`.
 
 Fixed: every regular file is hashed in full and pinned; text over the cap is scanned up to
 the cap and reported as `truncated` (a `medium` finding names the file), so a payload hidden
@@ -169,7 +169,7 @@ the skill directory is reported as `high` by `exfiltration`.
 
 `existsSync(join(dir, 'SKILL.md'))` misses `skill.md` / `Skill.md`, which agent runtimes on
 case-insensitive filesystems (macOS, Windows) load happily. A `skill.md`-only directory was
-therefore not a skill at all to SkillGate: `scan` reported "No skills found" and `ci` exited 0.
+therefore not a skill at all to SkillWarden: `scan` reported "No skills found" and `ci` exited 0.
 
 Fixed: the manifest is located case-insensitively and the resolved name is used consistently
 for sorting, hashing, and the lockfile.
@@ -269,7 +269,7 @@ reported once per skill (FN-10).
 
 `lockSkill()` hashed `sha256(f.content)`, i.e. the *decoded* string. Two files whose invalid
 UTF-8 bytes both decode to `U+FFFD` (`0xC3 0x28` vs `0xC3 0x29`) produced the same digest, so
-`skillgate ci` reported no drift after the bytes changed. Combined with FN-9/FN-10 (files
+`skillwarden ci` reported no drift after the bytes changed. Combined with FN-9/FN-10 (files
 missing from the lockfile entirely), the "pin what the agent will read" guarantee did not
 hold for anything that was not small, text, and valid UTF-8.
 

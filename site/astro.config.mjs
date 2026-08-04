@@ -6,21 +6,21 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://skillgate.zalize.com',
+  site: 'https://skillwarden.zalize.com',
   integrations: [
     starlight({
-      title: 'SkillGate',
+      title: 'SkillWarden',
       description:
         'Scan, lock, and gate your Agent Skills — npm audit + lockfile + CI drift gate for the SKILL.md era.',
       logo: {
         src: './src/assets/logo.svg',
-        alt: 'SkillGate',
+        alt: 'SkillWarden',
       },
       social: [
         {
           icon: 'github',
           label: 'GitHub',
-          href: 'https://github.com/wookat/skillgate',
+          href: 'https://github.com/wookat/skillwarden',
         },
       ],
       customCss: ['./src/styles/global.css'],
@@ -28,7 +28,7 @@ export default defineConfig({
         Head: './src/components/Head.astro',
       },
       editLink: {
-        baseUrl: 'https://github.com/wookat/skillgate/edit/main/site/',
+        baseUrl: 'https://github.com/wookat/skillwarden/edit/main/site/',
       },
       sidebar: [
         {
@@ -42,10 +42,10 @@ export default defineConfig({
           label: 'CLI reference',
           items: [
             { label: 'Overview & exit codes', slug: 'docs/cli' },
-            { label: 'skillgate scan', slug: 'docs/cli/scan' },
-            { label: 'skillgate lock', slug: 'docs/cli/lock' },
-            { label: 'skillgate diff', slug: 'docs/cli/diff' },
-            { label: 'skillgate ci', slug: 'docs/cli/ci' },
+            { label: 'skillwarden scan', slug: 'docs/cli/scan' },
+            { label: 'skillwarden lock', slug: 'docs/cli/lock' },
+            { label: 'skillwarden diff', slug: 'docs/cli/diff' },
+            { label: 'skillwarden ci', slug: 'docs/cli/ci' },
           ],
         },
         {
@@ -63,7 +63,7 @@ export default defineConfig({
         {
           label: 'Specifications',
           items: [
-            { label: 'Lockfile (skillgate.lock)', slug: 'docs/lockfile' },
+            { label: 'Lockfile (skillwarden.lock)', slug: 'docs/lockfile' },
           ],
         },
         {

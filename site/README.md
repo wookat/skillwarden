@@ -1,18 +1,18 @@
-# SkillGate docs site
+# SkillWarden docs site
 
-Documentation website for [SkillGate](https://github.com/wookat/skillgate), built with
+Documentation website for [SkillWarden](https://github.com/wookat/skillwarden), built with
 [Astro](https://astro.build) + [Starlight](https://starlight.astro.build), following
 the same pattern as the [AgentGate site](https://github.com/wookat/agentgate).
 
 ## Develop
 
-From the repo root (the site is a pnpm workspace package, `@skillgate/site`):
+From the repo root (the site is a pnpm workspace package, `@skillwarden/site`):
 
 ```bash
 pnpm install
-pnpm --filter @skillgate/site dev       # dev server at localhost:4321
-pnpm --filter @skillgate/site build     # static build → site/dist
-pnpm --filter @skillgate/site preview   # preview the production build
+pnpm --filter @skillwarden/site dev       # dev server at localhost:4321
+pnpm --filter @skillwarden/site build     # static build → site/dist
+pnpm --filter @skillwarden/site preview   # preview the production build
 ```
 
 The site is excluded from the root `pnpm build` / `lint` / `typecheck` / `test`
@@ -23,7 +23,7 @@ pipeline and builds independently.
 | Setting | Value |
 |---|---|
 | Framework preset | Astro |
-| Build command | `pnpm install && pnpm --filter @skillgate/site build` |
+| Build command | `pnpm install && pnpm --filter @skillwarden/site build` |
 | Build output directory | `site/dist` |
 | Root directory | `/` (repo root — the site depends on the workspace) |
 | Node version | 22 (`NODE_VERSION=22` env var) |
@@ -31,12 +31,12 @@ pipeline and builds independently.
 Or deploy directly with Wrangler:
 
 ```bash
-pnpm --filter @skillgate/site build
-npx wrangler pages deploy site/dist --project-name skillgate
+pnpm --filter @skillwarden/site build
+npx wrangler pages deploy site/dist --project-name skillwarden
 ```
 
-Initial deployment target is `skillgate.pages.dev`; the custom domain
-`skillgate.zalize.com` (configured in `astro.config.mjs` as `site`) will be attached
+Initial deployment target is `skillwarden.pages.dev`; the custom domain
+`skillwarden.zalize.com` (configured in `astro.config.mjs` as `site`) will be attached
 later via Cloudflare Pages custom domains.
 
 ## Structure

@@ -1,5 +1,5 @@
 import { relative, resolve } from 'node:path';
-import { discoverSkills, loadSkillsFromPath, type Skill } from 'skill-gate-core';
+import { discoverSkills, loadSkillsFromPath, type Skill } from 'skillwarden-core';
 
 export const EXIT_OK = 0;
 export const EXIT_GATE_FAILURE = 1;

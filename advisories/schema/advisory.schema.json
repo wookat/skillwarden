@@ -1,15 +1,15 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/wookat/skillgate/main/advisories/schema/advisory.schema.json",
-  "title": "SkillGate Agent Skill Advisory",
-  "description": "Schema for entries in the SkillGate public Agent Skills advisory database (advisories/*.json).",
+  "$id": "https://raw.githubusercontent.com/wookat/skillwarden/main/advisories/schema/advisory.schema.json",
+  "title": "SkillWarden Agent Skill Advisory",
+  "description": "Schema for entries in the SkillWarden public Agent Skills advisory database (advisories/*.json).",
   "type": "object",
   "required": ["id", "title", "summary", "type", "severity", "skills", "references", "timeline"],
   "additionalProperties": false,
   "properties": {
     "id": {
       "type": "string",
-      "description": "SkillGate advisory ID.",
+      "description": "SkillWarden advisory ID.",
       "pattern": "^SKA-[0-9]{4}-[0-9]{4}$"
     },
     "title": { "type": "string", "minLength": 1 },
@@ -17,7 +17,7 @@
     "details": { "type": "string", "description": "Extended technical details (Markdown allowed)." },
     "type": {
       "type": "string",
-      "description": "Advisory category, aligned with SkillGate scan rule categories.",
+      "description": "Advisory category, aligned with SkillWarden scan rule categories.",
       "enum": [
         "prompt-injection",
         "hidden-unicode",
@@ -58,7 +58,7 @@
           },
           "digest": {
             "type": "string",
-            "description": "SkillGate aggregate SHA-256 digest of the malicious skill content, when captured.",
+            "description": "SkillWarden aggregate SHA-256 digest of the malicious skill content, when captured.",
             "pattern": "^[0-9a-f]{64}$"
           },
           "note": { "type": "string", "description": "Free-text note, e.g. 'removed from registry'." }

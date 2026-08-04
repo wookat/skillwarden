@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
 
-const gh = 'https://github.com/wookat/skillgate';
+const gh = 'https://github.com/wookat/skillwarden';
 
 const nav = [
   { href: '#features', label: 'Features' },
@@ -19,12 +19,12 @@ const features = [
   {
     cmd: 'lock',
     icon: '<rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
-    text: 'Pin every file of every approved skill (per-file SHA-256) into skillgate.lock. Rug-pulls can\u2019t hide.',
+    text: 'Pin every file of every approved skill (per-file SHA-256) into skillwarden.lock. Rug-pulls can\u2019t hide.',
   },
   {
     cmd: 'gate',
     icon: '<path d="M12 3l8 3v5c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-3z"/><path d="M9 12l2 2 4-4"/>',
-    text: 'skillgate ci fails on any drift from the approved baseline or findings at your severity threshold.',
+    text: 'skillwarden ci fails on any drift from the approved baseline or findings at your severity threshold.',
   },
   {
     cmd: 'advise',
@@ -63,24 +63,24 @@ const ruleCards = [
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>SkillGate — Scan, lock, and gate your Agent Skills</title>
+    <title>SkillWarden — Scan, lock, and gate your Agent Skills</title>
     <meta
       name="description"
       content="Open-source security gate for Agent Skills (SKILL.md): npm audit + lockfile + CI drift gate for the SKILL.md era."
     />
     <meta name="theme-color" content="#0b1120" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="canonical" href="https://skillgate.zalize.com/" />
+    <link rel="canonical" href="https://skillwarden.zalize.com/" />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://skillgate.zalize.com/" />
-    <meta property="og:site_name" content="SkillGate" />
-    <meta property="og:title" content="SkillGate — Scan, lock, and gate your Agent Skills" />
+    <meta property="og:url" content="https://skillwarden.zalize.com/" />
+    <meta property="og:site_name" content="SkillWarden" />
+    <meta property="og:title" content="SkillWarden — Scan, lock, and gate your Agent Skills" />
     <meta
       property="og:description"
       content="npm audit + lockfile + CI drift gate for the SKILL.md era. Public Agent Skills advisory database included."
     />
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="SkillGate — Scan, lock, and gate your Agent Skills" />
+    <meta name="twitter:title" content="SkillWarden — Scan, lock, and gate your Agent Skills" />
     <meta
       name="twitter:description"
       content="npm audit + lockfile + CI drift gate for the SKILL.md era. Public Agent Skills advisory database included."
@@ -140,7 +140,7 @@ const ruleCards = [
           <span class="flex h-8 w-8 items-center justify-center rounded-ag-sm bg-ag-accent/10 text-ag-accent">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v5c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-3z"></path><path d="M9.5 10.5L7.5 12l2 1.5"></path><path d="M14.5 10.5l2 1.5-2 1.5"></path></svg>
           </span>
-          <span class="text-lg font-semibold tracking-tight">SkillGate</span>
+          <span class="text-lg font-semibold tracking-tight">SkillWarden</span>
         </a>
         <nav class="hidden items-center gap-6 text-sm text-ag-muted md:flex">
           {nav.map((n) => (
@@ -194,7 +194,7 @@ const ruleCards = [
               </a>
             </div>
             <div class="mt-6 flex max-w-md items-center justify-between gap-3 rounded-ag-md border border-ag-border bg-ag-subtle px-4 py-3">
-              <code class="min-w-0 break-all font-mono text-sm text-ag-text">git clone https://github.com/wookat/skillgate</code>
+              <code class="min-w-0 break-all font-mono text-sm text-ag-text">git clone https://github.com/wookat/skillwarden</code>
               <button id="copyInstall" aria-label="Copy install command" class="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-ag-sm text-ag-muted transition-colors duration-150 hover:text-ag-accent">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
               </button>
@@ -206,19 +206,19 @@ const ruleCards = [
                 <span class="h-3 w-3 rounded-full bg-ag-danger/70"></span>
                 <span class="h-3 w-3 rounded-full bg-ag-warn/70"></span>
                 <span class="h-3 w-3 rounded-full bg-ag-ok/70"></span>
-                <span class="ml-2 font-mono text-xs text-ag-muted">skillgate ci</span>
+                <span class="ml-2 font-mono text-xs text-ag-muted">skillwarden ci</span>
               </div>
               <div class="overflow-x-auto p-4 font-mono text-xs leading-6 sm:text-sm">
-                <pre class="whitespace-pre text-ag-muted"><span class="text-ag-accent">$</span> skillgate ci --fail-on high
+                <pre class="whitespace-pre text-ag-muted"><span class="text-ag-accent">$</span> skillwarden ci --fail-on high
 
 <span class="text-ag-ok">✔ changelog-writer</span>       3 files · matches lock
 <span class="text-ag-ok">✔ code-reviewer</span>          5 files · matches lock
 <span class="text-ag-warn">⚠ web-helper</span>            hidden-unicode: zero-width chars in SKILL.md
 <span class="text-ag-danger">✖ deploy-buddy</span>          prompt-injection: "ignore previous instructions"
-<span class="text-ag-danger">✖ notes-skill</span>           content drift from skillgate.lock
+<span class="text-ag-danger">✖ notes-skill</span>           content drift from skillwarden.lock
 
 <span class="text-ag-text">2 gate failures · 1 warning · exit code 1</span>
-<span class="text-ag-muted">Gate closed. Review drift with `skillgate diff`.</span></pre>
+<span class="text-ag-muted">Gate closed. Review drift with `skillwarden diff`.</span></pre>
               </div>
             </div>
           </div>
@@ -257,7 +257,7 @@ const ruleCards = [
             </li>
             <li class="flex gap-4">
               <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-ag-accent/10 font-mono text-sm font-semibold text-ag-accent">2</span>
-              <div><h3 class="text-lg font-semibold">Scan &amp; lock</h3><p class="mt-1 text-ag-muted">Audit every skill offline, then pin every file's SHA-256 into <code class="font-mono text-sm">skillgate.lock</code>.</p></div>
+              <div><h3 class="text-lg font-semibold">Scan &amp; lock</h3><p class="mt-1 text-ag-muted">Audit every skill offline, then pin every file's SHA-256 into <code class="font-mono text-sm">skillwarden.lock</code>.</p></div>
             </li>
             <li class="flex gap-4">
               <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-ag-accent/10 font-mono text-sm font-semibold text-ag-accent">3</span>
@@ -273,15 +273,15 @@ const ruleCards = [
             </div>
             <div class="overflow-x-auto p-4 font-mono text-xs leading-6 sm:text-sm">
               <pre class="whitespace-pre text-ag-muted"><span class="text-ag-muted"># 1. install</span>
-<span class="text-ag-accent">$</span> git clone https://github.com/wookat/skillgate
-<span class="text-ag-accent">$</span> cd skillgate &amp;&amp; pnpm install &amp;&amp; pnpm build
+<span class="text-ag-accent">$</span> git clone https://github.com/wookat/skillwarden
+<span class="text-ag-accent">$</span> cd skillwarden &amp;&amp; pnpm install &amp;&amp; pnpm build
 
 <span class="text-ag-muted"># 2. scan and lock</span>
-<span class="text-ag-accent">$</span> skillgate scan
-<span class="text-ag-accent">$</span> skillgate lock
+<span class="text-ag-accent">$</span> skillwarden scan
+<span class="text-ag-accent">$</span> skillwarden lock
 
 <span class="text-ag-muted"># 3. gate in CI</span>
-<span class="text-ag-accent">$</span> skillgate ci --fail-on high</pre>
+<span class="text-ag-accent">$</span> skillwarden ci --fail-on high</pre>
             </div>
           </div>
         </div>
@@ -322,7 +322,7 @@ const ruleCards = [
               <span class="flex h-8 w-8 items-center justify-center rounded-ag-sm bg-ag-accent/10 text-ag-accent">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v5c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-3z"></path><path d="M9.5 10.5L7.5 12l2 1.5"></path><path d="M14.5 10.5l2 1.5-2 1.5"></path></svg>
               </span>
-              <span class="text-lg font-semibold tracking-tight">SkillGate</span>
+              <span class="text-lg font-semibold tracking-tight">SkillWarden</span>
             </div>
             <p class="mt-3 text-sm leading-6 text-ag-muted">Open-source security gate for Agent Skills (<code class="font-mono">SKILL.md</code>). Apache-2.0.</p>
           </div>
@@ -344,7 +344,7 @@ const ruleCards = [
             </ul>
           </div>
         </div>
-        <p class="mt-10 border-t border-ag-border pt-6 text-sm text-ag-muted">© 2026 SkillGate. Built for the Agent Skills ecosystem.</p>
+        <p class="mt-10 border-t border-ag-border pt-6 text-sm text-ag-muted">© 2026 SkillWarden. Built for the Agent Skills ecosystem.</p>
       </div>
     </footer>
 
@@ -364,7 +364,7 @@ const ruleCards = [
         menuBtn.setAttribute('aria-expanded', String(!nav.classList.contains('hidden')));
       });
       document.getElementById('copyInstall')?.addEventListener('click', () => {
-        navigator.clipboard.writeText('git clone https://github.com/wookat/skillgate');
+        navigator.clipboard.writeText('git clone https://github.com/wookat/skillwarden');
       });
     </script>
   </body>

@@ -12,7 +12,7 @@ Only the latest published release line receives security fixes.
 
 Please report vulnerabilities privately — do **not** open a public issue.
 
-- Preferred: [GitHub private vulnerability reporting](https://github.com/wookat/skillgate/security/advisories/new)
+- Preferred: [GitHub private vulnerability reporting](https://github.com/wookat/skillwarden/security/advisories/new)
 - We aim to acknowledge reports within **48 hours** and provide a fix or
   mitigation plan within **7 days** for high/critical issues.
 
@@ -22,7 +22,7 @@ otherwise.
 
 ## Scope
 
-- `skill-gate` (CLI) and `skill-gate-core` npm packages
+- `skillwarden` (CLI) and `skillwarden-core` npm packages
 - The GitHub Action in `packages/action` and the workflows in this repository
 
 False negatives in the scanning rules (a threat we should detect but do not)
@@ -35,4 +35,4 @@ defeat the lockfile drift gate are treated as vulnerabilities.
 - Dependencies are locked via `pnpm-lock.yaml` and installed with
   `--frozen-lockfile` in CI.
 - Releases are published from CI with npm provenance.
-- SkillGate scans its own example skills in CI (`dogfood` steps).
+- SkillWarden scans its own example skills in CI (`dogfood` steps).

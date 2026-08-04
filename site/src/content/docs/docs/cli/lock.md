@@ -1,13 +1,13 @@
 ---
-title: skillgate lock
-description: Pin every file of every approved skill (per-file SHA-256) into skillgate.lock.
+title: skillwarden lock
+description: Pin every file of every approved skill (per-file SHA-256) into skillwarden.lock.
 ---
 
 ```bash
-skillgate lock [paths...]
+skillwarden lock [paths...]
 ```
 
-Writes `skillgate.lock` ([spec](/docs/lockfile/)) recording every file of every
+Writes `skillwarden.lock` ([spec](/docs/lockfile/)) recording every file of every
 resolved skill with its SHA-256 plus an aggregate digest per skill. A skill that
 changes upstream after you approved it — the classic registry rug-pull — turns CI red
 with a per-file diff instead of silently reprogramming your agent.
@@ -16,7 +16,7 @@ with a per-file diff instead of silently reprogramming your agent.
 
 | Flag | Default | Description |
 |---|---|---|
-| `-o, --output <file>` | `skillgate.lock` | Override the lockfile path |
+| `-o, --output <file>` | `skillwarden.lock` | Override the lockfile path |
 
 ## Behavior
 
@@ -29,6 +29,6 @@ with a per-file diff instead of silently reprogramming your agent.
 ## Example
 
 ```bash
-skillgate lock                 # write skillgate.lock in the working directory
-skillgate diff                 # verify: exit 0, no drift
+skillwarden lock                 # write skillwarden.lock in the working directory
+skillwarden diff                 # verify: exit 0, no drift
 ```

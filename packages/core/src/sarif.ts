@@ -17,8 +17,8 @@ export function toSarif(results: SkillScanResult[], version: string): object {
       {
         tool: {
           driver: {
-            name: 'skillgate',
-            informationUri: 'https://github.com/wookat/skillgate',
+            name: 'skillwarden',
+            informationUri: 'https://github.com/wookat/skillwarden',
             version,
             rules: ALL_RULES.map((rule) => ({
               id: rule.id,

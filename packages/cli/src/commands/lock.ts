@@ -1,6 +1,6 @@
 import { resolve } from 'node:path';
 import pc from 'picocolors';
-import { buildLockfile, LOCKFILE_NAME, writeLockfile } from 'skill-gate-core';
+import { buildLockfile, LOCKFILE_NAME, writeLockfile } from 'skillwarden-core';
 import { EXIT_OK, EXIT_USAGE_ERROR, resolveSkills } from '../context.js';
 
 export interface LockCommandOptions {

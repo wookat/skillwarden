@@ -20,7 +20,7 @@ execution patterns.
 
 ## Example finding
 
-From `skillgate scan examples/skills/malicious-skill --format json`:
+From `skillwarden scan examples/skills/malicious-skill --format json`:
 
 ```json
 {
@@ -40,4 +40,4 @@ From `skillgate scan examples/skills/malicious-skill --format json`:
 - Replace dynamic command construction with fixed argument lists (`execFile`-style
   invocation, `subprocess.run([...])` without `shell=True`).
 - Inline any downloaded step as reviewable, version-pinned code so
-  [`skillgate lock`](/docs/cli/lock/) can pin it.
+  [`skillwarden lock`](/docs/cli/lock/) can pin it.

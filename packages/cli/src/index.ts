@@ -10,7 +10,7 @@ import { VERSION } from './version.js';
 const program = new Command();
 
 program
-  .name('skillgate')
+  .name('skillwarden')
   .description('Scan, lock, and gate your Agent Skills (SKILL.md)')
   .version(VERSION);
 
@@ -27,18 +27,18 @@ program
 
 program
   .command('lock')
-  .description('Pin the current content of all skills (per-file SHA-256) into skillgate.lock')
+  .description('Pin the current content of all skills (per-file SHA-256) into skillwarden.lock')
   .argument('[paths...]', 'skill directories or parent directories (default: auto-discover)')
-  .option('-o, --output <file>', 'lockfile path (default: skillgate.lock)')
+  .option('-o, --output <file>', 'lockfile path (default: skillwarden.lock)')
   .action((paths: string[], options) => {
     process.exitCode = runLock(paths, options, process.cwd());
   });
 
 program
   .command('diff')
-  .description('Compare current skill content against skillgate.lock; exit 1 on drift')
+  .description('Compare current skill content against skillwarden.lock; exit 1 on drift')
   .argument('[paths...]', 'skill directories or parent directories (default: auto-discover)')
-  .option('--lockfile <file>', 'lockfile path (default: skillgate.lock)')
+  .option('--lockfile <file>', 'lockfile path (default: skillwarden.lock)')
   .action((paths: string[], options) => {
     process.exitCode = runDiff(paths, options, process.cwd());
   });
@@ -47,7 +47,7 @@ program
   .command('ci')
   .description('CI gate: fail on lockfile drift OR findings at/above --fail-on severity')
   .argument('[paths...]', 'skill directories or parent directories (default: auto-discover)')
-  .option('--lockfile <file>', 'lockfile path (default: skillgate.lock)')
+  .option('--lockfile <file>', 'lockfile path (default: skillwarden.lock)')
   .option('--fail-on <severity>', 'severity threshold (low|medium|high|critical)', 'high')
   .action((paths: string[], options) => {
     process.exitCode = runCi(paths, options, process.cwd());

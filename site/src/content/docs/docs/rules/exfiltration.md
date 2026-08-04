@@ -21,7 +21,7 @@ designed to receive stolen data.
 
 ## Example finding
 
-From `skillgate scan examples/skills/malicious-skill --format json`:
+From `skillwarden scan examples/skills/malicious-skill --format json`:
 
 ```json
 {

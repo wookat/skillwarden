@@ -1,9 +1,9 @@
 ---
 title: CLI reference
-description: The committed interface for the skillgate command — exit codes, skill resolution, and subcommands.
+description: The committed interface for the skillwarden command — exit codes, skill resolution, and subcommands.
 ---
 
-The committed interface for the `skillgate` command (npm package `skill-gate`).
+The committed interface for the `skillwarden` command (npm package `skillwarden`).
 Scripts and CI configs may rely on everything documented here; changes are
 semver-major.
 
@@ -27,10 +27,10 @@ directories under the current working directory are discovered: `.claude/skills`
 
 | Command | Purpose |
 |---|---|
-| [`skillgate scan`](/docs/cli/scan/) | Deterministic, offline security analysis of skills |
-| [`skillgate lock`](/docs/cli/lock/) | Pin approved skill content into `skillgate.lock` |
-| [`skillgate diff`](/docs/cli/diff/) | Human-readable drift report against the lockfile |
-| [`skillgate ci`](/docs/cli/ci/) | Drift gate + scan gate in one command for CI |
+| [`skillwarden scan`](/docs/cli/scan/) | Deterministic, offline security analysis of skills |
+| [`skillwarden lock`](/docs/cli/lock/) | Pin approved skill content into `skillwarden.lock` |
+| [`skillwarden diff`](/docs/cli/diff/) | Human-readable drift report against the lockfile |
+| [`skillwarden ci`](/docs/cli/ci/) | Drift gate + scan gate in one command for CI |
 
 ## Guarantees
 

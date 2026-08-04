@@ -1,10 +1,10 @@
 ---
-title: skillgate scan
+title: skillwarden scan
 description: Deterministic, offline security analysis of Agent Skills, with table, JSON, and SARIF output.
 ---
 
 ```bash
-skillgate scan [paths...]
+skillwarden scan [paths...]
 ```
 
 Runs the [six scan rules](/docs/rules/) against every resolved skill. With no paths,
@@ -25,16 +25,16 @@ well-known skill directories are [auto-discovered](/docs/cli/#skill-resolution-p
 **SARIF**: SARIF 2.1.0, suitable for GitHub code scanning upload:
 
 ```bash
-skillgate scan --format sarif -o report.sarif
+skillwarden scan --format sarif -o report.sarif
 ```
 
 ## Examples
 
 ```bash
-skillgate scan                          # auto-discover, terminal table
-skillgate scan path/to/skill            # a single skill (dir or SKILL.md)
-skillgate scan --format json            # machine-readable report
-skillgate scan --fail-on medium         # stricter gate
+skillwarden scan                          # auto-discover, terminal table
+skillwarden scan path/to/skill            # a single skill (dir or SKILL.md)
+skillwarden scan --format json            # machine-readable report
+skillwarden scan --fail-on medium         # stricter gate
 ```
 
 Exit `0` when clean, `1` when findings at/above `--fail-on` exist, `2` on usage or

@@ -1,15 +1,15 @@
 {
-  "name": "skill-gate-core",
+  "name": "skillwarden-core",
   "version": "0.2.0",
-  "description": "SkillGate core engine: Agent Skills (SKILL.md) security scanning rules, lockfile spec, skill directory discovery",
+  "description": "SkillWarden core engine: Agent Skills (SKILL.md) security scanning rules, lockfile spec, skill directory discovery",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wookat/skillgate.git",
+    "url": "git+https://github.com/wookat/skillwarden.git",
     "directory": "packages/core"
   },
-  "homepage": "https://github.com/wookat/skillgate",
-  "bugs": "https://github.com/wookat/skillgate/issues",
+  "homepage": "https://github.com/wookat/skillwarden",
+  "bugs": "https://github.com/wookat/skillwarden/issues",
   "keywords": [
     "agent-skills",
     "skill-md",

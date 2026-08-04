@@ -1,4 +1,4 @@
-# SkillGate Advisory Database
+# SkillWarden Advisory Database
 
 A public, structured database of security advisories for Agent Skills (`SKILL.md`) —
 malicious skills, prompt-injection payloads, hidden-Unicode smuggling, credential
@@ -6,7 +6,7 @@ theft, and supply-chain incidents across skill registries.
 
 - Format: one JSON file per advisory, `SKA-YYYY-NNNN.json`, validated against
   [`schema/advisory.schema.json`](schema/advisory.schema.json) in CI.
-- Categories mirror SkillGate's scan rule IDs so advisories can be cross-checked at
+- Categories mirror SkillWarden's scan rule IDs so advisories can be cross-checked at
   scan time.
 - Sister database: [AgentGate MCP advisories](https://github.com/wookat/agentgate/tree/main/advisories).
 
@@ -20,7 +20,7 @@ theft, and supply-chain incidents across skill registries.
 3. Open a PR. Schema validation runs automatically.
 
 Pattern-level analysis that cannot be tied to a named skill lives in
-[docs/THREAT-MODEL.md](../docs/THREAT-MODEL.md), which also documents what SkillGate's
+[docs/THREAT-MODEL.md](../docs/THREAT-MODEL.md), which also documents what SkillWarden's
 rules do *not* catch.
 
 ## Index

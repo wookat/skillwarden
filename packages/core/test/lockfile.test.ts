@@ -14,14 +14,14 @@ describe('lockfile', () => {
     expect(lock.version).toBe(1);
     expect(lock.skills[0]!.files.map((f) => f.path)).toEqual(['SKILL.md', 'scripts/run.sh']);
 
-    const path = join(mkdtempSync(join(tmpdir(), 'skillgate-lock-')), 'skillgate.lock');
+    const path = join(mkdtempSync(join(tmpdir(), 'skillwarden-lock-')), 'skillwarden.lock');
     writeLockfile(path, lock);
     const read = readLockfile(path);
     expect(read.skills[0]!.digest).toBe(lock.skills[0]!.digest);
   });
 
   it('rejects unsupported versions', () => {
-    const path = join(mkdtempSync(join(tmpdir(), 'skillgate-lock-')), 'skillgate.lock');
+    const path = join(mkdtempSync(join(tmpdir(), 'skillwarden-lock-')), 'skillwarden.lock');
     writeFileSync(path, JSON.stringify({ version: 99, skills: [] }), 'utf8');
     expect(() => readLockfile(path)).toThrow(/Unsupported/);
   });

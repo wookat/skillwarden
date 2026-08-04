@@ -1,9 +1,9 @@
 ---
 title: Rule reference
-description: The six SkillGate scan rules — what each detects, why it matters, and example findings.
+description: The six SkillWarden scan rules — what each detects, why it matters, and example findings.
 ---
 
-`skillgate scan` runs six deterministic rule categories, aligned with real-world
+`skillwarden scan` runs six deterministic rule categories, aligned with real-world
 skills-ecosystem threats. Every rule works offline, never executes skill content, and
 produces reproducible results.
 
@@ -17,7 +17,7 @@ produces reproducible results.
 | [`dangerous-scripts`](/docs/rules/dangerous-scripts/) | eval/exec of decoded payloads, download-then-execute chains, large base64/hex blobs, command injection in bundled scripts |
 
 Severities: `critical` > `high` > `medium` > `low`. Gate on them with
-`skillgate scan --fail-on <severity>` or [`skillgate ci`](/docs/cli/ci/) (default
+`skillwarden scan --fail-on <severity>` or [`skillwarden ci`](/docs/cli/ci/) (default
 threshold: `high`).
 
 Every finding carries `ruleId`, `severity`, `message`, `file`, and usually `line` and
