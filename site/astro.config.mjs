@@ -36,6 +36,7 @@ export default defineConfig({
           items: [
             { label: 'Introduction', slug: 'docs/introduction' },
             { label: 'Getting started', slug: 'docs/getting-started' },
+            { label: 'FAQ', slug: 'docs/faq' },
           ],
         },
         {
@@ -70,6 +71,7 @@ export default defineConfig({
           label: 'CI integration',
           items: [
             { label: 'GitHub Action', slug: 'docs/github-action' },
+            { label: 'CI recipes', slug: 'docs/ci-recipes' },
           ],
         },
         {
