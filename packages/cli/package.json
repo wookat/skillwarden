@@ -1,6 +1,6 @@
 {
   "name": "skill-gate",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Scan, lock, and gate your Agent Skills (SKILL.md) — npm audit + lockfile + CI drift gate for the agent skills era",
   "license": "Apache-2.0",
   "repository": {
@@ -10,7 +10,16 @@
   },
   "homepage": "https://github.com/wookat/skillgate",
   "bugs": "https://github.com/wookat/skillgate/issues",
-  "keywords": ["agent-skills", "skill-md", "security", "supply-chain", "lockfile", "scanner", "cli", "prompt-injection"],
+  "keywords": [
+    "agent-skills",
+    "skill-md",
+    "security",
+    "supply-chain",
+    "lockfile",
+    "scanner",
+    "cli",
+    "prompt-injection"
+  ],
   "publishConfig": {
     "access": "public"
   },

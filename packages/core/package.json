@@ -1,6 +1,6 @@
 {
   "name": "skill-gate-core",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "SkillGate core engine: Agent Skills (SKILL.md) security scanning rules, lockfile spec, skill directory discovery",
   "license": "Apache-2.0",
   "repository": {
@@ -10,7 +10,15 @@
   },
   "homepage": "https://github.com/wookat/skillgate",
   "bugs": "https://github.com/wookat/skillgate/issues",
-  "keywords": ["agent-skills", "skill-md", "security", "supply-chain", "lockfile", "scanner", "prompt-injection"],
+  "keywords": [
+    "agent-skills",
+    "skill-md",
+    "security",
+    "supply-chain",
+    "lockfile",
+    "scanner",
+    "prompt-injection"
+  ],
   "publishConfig": {
     "access": "public"
   },
