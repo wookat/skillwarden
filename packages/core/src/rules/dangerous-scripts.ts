@@ -1,4 +1,5 @@
 import type { Finding, Rule, Skill } from '../types.js';
+import { MAX_FILE_BYTES } from '../discovery.js';
 import { isScriptFile, matchPatterns, type PatternSpec } from './rule.js';
 
 /**
@@ -18,9 +19,24 @@ const SPECS: PatternSpec[] = [
     message: 'Shell eval of a decoded or downloaded payload',
   },
   {
-    pattern: /\bexec\s*\(\s*(compile|base64|__import__|bytes\.fromhex)/i,
+    pattern: /\bexec\s*\(\s*(compile|base64|codecs\.decode|marshal\.loads|zlib\.decompress|__import__|bytes\.fromhex|gzip\.decompress)/i,
     severity: 'critical',
     message: 'Python exec() of dynamic payload',
+  },
+  {
+    pattern: /\b(?:const|let|var)\s+(\w+)\s*=\s*(?:global(?:This)?\.)?eval\b|\[\s*["']eval["']\s*\]\s*\(|\bglobal(?:This)?\s*\[\s*["']eval["']\s*\]/,
+    severity: 'high',
+    message: 'Indirect eval reference — obfuscated dynamic execution',
+  },
+  {
+    pattern: /\bnew\s+Function\s*\(\s*(atob|Buffer\.from|decodeURIComponent|\w+\s*\.\s*toString\s*\()/,
+    severity: 'critical',
+    message: 'Function constructor over a decoded payload — obfuscated code execution',
+  },
+  {
+    pattern: /getattr\s*\(\s*__import__\s*\(|__import__\s*\(\s*["'](os|subprocess|socket|ctypes)["']\s*\)/,
+    severity: 'high',
+    message: 'Dynamic module/attribute lookup used to hide a dangerous call',
   },
   {
     pattern: /(new\s+Function|child_process|execSync|spawnSync?)\s*\([^\n)]*\+/,
@@ -56,12 +72,45 @@ const SPECS: PatternSpec[] = [
 
 export const dangerousScriptsRule: Rule = {
   id: 'dangerous-scripts',
-  description: 'Detects dynamic execution, obfuscation, and download-execute chains in bundled scripts',
+  description: 'Detects dynamic execution, obfuscation, download-execute chains, and unreviewable payloads in bundled files',
   check(skill: Skill): Finding[] {
     const findings: Finding[] = [];
+    const binaries: string[] = [];
     for (const file of skill.files) {
-      if (!isScriptFile(file.path)) continue;
+      // Content that no rule can read is worth surfacing: it ships with the skill
+      // and is pinned by the lockfile, but its behaviour cannot be reviewed.
+      if (file.binary) {
+        // The manifest is the part the agent always reads; if the scanner cannot
+        // decode it (UTF-16, embedded NULs), nothing in it has been reviewed.
+        if (file.path.toLowerCase() === 'skill.md') {
+          findings.push({
+            ruleId: 'dangerous-scripts',
+            severity: 'high',
+            message: 'SKILL.md is not decodable UTF-8 text — its instructions were not reviewed by any rule',
+            file: file.path,
+          });
+        } else {
+          binaries.push(file.path);
+        }
+      } else if (file.truncated) {
+        findings.push({
+          ruleId: 'dangerous-scripts',
+          severity: 'medium',
+          message: `File exceeds the ${MAX_FILE_BYTES} byte scan cap (${file.size} bytes) — only its head was analysed`,
+          file: file.path,
+        });
+      }
+      if (!isScriptFile(file.path) || !file.content) continue;
       findings.push(...matchPatterns('dangerous-scripts', file, SPECS));
+    }
+    if (binaries.length > 0) {
+      const shown = binaries.slice(0, 3).join(', ');
+      findings.push({
+        ruleId: 'dangerous-scripts',
+        severity: 'low',
+        message: `${binaries.length} non-text file${binaries.length === 1 ? '' : 's'} bundled in skill — pinned by the lockfile but not reviewable by scanning (${shown}${binaries.length > 3 ? ', …' : ''})`,
+        file: binaries[0]!,
+      });
     }
     return findings;
   },

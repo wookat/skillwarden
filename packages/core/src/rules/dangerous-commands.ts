@@ -7,7 +7,12 @@ import { matchPatterns, type PatternSpec } from './rule.js';
  */
 const SPECS: PatternSpec[] = [
   {
-    pattern: /rm\s+(-[a-z]*r[a-z]*f|-[a-z]*f[a-z]*r)[a-z]*\s+(\/|~|\$HOME)(?![\w./-])/i,
+    // Flag forms: -rf / -fr / -r -f / --recursive --force. Targets: `/`, `/*`, a
+    // system top-level directory, `~`, `~/`, `$HOME`, `${HOME}`, `$USERPROFILE`,
+    // optionally quoted. Scoped deletions (`rm -rf ./dist`, `rm -rf $HOME/.cache`)
+    // deliberately do not match.
+    pattern:
+      /\brm\s+(?:(?:-[a-z]*(?:r[a-z]*f|f[a-z]*r)[a-z]*|-[a-z]*[rf][a-z]*\s+-[a-z]*[rf][a-z]*|--recursive\s+--force|--force\s+--recursive)\s+)+["']?(?:\/(?:\*|(?:bin|boot|dev|etc|home|lib|opt|private|root|srv|sys|usr|var|Users|Library)\b|(?![\w.\-/]))|(?:~|\$\{?HOME\}?|\$USERPROFILE)\/?(?:\*|(?![\w.\-/])))/i,
     severity: 'critical',
     message: 'Recursive force-delete of a root or home path',
   },
@@ -22,7 +27,28 @@ const SPECS: PatternSpec[] = [
     message: 'Pipe-to-interpreter of remote content — unauditable remote code execution',
   },
   {
-    pattern: /base64\s+(-d|--decode)[^|;\n]*\|\s*(ba|z|da)?sh\b/i,
+    pattern: /\b(sh|bash|zsh|ksh|python3?|ruby|perl|node)\s+(-[a-z]+\s+)*(-c\s*)?["']?\$\(\s*(curl|wget)\b/i,
+    severity: 'critical',
+    message: 'Command substitution of remote content into a shell/interpreter — unauditable RCE',
+  },
+  {
+    pattern: /\b(ba|z|k)?sh\s+(-[a-z]+\s+)*<\(\s*(curl|wget)\b/i,
+    severity: 'critical',
+    message: 'Process substitution of remote content into a shell — unauditable RCE',
+  },
+  {
+    pattern: /\beval\s+["']?\$\(\s*(curl|wget)\b/i,
+    severity: 'critical',
+    message: 'eval of downloaded content — unauditable remote code execution',
+  },
+  {
+    pattern:
+      /(python3?|node|ruby|perl)\s+-(c|e)\s+["'][^\n]{0,200}?(urlopen|urllib|requests\.get|http\.get|fetch\(|Net::HTTP)[^\n]{0,200}?(exec|eval|system|popen|Function)/i,
+    severity: 'critical',
+    message: 'Inline interpreter one-liner that downloads and executes code',
+  },
+  {
+    pattern: /base64\s+(-d|-D|--decode)[^|;\n]*\|\s*(ba|z|da)?sh\b/i,
     severity: 'critical',
     message: 'Decoding base64 into a shell — obfuscated command execution',
   },
@@ -37,9 +63,9 @@ const SPECS: PatternSpec[] = [
     message: 'World-writable permissions (chmod 777)',
   },
   {
-    pattern: /\bsudo\s+(?!-h\b)/,
+    pattern: /\b(sudo|doas)\s+(?!-h\b)/,
     severity: 'medium',
-    message: 'Privilege escalation via sudo inside a skill',
+    message: 'Privilege escalation via sudo/doas inside a skill',
   },
   {
     pattern: /(history\s+-c|shred\s+|unset\s+HISTFILE|>\s*~\/\.(bash|zsh)_history)/i,
@@ -57,9 +83,36 @@ const SPECS: PatternSpec[] = [
     message: 'Reverse-shell pattern',
   },
   {
+    pattern:
+      /socket\s*\(\s*\)[^\n]{0,80}connect\s*\(|dup2\s*\(\s*s(ock)?\.fileno\s*\(\s*\)\s*,\s*[012]\s*\)|pty\.spawn\s*\(\s*["']\/bin\/(ba)?sh/i,
+    severity: 'critical',
+    message: 'Reverse-shell pattern (socket + shell/stdio redirection)',
+  },
+  {
     pattern: /crontab\s+-|\/etc\/cron|systemctl\s+enable/i,
     severity: 'medium',
     message: 'Persistence mechanism (cron / systemd) installed by a skill',
+  },
+  {
+    pattern: /Library\/Launch(Agents|Daemons)\b|launchctl\s+(load|bootstrap)\b/,
+    severity: 'high',
+    message: 'Persistence mechanism (macOS launch agent) installed by a skill',
+  },
+  {
+    pattern: /(>>?\s*"?(~|\$HOME)\/\.(bash_profile|bashrc|zshrc|zprofile|profile)\b|\bcat\s*>>?\s*"?(~|\$HOME)\/\.(bashrc|zshrc|bash_profile|zprofile|profile)\b)/i,
+    severity: 'high',
+    message: 'Shell startup file modified — persistence across sessions',
+  },
+  {
+    pattern:
+      /git\s+config\s+(--\w+\s+)*core\.hooksPath|\b(cp|mv|install|ln|echo|printf|cat|tee|chmod|curl|wget)\b[^\n]{0,100}\.git\/hooks\/|\.git\/hooks\/[\w-]+[^\n]{0,40}(<<|>>?|&&|\|)/i,
+    severity: 'high',
+    message: 'Git hook installation — code execution on future git operations',
+  },
+  {
+    pattern: /"(pre|post)(install|pack|publish)"\s*:\s*"[^"\n]*(curl|wget|base64|eval|node\s+-e|python)/i,
+    severity: 'high',
+    message: 'Package lifecycle script wired to run downloaded or dynamic code',
   },
 ];
 

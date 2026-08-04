@@ -22,9 +22,26 @@ export interface Finding {
 export interface SkillFile {
   /** Path relative to the skill directory, POSIX separators. */
   path: string;
-  /** UTF-8 content. Binary files are not loaded as SkillFile. */
+  /**
+   * Text content available to the rules. Empty for binary files and truncated
+   * to the scan cap for oversized files — `sha256` always covers the full bytes.
+   */
   content: string;
   size: number;
+  /** SHA-256 (hex) of the file's raw bytes. */
+  sha256: string;
+  /** File is not decodable text; `content` is empty. */
+  binary?: boolean;
+  /** File exceeds the scan cap; `content` holds only the leading bytes. */
+  truncated?: boolean;
+  /** File is nominally text but contains bytes that are not valid UTF-8. */
+  invalidUtf8?: boolean;
+  /** File is a symlink; target is resolved relative to the skill directory. */
+  symlink?: boolean;
+  /** Symlink target resolves outside the skill directory. */
+  escapesSkillDir?: boolean;
+  /** Resolved symlink target, when the link escapes the skill directory. */
+  linkTarget?: string;
 }
 
 export interface SkillFrontmatter {
