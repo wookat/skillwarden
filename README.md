@@ -108,6 +108,14 @@ every file of every skill with its SHA-256 plus an aggregate digest per skill. A
 that changes upstream after you approved it — the classic registry rug-pull — turns CI
 red with a per-file diff instead of silently reprogramming your agent.
 
+## Threat model
+
+Why skills are a distinct supply-chain problem, the attack chains observed in the wild
+(ClawHavoc, ToxicSkills, the `openclaw-core` prerequisite trap), how they map onto the six
+rule categories above, and — explicitly — the residual risks the rules do *not* cover:
+[docs/THREAT-MODEL.md](docs/THREAT-MODEL.md). Confirmed incidents with named skills are in
+the [advisory database](advisories/).
+
 ## How it compares
 
 The quality linters (skill-tools, skill-check, skillmds) validate structure and score

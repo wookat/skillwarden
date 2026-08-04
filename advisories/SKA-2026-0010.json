@@ -1,0 +1,20 @@
+{
+  "id": "SKA-2026-0010",
+  "title": "moonshine-100rze/moltbook-lm8 listed as a confirmed malicious skill still installable on ClawHub",
+  "summary": "Snyk's technical report enumerates eight of its 76 manually confirmed malicious skills that were still publicly available and installable on clawhub.ai on the report's publication date; `moonshine-100rze/moltbook-lm8` is one of them. The report deliberately withholds the payload details for skills that were still live at publication time, so this entry records the identity and the confirmation only. Treat the skill as malicious and do not install it.",
+  "details": "**What is substantiated:** Snyk manually reviewed and confirmed the skill as malicious, and published its clawhub.ai URL in the \"Live Threats: Malicious Skills Still Available\" section (Section 4.2) of the report. The other seven entries in that list are covered by SKA-2026-0002 (Aslaep123 `polymarket-traiding-bot`, `base-agent`, `bybit-agent`), SKA-2026-0003 (zaycv `clawhud`, `clawhub1`) and SKA-2026-0007 (pepe276 `moltbookagent`, `publish-dist`).\n\n**What is not substantiated:** the specific technique used by this skill. Snyk states it omits details for some examples \"since some examples are still active and/or contain sensitive information\". SkillGate has not obtained the skill package, so no payload, IOC or severity refinement is asserted beyond the reporters' \"highly malicious\" classification. The severity below reflects the report's classification, not independent analysis.\n\nVerified 2026-08-04.",
+  "type": "malicious-skill",
+  "severity": "critical",
+  "skills": [
+    { "name": "moltbook-lm8", "source": "https://clawhub.ai/moonshine-100rze/moltbook-lm8", "note": "confirmed malicious by Snyk; still installable as of 2026-02-05. Payload details withheld by the reporters." }
+  ],
+  "references": [
+    { "type": "report", "url": "https://arxiv.org/abs/2605.28588" },
+    { "type": "report", "url": "https://snyk.io/blog/toxicskills-malicious-ai-agent-skills-clawhub/" }
+  ],
+  "timeline": {
+    "discovered": "2026-02-03",
+    "published": "2026-02-05"
+  },
+  "credits": ["Snyk Security Labs"]
+}

@@ -1,0 +1,29 @@
+{
+  "id": "SKA-2026-0008",
+  "title": "First-wave ClawHub malware skills by jordanprater, danman60, gpaitai and lvy19811120-gif (openclawcli.zip / ClawdAuthenticatorTool.zip lures)",
+  "summary": "Alongside the Aslaep123 and zaycv clusters, OpenSourceMalware's audit of ClawHub identified further named skills from four other accounts published between 2026-01-27 and 2026-02-02 that use the same social-engineering pattern: legitimate-looking documentation for YouTube, X/Twitter, Yahoo Finance, proxy-scraping and Polymarket utilities, plus a mandatory \"authentication tool\" the victim must download (`openclawcli.zip`, `ClawdAuthenticatorTool.zip`) or a base64-into-bash command. All of them route to the same command-and-control infrastructure at 91.92.242.30 and steal exchange API keys, wallet private keys, SSH credentials and browser passwords.",
+  "details": "**Per-skill technique, as tabulated by OpenSourceMalware:**\n\n| Author | Skill | Payload delivery |\n|---|---|---|\n| jordanprater | `twittertrends`, `xtrends`, `yahoofinance`, `youtube-summarize`, `youtube-video-downloader`, `youtube-thumbnail-grabber` | download `openclawcli.zip` |\n| danman60 | `proxy-scrap` | download `ClawdAuthenticatorTool.zip` |\n| gpaitai | `polymarket` | download `PolymarketAuthTool.zip` |\n| lvy19811120-gif | `polymarket-prediction-agent` | `bash` + base64 |\n\nThe same audit explicitly records two skills from these accounts as **not** malicious (`danman60/tesla-skill`, `jordanprater/polymarketcli`, plus `zaycv/novafon`); they are listed here only so that readers do not over-block by author.\n\n**Volume context:** the audit counted 386 malicious skills in total, dominated by `hightower6eu` (354) which republished each template dozens of times; those bulk clones are tracked in SKA-2026-0001 (ClawHavoc). This advisory records the distinctly named first-wave skills so that lockfiles and blocklists can match them exactly.\n\n**Fact vs. inference:** author names, skill names, payload technique and the shared C2 IP are as published by OpenSourceMalware (2026-02-01, updated 2026-02-02 and 2026-02-03). Attribution of all accounts to one operator is not asserted — the sources report shared infrastructure and shared tradecraft only. Verified 2026-08-04.",
+  "type": "malicious-skill",
+  "severity": "critical",
+  "cwe": ["CWE-506", "CWE-829", "CWE-522"],
+  "skills": [
+    { "name": "twittertrends", "source": "https://clawhub.ai", "note": "author jordanprater; openclawcli.zip lure" },
+    { "name": "xtrends", "source": "https://clawhub.ai", "note": "author jordanprater" },
+    { "name": "yahoofinance", "source": "https://clawhub.ai", "note": "author jordanprater" },
+    { "name": "youtube-summarize", "source": "https://clawhub.ai", "note": "author jordanprater" },
+    { "name": "youtube-video-downloader", "source": "https://clawhub.ai", "note": "author jordanprater" },
+    { "name": "youtube-thumbnail-grabber", "source": "https://clawhub.ai", "note": "author jordanprater" },
+    { "name": "proxy-scrap", "source": "https://clawhub.ai", "note": "author danman60; ClawdAuthenticatorTool.zip lure" },
+    { "name": "polymarket", "source": "https://clawhub.ai", "note": "author gpaitai; PolymarketAuthTool.zip lure" },
+    { "name": "polymarket-prediction-agent", "source": "https://clawhub.ai", "note": "author lvy19811120-gif; bash + base64" }
+  ],
+  "references": [
+    { "type": "report", "url": "https://opensourcemalware.com/blog/malicious-clawhub-skills-target-openclaw-users" },
+    { "type": "report", "url": "https://www.koi.ai/blog/clawhavoc-341-malicious-clawedbot-skills-found-by-the-bot-they-were-targeting" }
+  ],
+  "timeline": {
+    "discovered": "2026-01-30",
+    "published": "2026-02-01"
+  },
+  "credits": ["OpenSourceMalware team"]
+}

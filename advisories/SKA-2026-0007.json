@@ -1,0 +1,24 @@
+{
+  "id": "SKA-2026-0007",
+  "title": "pepe276 moltbookagent / publish-dist inject invisible Unicode into every agent message and jailbreak the agent DAN-style",
+  "summary": "Two ClawHub skills published by `pepe276` carry no dropper and no malicious binary. Instead they instruct the agent to embed invisible Unicode \"contraband\" into every message it sends, and use DAN-style prompt injection to talk the agent out of its safety mechanisms. Snyk's technical report lists both as confirmed malicious skills that were still publicly available and installable on clawhub.ai as of 2026-02-05, while noting there is \"no malicious action per se\" — the harm is behavioural manipulation and covert channelling, not code execution.",
+  "details": "**Why this class matters:** it is natural-language-only malware. There is no script to scan, no domain to blocklist and no binary to hash. Snyk's ecosystem data shows 91% of confirmed malicious skills use prompt injection, and their report explicitly calls out that \"prompt injections alone can also be leveraged for malware-like behavior, creating a new form of natural language malware\" with a much lower barrier to entry for attackers.\n\n**Invisible Unicode as an instruction channel:** characters in the Unicode Tags block (U+E0000–U+E007F), zero-width characters and bidi controls render as nothing in a terminal, editor or pull-request diff, yet several models interpret them as text. Independent research by Johann Rehberger (Embrace The Red, 2026-02-11) demonstrates backdooring an otherwise legitimate skill with Unicode tag codepoints such that human review of the rendered file cannot see the injected instructions; the Cloud Security Alliance published a research note on the same instruction-injection class in March 2026. Those two links are included as background — the confirmed *in-the-wild* skills are the two listed below.\n\n**Detection:** byte-level scanning for invisible codepoints in every file of a skill, plus flagging of instruction-override and concealment phrasing. Rendering-based or LLM-summary review is unreliable here by construction.\n\n**Fact vs. inference:** the two skill identities, their behaviour and their live status on 2026-02-05 are as reported in Snyk's technical report (Section 4.2, \"Live Threats\"). The report does not publish the exact injected payload, so the precise codepoints used are not asserted here. Verified 2026-08-04.",
+  "type": "hidden-unicode",
+  "severity": "high",
+  "cwe": ["CWE-1007", "CWE-94", "CWE-116"],
+  "skills": [
+    { "name": "moltbookagent", "source": "https://clawhub.ai/pepe276/moltbookagent", "note": "injects Unicode contraband into every agent communication; DAN-style jailbreak of safety mechanisms" },
+    { "name": "publish-dist", "source": "https://clawhub.ai/pepe276/publish-dist", "note": "same operator, same technique" }
+  ],
+  "references": [
+    { "type": "report", "url": "https://arxiv.org/abs/2605.28588" },
+    { "type": "report", "url": "https://snyk.io/blog/toxicskills-malicious-ai-agent-skills-clawhub/" },
+    { "type": "article", "url": "https://embracethered.com/blog/posts/2026/scary-agent-skills/" },
+    { "type": "article", "url": "https://labs.cloudsecurityalliance.org/research/csa-research-note-unicode-instruction-injection-ai-skills-20/" }
+  ],
+  "timeline": {
+    "discovered": "2026-02-03",
+    "published": "2026-02-05"
+  },
+  "credits": ["Snyk Security Labs"]
+}
