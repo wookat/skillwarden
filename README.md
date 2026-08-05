@@ -106,7 +106,7 @@ Eight deterministic rule categories, aligned with real-world skills-ecosystem th
 | `exfiltration` | env secrets in network requests, key-material reads (`~/.ssh`, `~/.aws`), dead-drop endpoints (webhook.site & co), ephemeral tunnels |
 | `dangerous-scripts` | eval/exec of decoded payloads, download-then-execute chains, large base64/hex blobs, command injection in bundled scripts |
 | `detection-evasion` | CAPTCHA solving/bypass, anti-bot detection evasion, automation-fingerprint hiding (`navigator.webdriver` spoofing) |
-| `known-advisory` | Skill name matches a publicly documented malicious skill in the bundled [advisory database](advisories/) |
+| `known-advisory` | Skill name or content indicators (documented campaign domains) match a publicly documented malicious skill in the bundled [advisory database](advisories/) |
 
 ## Lockfile
 

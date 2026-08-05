@@ -164,7 +164,7 @@ exports[`output contract snapshots > scan --format sarif on the malicious exampl
             {
               "id": "known-advisory",
               "shortDescription": {
-                "text": "Matches skill names against the SkillWarden advisory database of publicly documented malicious skills"
+                "text": "Matches skill names and content indicators against the SkillWarden advisory database of publicly documented malicious skills"
               }
             }
           ]
