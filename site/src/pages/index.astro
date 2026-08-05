@@ -194,7 +194,7 @@ const ruleCards = [
               </a>
             </div>
             <div class="mt-6 flex max-w-md items-center justify-between gap-3 rounded-ag-md border border-ag-border bg-ag-subtle px-4 py-3">
-              <code class="min-w-0 break-all font-mono text-sm text-ag-text">git clone https://github.com/wookat/skillwarden</code>
+              <code class="min-w-0 break-all font-mono text-sm text-ag-text">npx skillwarden scan</code>
               <button id="copyInstall" aria-label="Copy install command" class="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-ag-sm text-ag-muted transition-colors duration-150 hover:text-ag-accent">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
               </button>
@@ -253,15 +253,15 @@ const ruleCards = [
           <ol class="space-y-8">
             <li class="flex gap-4">
               <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-ag-accent/10 font-mono text-sm font-semibold text-ag-accent">1</span>
-              <div><h3 class="text-lg font-semibold">Install</h3><p class="mt-1 text-ag-muted">Clone and build; auto-discovers <code class="font-mono text-sm">.claude/skills</code>, <code class="font-mono text-sm">.agents/skills</code>, <code class="font-mono text-sm">.codex/skills</code>, and more.</p></div>
+              <div><h3 class="text-lg font-semibold">Scan &amp; lock</h3><p class="mt-1 text-ag-muted">One <code class="font-mono text-sm">npx</code> command; auto-discovers <code class="font-mono text-sm">.claude/skills</code>, <code class="font-mono text-sm">.agents/skills</code>, <code class="font-mono text-sm">.codex/skills</code>, and more, then pins every file's SHA-256 into <code class="font-mono text-sm">skillwarden.lock</code>.</p></div>
             </li>
             <li class="flex gap-4">
               <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-ag-accent/10 font-mono text-sm font-semibold text-ag-accent">2</span>
-              <div><h3 class="text-lg font-semibold">Scan &amp; lock</h3><p class="mt-1 text-ag-muted">Audit every skill offline, then pin every file's SHA-256 into <code class="font-mono text-sm">skillwarden.lock</code>.</p></div>
+              <div><h3 class="text-lg font-semibold">Gate in CI</h3><p class="mt-1 text-ag-muted">Add one CI step (or the GitHub Action). Any upstream drift turns the build red.</p></div>
             </li>
             <li class="flex gap-4">
               <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-ag-accent/10 font-mono text-sm font-semibold text-ag-accent">3</span>
-              <div><h3 class="text-lg font-semibold">Gate in CI</h3><p class="mt-1 text-ag-muted">Add one CI step (or the GitHub Action). Any upstream drift turns the build red.</p></div>
+              <div><h3 class="text-lg font-semibold">Gate installs</h3><p class="mt-1 text-ag-muted">Run SkillWarden as OpenClaw's <a href="/docs/cli/openclaw-install-policy/" class="text-ag-accent hover:underline">install policy</a>: skills are scanned before they ever reach the agent.</p></div>
             </li>
           </ol>
           <div class="card-shadow min-w-0 overflow-hidden rounded-ag-lg border border-ag-border bg-ag-raised">
@@ -272,16 +272,15 @@ const ruleCards = [
               <span class="ml-2 font-mono text-xs text-ag-muted">terminal</span>
             </div>
             <div class="overflow-x-auto p-4 font-mono text-xs leading-6 sm:text-sm">
-              <pre class="whitespace-pre text-ag-muted"><span class="text-ag-muted"># 1. install</span>
-<span class="text-ag-accent">$</span> git clone https://github.com/wookat/skillwarden
-<span class="text-ag-accent">$</span> cd skillwarden &amp;&amp; pnpm install &amp;&amp; pnpm build
+              <pre class="whitespace-pre text-ag-muted"><span class="text-ag-muted"># 1. scan and lock (no install needed)</span>
+<span class="text-ag-accent">$</span> npx skillwarden scan
+<span class="text-ag-accent">$</span> npx skillwarden lock
 
-<span class="text-ag-muted"># 2. scan and lock</span>
-<span class="text-ag-accent">$</span> skillwarden scan
-<span class="text-ag-accent">$</span> skillwarden lock
+<span class="text-ag-muted"># 2. gate in CI</span>
+<span class="text-ag-accent">$</span> npx skillwarden ci --fail-on high
 
-<span class="text-ag-muted"># 3. gate in CI</span>
-<span class="text-ag-accent">$</span> skillwarden ci --fail-on high</pre>
+<span class="text-ag-muted"># 3. gate installs into OpenClaw</span>
+<span class="text-ag-accent">$</span> skillwarden openclaw-install-policy</pre>
             </div>
           </div>
         </div>
@@ -371,7 +370,7 @@ const ruleCards = [
         menuBtn.setAttribute('aria-expanded', String(!nav.classList.contains('hidden')));
       });
       document.getElementById('copyInstall')?.addEventListener('click', () => {
-        navigator.clipboard.writeText('git clone https://github.com/wookat/skillwarden');
+        navigator.clipboard.writeText('npx skillwarden scan');
       });
     </script>
   </body>
