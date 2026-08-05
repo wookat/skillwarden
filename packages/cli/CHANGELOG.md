@@ -1,5 +1,13 @@
 # skillwarden
 
+## 0.7.1
+
+### Patch Changes
+
+- 5479ff8: known-advisory: add SKA-2026-0021 (DeepSeek-Claw — fake DeepSeek integration skill delivering Remcos RAT on Windows and GhostLoader on macOS/Linux, per Zscaler ThreatLabz). Skills named `deepseek-claw` or referencing `cloudcraftshub.com` now match offline.
+- Updated dependencies [5479ff8]
+  - skillwarden-core@0.7.1
+
 ## 0.7.0
 
 ### Minor Changes
