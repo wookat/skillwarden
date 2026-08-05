@@ -22,7 +22,7 @@ const SPECS: PatternSpec[] = [
   { pattern: /\bAIza[0-9A-Za-z_-]{35}\b/, severity: 'critical', message: 'Google API key' },
   { pattern: /\bdop_v1_[a-f0-9]{60,}\b/, severity: 'critical', message: 'DigitalOcean personal access token' },
   { pattern: /\bSG\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\b/, severity: 'critical', message: 'SendGrid API key' },
-  { pattern: /-----BEGIN\s+(RSA|EC|DSA|OPENSSH|PGP)?\s*PRIVATE\s+KEY(\s+BLOCK)?-----/, severity: 'critical', message: 'Private key block' },
+  { pattern: /-----BEGIN\s+(RSA|EC|DSA|OPENSSH|PGP)?\s*PRIVATE\s+KEY(\s+BLOCK)?-----\s*\n\s*(?!\.\.\.|<|-----END)[A-Za-z0-9+/=]{16,}/, severity: 'critical', message: 'Private key block' },
   { pattern: /\beyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\b/, severity: 'high', message: 'Hardcoded JWT' },
   {
     pattern: /\b(password|passwd|api[_-]?key|secret|token)\s*[:=]\s*["'][^"'\s]{8,}["']/i,
@@ -32,7 +32,7 @@ const SPECS: PatternSpec[] = [
 ];
 
 /** Broad placeholder shapes, applied to the low-confidence assignment pattern. */
-const PLACEHOLDER = /(\$\{?[A-Z_]+\}?|<[^>]+>|xxx+|\.\.\.|your[-_ ]|example|placeholder|redacted|123456|abcdef|foobar|dummy|sample|test[-_]?key|changeme|insert)/i;
+const PLACEHOLDER = /(\$\{?[A-Z_]+\}?|<[^>]+>|xxx+|\.\.\.|your[-_ ]|example|placeholder|redacted|123456?|abcdef|foobar|dummy|sample|test[-_]?(key|token|secret|pass(word)?)|changeme|insert|password|passw?d|secret[-_]?value|hunter2|correct[-_ ]?horse|\bmy[-_]|(api|access)[-_]?(key|token)|(production|prod|dev|staging|local)[-_]?(key|token|secret))/i;
 
 /**
  * Shapes a real, randomly generated token effectively cannot contain. Applied to

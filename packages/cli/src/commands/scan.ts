@@ -1,6 +1,6 @@
 import { writeFileSync } from 'node:fs';
-import { hasFindingsAtOrAbove, scanSkills, toSarif, type Severity } from 'skillwarden-core';
-import { EXIT_GATE_FAILURE, EXIT_OK, EXIT_USAGE_ERROR, resolveSkills } from '../context.js';
+import { fingerprint, hasFindingsAtOrAbove, scanSkills, toSarif, type Severity } from 'skillwarden-core';
+import { EXIT_GATE_FAILURE, EXIT_OK, EXIT_USAGE_ERROR, filterIgnored, resolveSkills } from '../context.js';
 import { renderScanTable } from '../output.js';
 import { VERSION } from '../version.js';
 
@@ -22,7 +22,10 @@ export function runScan(paths: string[], options: ScanCommandOptions, cwd: strin
     process.stderr.write('No skills found. Pass a path to a skill directory or run inside a project with a known skills directory (.claude/skills, .agents/skills, ...).\n');
     return EXIT_USAGE_ERROR;
   }
-  const results = scanSkills(entries.map((e) => e.skill));
+  const { results, ignoredCount } = filterIgnored(scanSkills(entries.map((e) => e.skill)), cwd);
+  if (ignoredCount > 0 && options.format === 'table') {
+    process.stderr.write(`${ignoredCount} finding${ignoredCount > 1 ? 's' : ''} suppressed by .skillwardenignore\n`);
+  }
 
   let rendered: string;
   switch (options.format) {
@@ -34,7 +37,7 @@ export function runScan(paths: string[], options: ScanCommandOptions, cwd: strin
         results.map((r) => ({
           skill: r.skill.name,
           path: r.skill.dir,
-          findings: r.findings,
+          findings: r.findings.map((f) => ({ ...f, fingerprint: fingerprint(r.skill.name, f) })),
         })),
         null,
         2,

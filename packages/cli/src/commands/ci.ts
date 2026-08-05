@@ -10,7 +10,7 @@ import {
   scanSkills,
   type Severity,
 } from 'skillwarden-core';
-import { EXIT_GATE_FAILURE, EXIT_OK, EXIT_USAGE_ERROR, resolveSkills } from '../context.js';
+import { EXIT_GATE_FAILURE, EXIT_OK, EXIT_USAGE_ERROR, filterIgnored, resolveSkills } from '../context.js';
 import { renderDrift, renderScanTable } from '../output.js';
 
 export interface CiCommandOptions {
@@ -42,7 +42,10 @@ export function runCi(paths: string[], options: CiCommandOptions, cwd: string): 
     process.stdout.write(`${pc.yellow('!')} No ${LOCKFILE_NAME} found — drift gate skipped. Run \`skillwarden lock\` to enable it.\n\n`);
   }
 
-  const results = scanSkills(entries.map((e) => e.skill));
+  const { results, ignoredCount } = filterIgnored(scanSkills(entries.map((e) => e.skill)), cwd);
+  if (ignoredCount > 0) {
+    process.stderr.write(`${ignoredCount} finding${ignoredCount > 1 ? 's' : ''} suppressed by .skillwardenignore\n`);
+  }
   process.stdout.write(`${renderScanTable(results)}\n`);
 
   const threshold = (options.failOn ?? 'high') as Severity;

@@ -190,22 +190,40 @@ function isSkillDir(path: string): boolean {
   return findSkillManifest(path) !== undefined;
 }
 
+const MAX_DISCOVERY_DEPTH = 10;
+
+/** All directories under `dir` (inclusive) that contain a SKILL.md, without descending into found skills. */
+function findSkillDirs(dir: string, depth: number, out: string[]): void {
+  if (isSkillDir(dir)) {
+    out.push(dir);
+    return;
+  }
+  if (depth >= MAX_DISCOVERY_DEPTH) return;
+  let entries;
+  try {
+    entries = readdirSync(dir, { withFileTypes: true });
+  } catch {
+    return;
+  }
+  for (const entry of entries) {
+    if (entry.isDirectory() && !SKIP_DIRS.has(entry.name)) {
+      findSkillDirs(join(dir, entry.name), depth + 1, out);
+    }
+  }
+}
+
 /**
  * Resolve a user-supplied path into skills:
  * - a SKILL.md file or a directory containing one → that single skill
- * - a directory of skill directories (e.g. .claude/skills) → each child skill
+ * - any other directory → every skill found recursively beneath it
+ *   (e.g. `.claude/skills`, or a plugin marketplace with `plugins/<name>/skills`)
  */
 export function loadSkillsFromPath(path: string): Skill[] {
   const stat = statSync(path);
   if (stat.isFile()) return [loadSkill(path)];
-  if (isSkillDir(path)) return [loadSkill(path)];
-  const skills: Skill[] = [];
-  for (const entry of readdirSync(path, { withFileTypes: true })) {
-    if (entry.isDirectory() && !SKIP_DIRS.has(entry.name) && isSkillDir(join(path, entry.name))) {
-      skills.push(loadSkill(join(path, entry.name)));
-    }
-  }
-  return skills;
+  const dirs: string[] = [];
+  findSkillDirs(path, 0, dirs);
+  return dirs.map((d) => loadSkill(d));
 }
 
 export interface DiscoverOptions {
@@ -213,21 +231,30 @@ export interface DiscoverOptions {
   machine?: boolean;
 }
 
-/** Discover skills in well-known directories under `root` (and optionally `~`). */
+/**
+ * Discover skills under `root` (and optionally `~`): well-known directories
+ * first, then a recursive search of the whole tree so nested layouts
+ * (`plugins/<name>/skills`, monorepo packages) are found too.
+ */
 export function discoverSkills(root: string, options: DiscoverOptions = {}): Skill[] {
-  const roots = [root];
-  if (options.machine) roots.push(homedir());
   const seen = new Set<string>();
   const skills: Skill[] = [];
-  for (const r of roots) {
+  const add = (found: Skill[]) => {
+    for (const skill of found) {
+      if (seen.has(skill.dir)) continue;
+      seen.add(skill.dir);
+      skills.push(skill);
+    }
+  };
+  for (const rel of KNOWN_SKILL_DIRS) {
+    const dir = resolve(root, rel);
+    if (existsSync(dir)) add(loadSkillsFromPath(dir));
+  }
+  add(loadSkillsFromPath(root));
+  if (options.machine) {
     for (const rel of KNOWN_SKILL_DIRS) {
-      const dir = resolve(r, rel);
-      if (!existsSync(dir)) continue;
-      for (const skill of loadSkillsFromPath(dir)) {
-        if (seen.has(skill.dir)) continue;
-        seen.add(skill.dir);
-        skills.push(skill);
-      }
+      const dir = resolve(homedir(), rel);
+      if (existsSync(dir)) add(loadSkillsFromPath(dir));
     }
   }
   return skills;

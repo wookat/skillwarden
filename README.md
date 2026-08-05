@@ -44,8 +44,8 @@ npm install -g skillwarden    # or: npx skillwarden
 ```
 
 Scan the skills in your project — `.claude/skills`, `.agents/skills`, `.codex/skills`,
-`.gemini/skills`, `.opencode/skills`, `.cursor/skills`, and `skills/` are discovered
-automatically:
+`.gemini/skills`, `.opencode/skills`, `.cursor/skills`, `skills/`, and nested layouts
+like `plugins/<name>/skills/` are discovered automatically:
 
 ```bash
 skillwarden scan                          # auto-discover, terminal table
@@ -71,6 +71,14 @@ skillwarden ci --fail-on high    # CI gate: drift OR high-severity findings → 
 
 Exit codes: `0` clean, `1` gate failure (drift / findings at `--fail-on`), `2` usage or
 environment error — see [docs/spec/cli-contract.md](docs/spec/cli-contract.md).
+
+Suppress a reviewed finding by putting its fingerprint (shown in `--format json`)
+in `.skillwardenignore` — one `skill:file:ruleId[:line]` per line, `*` wildcards allowed:
+
+```text
+# reviewed: install doc quotes the official installer one-liner
+linkerd-patterns:SKILL.md:dangerous-commands:58
+```
 
 ## CI gate in one step
 

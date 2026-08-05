@@ -13,11 +13,21 @@ Scripts and CI configs may rely on everything documented here; changes are semve
 
 ## Skill resolution (positional `[paths...]`)
 
-Each path may be a skill directory (contains `SKILL.md`), a `SKILL.md` file, or a
-parent directory whose children are skill directories. With no paths, well-known
-directories under the current working directory are discovered: `.claude/skills`,
-`.agents/skills`, `.agent/skills`, `.codex/skills`, `.gemini/skills`,
-`.opencode/skills`, `.cursor/skills`, `skills`.
+Each path may be a skill directory (contains `SKILL.md`), a `SKILL.md` file, or any
+parent directory — skills beneath it are found recursively (depth limit 10;
+`node_modules`, `.git`, and build-output directories are skipped). With no paths,
+the well-known directories `.claude/skills`, `.agents/skills`, `.agent/skills`,
+`.codex/skills`, `.gemini/skills`, `.opencode/skills`, `.cursor/skills`, `skills`
+are checked first, then the rest of the working tree is searched recursively, so
+nested layouts such as `plugins/<name>/skills/*` are discovered too.
+
+## Ignore file (`.skillwardenignore`)
+
+If a `.skillwardenignore` file exists in the working directory, `scan` and `ci`
+drop findings whose fingerprint matches an entry. One entry per line,
+`skill:file:ruleId[:line]`; `#` starts a comment; `*` matches a whole segment.
+Fingerprints are included in `--format json` output. Suppressed findings are
+counted on stderr (`N findings suppressed by .skillwardenignore`).
 
 ## Subcommands
 
