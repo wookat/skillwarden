@@ -93,6 +93,15 @@ steps:
 
 See [packages/action](packages/action/README.md) for all inputs.
 
+## Install-time gate for OpenClaw
+
+Gate skills *before they are installed into the agent*, not just in CI: run
+SkillWarden as OpenClaw's `security.installPolicy.exec` command. OpenClaw hands the
+staged skill to `skillwarden openclaw-install-policy` on stdin and gets an
+allow/warn/block decision back — offline, sub-second, fail-closed on anything
+unreadable. Setup:
+[docs](https://skillwarden.zalize.com/docs/cli/openclaw-install-policy/).
+
 ## Scan rules
 
 Eight deterministic rule categories, aligned with real-world skills-ecosystem threats:
@@ -101,10 +110,10 @@ Eight deterministic rule categories, aligned with real-world skills-ecosystem th
 |---|---|
 | `prompt-injection` | "ignore previous instructions", concealment ("don't tell the user"), jailbreak roleplay, fake system markers, precedence claims |
 | `hidden-unicode` | zero-width characters, bidi controls, Unicode tag block (invisible instruction smuggling), private-use areas |
-| `dangerous-commands` | `curl \| bash`, `rm -rf /`, reverse shells, disk-destructive commands, history tampering, persistence via cron/systemd |
+| `dangerous-commands` | `curl \| bash`, `rm -rf /`, reverse shells, disk-destructive commands, history tampering, persistence via cron/systemd/shell profiles/`.pth` files, interpreter hooks (`LD_PRELOAD`, `PYTHONSTARTUP`), detached processes |
 | `credential-leak` | hardcoded AWS/GitHub/npm/OpenAI/Anthropic/Slack/Google tokens, private keys, JWTs (reported redacted) |
-| `exfiltration` | env secrets in network requests, key-material reads (`~/.ssh`, `~/.aws`), dead-drop endpoints (webhook.site & co), ephemeral tunnels |
-| `dangerous-scripts` | eval/exec of decoded payloads, download-then-execute chains, large base64/hex blobs, command injection in bundled scripts |
+| `exfiltration` | env secrets in network requests, key-material reads (`~/.ssh`, `~/.aws`), env harvesting loops, dead-drop endpoints (webhook.site & co), ephemeral tunnels, host-fingerprint telemetry, disposable collectors |
+| `dangerous-scripts` | eval/exec of decoded, reversed, or list-driven payloads, download-then-execute chains, large base64/hex blobs, command injection, bundled agent hook/config files |
 | `detection-evasion` | CAPTCHA solving/bypass, anti-bot detection evasion, automation-fingerprint hiding (`navigator.webdriver` spoofing) |
 | `known-advisory` | Skill name or content indicators (documented campaign domains) match a publicly documented malicious skill in the bundled [advisory database](advisories/) |
 
@@ -118,7 +127,7 @@ red with a per-file diff instead of silently reprogramming your agent.
 ## Threat model
 
 Why skills are a distinct supply-chain problem, the attack chains observed in the wild
-(ClawHavoc, ToxicSkills, the `openclaw-core` prerequisite trap), how they map onto the six
+(ClawHavoc, ToxicSkills, the `openclaw-core` prerequisite trap), how they map onto the eight
 rule categories above, and — explicitly — the residual risks the rules do *not* cover:
 [docs/THREAT-MODEL.md](docs/THREAT-MODEL.md). Confirmed incidents with named skills are in
 the [advisory database](advisories/).
