@@ -17,7 +17,19 @@ function captureStdout(): { out: () => string; restore: () => void } {
 }
 
 function normalize(text: string): string {
-  return text.split(REPO_ROOT).join('<repo>').replace(/"version": "\d+\.\d+\.\d+"/g, '"version": "<version>"');
+  // The repo root can appear native (D:\a\repo), JSON-escaped (D:\\a\\repo),
+  // or as a forward-slash URI (D:/a/repo); normalize all of them.
+  const posixRoot = REPO_ROOT.split('\\').join('/');
+  const escapedRoot = REPO_ROOT.split('\\').join('\\\\');
+  return text
+    .split(escapedRoot)
+    .join('<repo>')
+    .split(REPO_ROOT)
+    .join('<repo>')
+    .split(posixRoot)
+    .join('<repo>')
+    .replace(/<repo>[^",\n]*/g, (m) => m.split('\\\\').join('/').split('\\').join('/'))
+    .replace(/"version": "\d+\.\d+\.\d+"/g, '"version": "<version>"');
 }
 
 describe('output contract snapshots', () => {
