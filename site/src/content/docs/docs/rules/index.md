@@ -1,9 +1,9 @@
 ---
 title: Rule reference
-description: The seven SkillWarden scan rules — what each detects, why it matters, and example findings.
+description: The eight SkillWarden scan rules — what each detects, why it matters, and example findings.
 ---
 
-`skillwarden scan` runs seven deterministic rule categories, aligned with real-world
+`skillwarden scan` runs eight deterministic rule categories, aligned with real-world
 skills-ecosystem threats. Every rule works offline, never executes skill content, and
 produces reproducible results.
 
@@ -16,6 +16,7 @@ produces reproducible results.
 | [`exfiltration`](/docs/rules/exfiltration/) | env secrets in network requests, key-material reads (`~/.ssh`, `~/.aws`), dead-drop endpoints (webhook.site & co), ephemeral tunnels |
 | [`dangerous-scripts`](/docs/rules/dangerous-scripts/) | eval/exec of decoded payloads, download-then-execute chains, large base64/hex blobs, command injection in bundled scripts |
 | [`detection-evasion`](/docs/rules/detection-evasion/) | CAPTCHA solving/bypass, anti-bot detection evasion, automation-fingerprint hiding (`navigator.webdriver` spoofing) |
+| [`known-advisory`](/docs/rules/known-advisory/) | Skill name matches a publicly documented malicious skill in the bundled advisory database |
 
 Severities: `critical` > `high` > `medium` > `low`. Gate on them with
 `skillwarden scan --fail-on <severity>` or [`skillwarden ci`](/docs/cli/ci/) (default

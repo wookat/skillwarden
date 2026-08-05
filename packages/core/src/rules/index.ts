@@ -5,6 +5,7 @@ import { dangerousScriptsRule } from './dangerous-scripts.js';
 import { detectionEvasionRule } from './detection-evasion.js';
 import { exfiltrationRule } from './exfiltration.js';
 import { hiddenUnicodeRule } from './hidden-unicode.js';
+import { knownAdvisoryRule } from './known-advisory.js';
 import { promptInjectionRule } from './prompt-injection.js';
 
 export const ALL_RULES: Rule[] = [
@@ -15,6 +16,7 @@ export const ALL_RULES: Rule[] = [
   exfiltrationRule,
   dangerousScriptsRule,
   detectionEvasionRule,
+  knownAdvisoryRule,
 ];
 
 export {
@@ -24,5 +26,6 @@ export {
   detectionEvasionRule,
   exfiltrationRule,
   hiddenUnicodeRule,
+  knownAdvisoryRule,
   promptInjectionRule,
 };

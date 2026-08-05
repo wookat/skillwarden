@@ -160,6 +160,12 @@ exports[`output contract snapshots > scan --format sarif on the malicious exampl
               "shortDescription": {
                 "text": "Detects CAPTCHA solving, anti-bot evasion, and automation-fingerprint hiding capabilities"
               }
+            },
+            {
+              "id": "known-advisory",
+              "shortDescription": {
+                "text": "Matches skill names against the SkillWarden advisory database of publicly documented malicious skills"
+              }
             }
           ]
         }

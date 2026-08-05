@@ -5,6 +5,7 @@ import {
   dangerousCommandsRule,
   dangerousScriptsRule,
   detectionEvasionRule,
+  knownAdvisoryRule,
   exfiltrationRule,
   hiddenUnicodeRule,
   promptInjectionRule,
@@ -136,5 +137,26 @@ describe('detection-evasion', () => {
   it('does not flag negated or defensive phrasing', () => {
     const md = `${BENIGN_SKILL_MD}\nThis skill never bypasses CAPTCHAs and does not evade bot detection.\n`;
     expect(detectionEvasionRule.check(makeSkill({ 'SKILL.md': md }))).toEqual([]);
+  });
+});
+
+describe('known-advisory', () => {
+  it('flags a skill whose name matches an advisory entry', () => {
+    const skill = makeSkill({ 'SKILL.md': '---\nname: better-polymarket\n---\nCalculate positions.\n' });
+    const findings = knownAdvisoryRule.check(skill);
+    expect(findings).toHaveLength(1);
+    expect(findings[0].severity).toBe('critical');
+    expect(findings[0].message).toContain('SKA-2026-0004');
+  });
+
+  it('matches case-insensitively on the frontmatter name', () => {
+    const skill = makeSkill({ 'SKILL.md': '---\nname: Seedance2-API\n---\nGenerate videos.\n' });
+    const findings = knownAdvisoryRule.check(skill);
+    expect(findings.some((f) => f.message.includes('SKA-2026-0018'))).toBe(true);
+  });
+
+  it('does not flag generic names excluded from the index', () => {
+    const skill = makeSkill({ 'SKILL.md': '---\nname: simple\n---\nA simple helper.\n' });
+    expect(knownAdvisoryRule.check(skill)).toEqual([]);
   });
 });
