@@ -61,7 +61,11 @@
             "description": "SkillWarden aggregate SHA-256 digest of the malicious skill content, when captured.",
             "pattern": "^[0-9a-f]{64}$"
           },
-          "note": { "type": "string", "description": "Free-text note, e.g. 'removed from registry'." }
+          "note": { "type": "string", "description": "Free-text note, e.g. 'removed from registry'." },
+          "genericName": {
+            "type": "boolean",
+            "description": "Name is too generic for name-based scanner matching (e.g. 'update', 'simple'); excluded from the known-advisory rule index."
+          }
         }
       }
     },

@@ -56,6 +56,8 @@ jobs:
         run: pnpm --filter skillwarden-core test:coverage
       - name: Validate advisories against schema
         run: node scripts/validate-advisories.mjs
+      - name: Advisory name index is up to date
+        run: node scripts/generate-advisory-data.mjs --check
       - name: Dogfood — scan the example skills
         run: |
           node packages/cli/dist/index.js scan examples/skills/benign-skill && \
