@@ -1,5 +1,15 @@
 # skillwarden-core
 
+## 0.4.0
+
+### Minor Changes
+
+- 3393329: New `detection-evasion` rule: flags CAPTCHA solving/bypass, anti-bot detection
+  evasion, and automation-fingerprint hiding (`navigator.webdriver` spoofing)
+  capabilities. Developed against the ClawHub security-signals train split;
+  detects 2 previously missed LLM-labeled malicious eval_holdout cases with zero
+  new findings across the four real-corpus benchmark repositories.
+
 ## 0.3.0
 
 ### Minor Changes
