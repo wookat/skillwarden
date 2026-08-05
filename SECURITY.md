@@ -34,5 +34,6 @@ defeat the lockfile drift gate are treated as vulnerabilities.
 - All GitHub Actions are pinned to full commit SHAs.
 - Dependencies are locked via `pnpm-lock.yaml` and installed with
   `--frozen-lockfile` in CI.
-- Releases are published from CI with npm provenance.
+- Releases are versioned via changesets and published by a maintainer with a
+  scoped npm token (npm provenance/trusted publishing is planned).
 - SkillWarden scans its own example skills in CI (`dogfood` steps).
