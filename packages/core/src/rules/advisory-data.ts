@@ -22,6 +22,7 @@ export const ADVISORY_NAME_INDEX: ReadonlyMap<string, AdvisoryEntry> = new Map([
   ["clawwhub", {"id":"SKA-2026-0001","severity":"critical","title":"ClawHavoc: mass-published ClawHub skills deliver AMOS / Windows infostealers via a fake \"prerequisite\" install step"}],
   ["cllawhub", {"id":"SKA-2026-0001","severity":"critical","title":"ClawHavoc: mass-published ClawHub skills deliver AMOS / Windows infostealers via a fake \"prerequisite\" install step"}],
   ["coding-agent-1gx", {"id":"SKA-2026-0006","severity":"critical","title":"NET_NiNjA skills (google-qx4, whatsapp-mgv, coding-agent-1gx, clawhub) distributed from GitHub demand a fabricated \"openclaw-core\" prerequisite"}],
+  ["deepseek-claw", {"id":"SKA-2026-0021","severity":"critical","title":"DeepSeek-Claw: fake DeepSeek integration skill installs Remcos RAT (Windows) or GhostLoader stealer (macOS/Linux) via SKILL.md install instructions"}],
   ["drug-safety-review", {"id":"SKA-2026-0020","severity":"medium","title":"SkillPay pay-per-call skills: hardcoded billing bearer keys, undisclosed user-ID transmission to skillpay.me, and fail-open charge checks"}],
   ["ethereum-gas-tracker-abxf0", {"id":"SKA-2026-0001","severity":"critical","title":"ClawHavoc: mass-published ClawHub skills deliver AMOS / Windows infostealers via a fake \"prerequisite\" install step"}],
   ["find-skills", {"id":"SKA-2026-0016","severity":"high","title":"roin-orca/skills: self-propagating skill pack with hostname exfiltration, scanner-directed prompt injection and XSS payloads"}],
@@ -76,6 +77,7 @@ export const ADVISORY_NAME_INDEX: ReadonlyMap<string, AdvisoryEntry> = new Map([
 
 export const ADVISORY_DOMAIN_INDEX: ReadonlyMap<string, AdvisoryEntry> = new Map([
   ["app-distribution.net", {"id":"SKA-2026-0001","severity":"critical","title":"ClawHavoc: mass-published ClawHub skills deliver AMOS / Windows infostealers via a fake \"prerequisite\" install step"}],
+  ["cloudcraftshub.com", {"id":"SKA-2026-0021","severity":"critical","title":"DeepSeek-Claw: fake DeepSeek integration skill installs Remcos RAT (Windows) or GhostLoader stealer (macOS/Linux) via SKILL.md install instructions"}],
   ["eng0ai-sdk.vercel.app", {"id":"SKA-2026-0019","severity":"high","title":"awwwards-landing-page: clean skill clones a template repository whose owner handle was freed by a rename and re-claimed (RepoJacking)"}],
   ["google-stitch.com", {"id":"SKA-2026-0017","severity":"high","title":"brand-landingpage: skill sends the agent to attacker-controlled \"Stitch SDK\" docs; npm stitch-design harvested developer identity data"}],
   ["setup-service.com", {"id":"SKA-2026-0006","severity":"critical","title":"NET_NiNjA skills (google-qx4, whatsapp-mgv, coding-agent-1gx, clawhub) distributed from GitHub demand a fabricated \"openclaw-core\" prerequisite"}],
