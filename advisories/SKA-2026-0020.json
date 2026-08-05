@@ -1,0 +1,36 @@
+{
+  "id": "SKA-2026-0020",
+  "title": "SkillPay pay-per-call skills: hardcoded billing bearer keys, undisclosed user-ID transmission to skillpay.me, and fail-open charge checks",
+  "summary": "A family of ClawHub skills monetized \"per call\" through SkillPay (api.skillpay.me) ships the same anti-pattern set: a hardcoded secret bearer key (`sk_...`) committed in the skill's code and sometimes in SKILL.md itself; the agent runtime's user identifier (`ctx.userId`) transmitted to the third-party billing endpoint before the skill's core logic runs, in some skills while the docs simultaneously claim \"no data is ever transmitted\"; and in at least one skill a charge check that treats any network error or exception as paid (`catch` returns `paid: true`), i.e. the billing gate fails open. Named, publicly analyzed instances: `mosonchan2023/polymarket-position-calculator`, `tradingview-signal` (VirusTotal Code Insight), and `andyxcg/drug-safety-review` (flagged suspicious by ClawHub Security).",
+  "details": "**Why this is an advisory and not just bad engineering:** the pattern normalizes exactly the shape a data-theft skill takes. Users are trained to accept that a calculator or a medication checker \"needs\" to POST their agent identity plus a bearer token to a third-party domain before doing local work. The billing endpoint is declared by the skill author; nothing distinguishes `api.skillpay.me` from an exfiltration dead-drop except the author's word — which is why SkillWarden's `exfiltration` rule deliberately stays `critical` for env/identity data in network requests regardless of how official the destination looks.\n\n**Verified observations (2026-08-05, all from public analyses):**\n\n- `polymarket-position-calculator` (ClawHub, @mosonchan2023): Zappush's published file-level analysis documents a hardcoded secret API key used as a Bearer token against `https://api.skillpay.me`, `ctx.userId` sent to the billing endpoint although SKILL.md only describes calculator features, and a `catch` branch returning `paid: true` so billing errors bypass payment entirely — undocumented behavior in both directions.\n- `tradingview-signal` v1.0.1 (ClawHub): VirusTotal Code Insight records a hardcoded `sk_...` API key in both `index.js` and SKILL.md, and a mandatory pay-per-use gate that sends user identifiers to skillpay.me before the core logic executes.\n- `drug-safety-review` (ClawHub, @andyxcg): ClawHub Security flags the skill as suspicious; the published scan notes registry metadata declaring no required credentials while the code expects `SKILLPAY_API_KEY`/`SKILLPAY_SKILL_ID`, documentation asserting \"no medication data is ever stored or transmitted\" and \"all analysis happens locally\" while the code writes per-user trial files under `~/.openclaw/skill_trial/` and sends `user_id` to skillpay.me when charging, plus an FAQ claiming user IDs are hashed while the trial manager stores them raw.\n\n**Fact vs. inference:** the file-level observations above are as published by Zappush, VirusTotal Code Insight, and ClawHub Security's scan output; we did not independently execute these skills. We make no claim that SkillPay itself, or these skill authors, intend data theft — the advisory records the verified anti-patterns (hardcoded secrets in distributed code, undisclosed identity transmission contradicting the skills' own privacy claims, fail-open payment gates) and the ecosystem risk of normalizing them.\n\n**What SkillWarden detects:** hardcoded `sk_`-style bearer keys in skill files fire `credential-leak`; identity/env data placed in network requests fires `exfiltration` (critical, fail-closed by design — see the FAQ entry on API-wrapper false positives for the reviewed-and-ignored workflow). The lockfile pins reviewed content, so a later change of billing endpoint or key shows up as drift.",
+  "type": "credential-leak",
+  "severity": "medium",
+  "cwe": ["CWE-798", "CWE-359", "CWE-636"],
+  "skills": [
+    {
+      "name": "polymarket-position-calculator",
+      "source": "https://clawhub.ai/mosonchan2023/polymarket-position-calculator",
+      "note": "hardcoded SkillPay bearer key; ctx.userId sent to api.skillpay.me; billing errors treated as paid"
+    },
+    {
+      "name": "tradingview-signal",
+      "source": "https://clawhub.ai",
+      "note": "hardcoded sk_ key in index.js and SKILL.md; user identifiers sent to skillpay.me before core logic"
+    },
+    {
+      "name": "drug-safety-review",
+      "source": "https://clawhub.ai/andyxcg/drug-safety-review",
+      "note": "undeclared billing credentials; privacy claims contradicted by user_id transmission and local trial files"
+    }
+  ],
+  "references": [
+    { "type": "report", "url": "https://agents.zappush.com/skills/polymarket-position-calculator" },
+    { "type": "report", "url": "https://www.virustotal.com/gui/file/bec747ae8363848b116a7ff605dbf4dd6f311ff7316e532a1d97f0e0bc367655" },
+    { "type": "report", "url": "https://clawhub.ai/andyxcg/drug-safety-review" }
+  ],
+  "timeline": {
+    "published": "2026-08-05",
+    "updated": "2026-08-05"
+  },
+  "credits": ["Zappush skill safety reports", "VirusTotal Code Insight", "ClawHub Security"]
+}
