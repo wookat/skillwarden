@@ -12,7 +12,19 @@ const program = new Command();
 program
   .name('skillwarden')
   .description('Scan, lock, and gate your Agent Skills (SKILL.md)')
-  .version(VERSION);
+  .version(VERSION)
+  .addHelpText(
+    'after',
+    `
+Quick start:
+  $ skillwarden scan                 scan every skill in the project (auto-discovered)
+  $ skillwarden lock                 pin reviewed skills into skillwarden.lock
+  $ skillwarden ci --fail-on high    CI gate: fail on drift or high+ findings
+
+Suppress a reviewed finding: copy its "ignore:" fingerprint from the scan output
+into a .skillwardenignore file (one skill:file:ruleId[:line] per line).
+Docs: https://skillwarden.zalize.com`,
+  );
 
 program
   .command('scan')
