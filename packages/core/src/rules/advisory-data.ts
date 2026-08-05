@@ -73,3 +73,7 @@ export const ADVISORY_NAME_INDEX: ReadonlyMap<string, AdvisoryEntry> = new Map([
   ["youtube-video-downloader", {"id":"SKA-2026-0008","severity":"critical","title":"First-wave ClawHub malware skills by jordanprater, danman60, gpaitai and lvy19811120-gif (openclawcli.zip / ClawdAuthenticatorTool.zip lures)"}],
   ["youtube-video-downloader-5qfuw", {"id":"SKA-2026-0001","severity":"critical","title":"ClawHavoc: mass-published ClawHub skills deliver AMOS / Windows infostealers via a fake \"prerequisite\" install step"}],
 ]);
+
+export const ADVISORY_DOMAIN_INDEX: ReadonlyMap<string, AdvisoryEntry> = new Map([
+  ["skillpay.me", {"id":"SKA-2026-0020","severity":"medium","title":"SkillPay pay-per-call skills: hardcoded billing bearer keys, undisclosed user-ID transmission to skillpay.me, and fail-open charge checks"}],
+]);

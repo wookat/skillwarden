@@ -1,6 +1,6 @@
 ---
 title: known-advisory
-description: Flags skills whose name matches a publicly documented malicious skill in the bundled advisory database.
+description: Flags skills whose name or content indicators match a publicly documented malicious skill in the bundled advisory database.
 ---
 
 Malicious skills get re-uploaded, cloned, and typosquatted. This rule matches
@@ -18,9 +18,14 @@ so matching works fully offline.
 - Names an ordinary skill could plausibly use (`update`, `simple`, `clawhub`,
   …) are marked `genericName` in the advisory data and excluded from matching
   to avoid false positives.
+- Every text file's content against domains recorded as `indicators.domains`
+  in an advisory — infrastructure that identifies the documented campaign
+  (e.g. `skillpay.me` from SKA-2026-0020). Subdomains match too
+  (`api.skillpay.me`), lookalikes (`notskillpay.me`) do not. One finding is
+  reported per domain per file.
 
-This is a **name-based** match: it proves the name collides with a documented
-malicious skill, not that the content is identical. Treat it as a
+A name match is a **name-based** signal: it proves the name collides with a
+documented malicious skill, not that the content is identical. Treat it as a
 review-immediately signal — check the advisory link in the finding, compare
 sources, and if your skill is a legitimate namesake, add the finding's
 `ignore:` fingerprint to `.skillwardenignore` after review.

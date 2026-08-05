@@ -69,6 +69,19 @@
         }
       }
     },
+    "indicators": {
+      "type": "object",
+      "description": "Machine-matchable content indicators for the known-advisory rule.",
+      "additionalProperties": false,
+      "properties": {
+        "domains": {
+          "type": "array",
+          "description": "Domains that identify this advisory's infrastructure when referenced in skill content (matched case-insensitively, including subdomains).",
+          "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9.-]*\\.[a-z]{2,}$" },
+          "uniqueItems": true
+        }
+      }
+    },
     "references": {
       "type": "array",
       "minItems": 1,

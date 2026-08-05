@@ -23,6 +23,9 @@
       "note": "undeclared billing credentials; privacy claims contradicted by user_id transmission and local trial files"
     }
   ],
+  "indicators": {
+    "domains": ["skillpay.me"]
+  },
   "references": [
     { "type": "report", "url": "https://agents.zappush.com/skills/polymarket-position-calculator" },
     { "type": "report", "url": "https://www.virustotal.com/gui/file/bec747ae8363848b116a7ff605dbf4dd6f311ff7316e532a1d97f0e0bc367655" },
