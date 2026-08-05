@@ -28,6 +28,7 @@ directories under the current working directory are discovered: `.claude/skills`
 | Command | Purpose |
 |---|---|
 | [`skillwarden scan`](/docs/cli/scan/) | Deterministic, offline security analysis of skills |
+| [`skillwarden openclaw-install-policy`](/docs/cli/openclaw-install-policy/) | OpenClaw install-time gate (`security.installPolicy.exec` adapter) |
 | [`skillwarden lock`](/docs/cli/lock/) | Pin approved skill content into `skillwarden.lock` |
 | [`skillwarden diff`](/docs/cli/diff/) | Human-readable drift report against the lockfile |
 | [`skillwarden ci`](/docs/cli/ci/) | Drift gate + scan gate in one command for CI |

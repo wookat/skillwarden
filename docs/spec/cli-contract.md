@@ -58,6 +58,25 @@ Drift gate + scan gate in one command for CI. Flags: `--lockfile <file>`,
 `--fail-on <severity>` (default `high`). A missing lockfile skips the drift gate with
 a warning (scan gate still applies).
 
+### `skillwarden openclaw-install-policy`
+
+OpenClaw `security.installPolicy.exec` adapter. Reads one protocol-v1 JSON request
+from stdin (max 256 KiB) describing a staged skill install, scans the staged
+`sourcePath`, and writes one protocol-v1 JSON response to stdout:
+`{ protocolVersion: 1, decision: "allow"|"warn"|"block", reason?, findings? }`
+(findings capped at 100, each `{ ruleId, severity, message, evidence? }`).
+
+| Flag | Default | Description |
+|---|---|---|
+| `--block-on <severity>` | `high` | Findings at/above this severity → `block` |
+| `--warn-on <severity>` | `medium` | Findings at/above this severity → `warn` |
+
+Decision semantics are **fail-closed**: invalid or oversized requests, unreadable
+staged paths, and staged paths with no `SKILL.md` all produce `block` with a reason.
+`targetType: "plugin"` produces `warn` (SkillWarden analyzes skills, not plugin
+packages). `.skillwardenignore` in the working directory applies. Exit code is `0`
+whenever a response was written; `2` only for invalid flag values.
+
 ## Guarantees
 
 - Scanning never executes skill content — files are only read.

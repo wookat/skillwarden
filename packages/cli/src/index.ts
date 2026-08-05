@@ -5,6 +5,7 @@ import { runCi } from './commands/ci.js';
 import { runDiff } from './commands/diff.js';
 import { runLock } from './commands/lock.js';
 import { runScan } from './commands/scan.js';
+import { runInstallPolicy } from './commands/openclaw-install-policy.js';
 import { VERSION } from './version.js';
 
 const program = new Command();
@@ -53,6 +54,21 @@ program
   .option('--lockfile <file>', 'lockfile path (default: skillwarden.lock)')
   .action((paths: string[], options) => {
     process.exitCode = runDiff(paths, options, process.cwd());
+  });
+
+program
+  .command('openclaw-install-policy')
+  .description("OpenClaw security.installPolicy.exec adapter: read a protocol-v1 request from stdin, scan the staged skill, write an allow/warn/block response to stdout")
+  .option('--block-on <severity>', 'block when findings at/above this severity exist (low|medium|high|critical)', 'high')
+  .option('--warn-on <severity>', 'warn when findings at/above this severity exist (low|medium|high|critical)', 'medium')
+  .action(async (options) => {
+    const chunks: Buffer[] = [];
+    for await (const chunk of process.stdin) chunks.push(chunk as Buffer);
+    process.exitCode = runInstallPolicy(
+      Buffer.concat(chunks).toString('utf8'),
+      { blockOn: options.blockOn, warnOn: options.warnOn },
+      process.cwd(),
+    );
   });
 
 program
