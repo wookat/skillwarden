@@ -17,6 +17,11 @@ execution patterns.
 - Large base64 blobs and long hex-escape sequences — possible embedded payloads
   (`high`).
 - Char-code obfuscated string construction (`high`).
+- `exec`/`eval` of strings rebuilt at runtime (reversed, re-joined, sliced) or applied
+  over a list of code strings (`critical`).
+- Agent configuration/hook files bundled with the skill — `.claude/hooks/`,
+  `settings.json`, `mcp.json` and equivalents for other agents. They run on the
+  agent's own events, outside the skill's invocation (`high`).
 
 ## Example finding
 

@@ -7,6 +7,10 @@ A skill is injected straight into your agent's context, so hostile natural langu
 a `SKILL.md` is an attack payload. This rule detects instruction-override attempts and
 related manipulation patterns.
 
+The rule scans documentation files **and bundled scripts**: agents read helper scripts
+before running them, so a Python docstring or a shell comment is the same instruction
+channel as `SKILL.md`. Non-text assets (data files, binaries) are not scanned.
+
 ## What it checks
 
 - Instruction-override attempts — "ignore previous instructions", "disregard your

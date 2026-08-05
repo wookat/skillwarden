@@ -17,7 +17,18 @@ designed to receive stolen data.
 - Known dead-drop / callback-catcher endpoints — webhook.site and co (`critical`).
 - Ephemeral tunnel endpoints — untraceable data destinations (`high`).
 - Reads of credential files outside the skill scope (`high`).
-- Raw-IP URLs whose endpoint identity cannot be reviewed (`medium`).
+- Raw-IP URLs whose endpoint identity cannot be reviewed (`medium`), and endpoint
+  constants holding a bare public IP (`high`) — private, link-local, and RFC 5737
+  documentation ranges are excluded.
+- Credential files read through a language runtime — `Path("~/.ssh/id_rsa").read_text()`,
+  `open("~/.aws/credentials")` (`critical`).
+- Environment scanned for secret-looking variable names — harvesting loops over
+  `os.environ.items()` / `process.env` (`critical`), and environments filtered for
+  secrets then encoded for transport (`critical`).
+- Host/workspace identifiers (hostname, cwd, username) sent to a network endpoint —
+  undisclosed fingerprint telemetry (`high`).
+- Endpoints on free-tier hosts with random-looking subdomains — the shape of a
+  disposable collector (`high`).
 
 ## Example finding
 

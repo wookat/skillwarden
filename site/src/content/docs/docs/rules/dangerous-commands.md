@@ -18,7 +18,15 @@ persistence.
 - Shell-history tampering / anti-forensics (`high`).
 - Force-push to a protected branch (`high`).
 - World-writable permissions (`chmod 777`), `sudo` inside a skill, persistence via
-  cron/systemd (`medium`).
+  cron/systemd — including `crontab` invoked programmatically as an argv list
+  (`medium`).
+- Shell startup files appended through a language runtime (`open(bashrc, "a")`) and
+  interpreter/loader hook variables — `PYTHONSTARTUP`, `LD_PRELOAD`, `NODE_OPTIONS`,
+  `BASH_ENV` (`high`).
+- Python `.pth` files written into `site-packages` — code executed on every
+  interpreter start (`high`).
+- Detached long-lived processes that outlive the skill invocation — `nohup … &`,
+  `setsid`, `start_new_session=True` (`high`).
 
 ## Example finding
 

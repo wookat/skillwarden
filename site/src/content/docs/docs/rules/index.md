@@ -9,12 +9,12 @@ produces reproducible results.
 
 | Rule | Catches |
 |---|---|
-| [`prompt-injection`](/docs/rules/prompt-injection/) | "ignore previous instructions", concealment ("don't tell the user"), jailbreak roleplay, fake system markers, precedence claims |
+| [`prompt-injection`](/docs/rules/prompt-injection/) | "ignore previous instructions", concealment ("don't tell the user"), jailbreak roleplay, fake system markers, precedence claims — in docs **and** bundled scripts |
 | [`hidden-unicode`](/docs/rules/hidden-unicode/) | zero-width characters, bidi controls, Unicode tag block (invisible instruction smuggling), private-use areas |
-| [`dangerous-commands`](/docs/rules/dangerous-commands/) | `curl \| bash`, `rm -rf /`, reverse shells, disk-destructive commands, history tampering, persistence via cron/systemd |
+| [`dangerous-commands`](/docs/rules/dangerous-commands/) | `curl \| bash`, `rm -rf /`, reverse shells, disk-destructive commands, history tampering, persistence via cron/systemd, shell-profile and `.pth` persistence, interpreter hooks (`PYTHONSTARTUP`, `LD_PRELOAD`), detached processes |
 | [`credential-leak`](/docs/rules/credential-leak/) | hardcoded AWS/GitHub/npm/OpenAI/Anthropic/Slack/Google tokens, private keys, JWTs (reported redacted) |
-| [`exfiltration`](/docs/rules/exfiltration/) | env secrets in network requests, key-material reads (`~/.ssh`, `~/.aws`), dead-drop endpoints (webhook.site & co), ephemeral tunnels |
-| [`dangerous-scripts`](/docs/rules/dangerous-scripts/) | eval/exec of decoded payloads, download-then-execute chains, large base64/hex blobs, command injection in bundled scripts |
+| [`exfiltration`](/docs/rules/exfiltration/) | env secrets in network requests, key-material reads (`~/.ssh`, `~/.aws`) including via language runtimes, env harvesting loops, dead-drop endpoints (webhook.site & co), ephemeral tunnels, host-fingerprint telemetry, disposable free-tier collectors |
+| [`dangerous-scripts`](/docs/rules/dangerous-scripts/) | eval/exec of decoded, reversed, or list-driven payloads, download-then-execute chains, large base64/hex blobs, command injection in bundled scripts, bundled agent hook/config files |
 | [`detection-evasion`](/docs/rules/detection-evasion/) | CAPTCHA solving/bypass, anti-bot detection evasion, automation-fingerprint hiding (`navigator.webdriver` spoofing) |
 | [`known-advisory`](/docs/rules/known-advisory/) | Skill name or content indicators (documented campaign domains) match a publicly documented malicious skill in the bundled advisory database |
 
