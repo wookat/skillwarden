@@ -1,6 +1,6 @@
 {
   "name": "skillwarden-core",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "SkillWarden core engine: Agent Skills (SKILL.md) security scanning rules, lockfile spec, skill directory discovery",
   "license": "Apache-2.0",
   "repository": {
