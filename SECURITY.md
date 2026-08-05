@@ -35,5 +35,7 @@ defeat the lockfile drift gate are treated as vulnerabilities.
 - Dependencies are locked via `pnpm-lock.yaml` and installed with
   `--frozen-lockfile` in CI.
 - Releases are versioned via changesets and published by a maintainer with a
-  scoped npm token (npm provenance/trusted publishing is planned).
+  scoped npm token; the CI release workflow is configured for npm trusted
+  publishing (OIDC + provenance) pending npmjs-side activation — see
+  docs/RELEASING.md.
 - SkillWarden scans its own example skills in CI (`dogfood` steps).
