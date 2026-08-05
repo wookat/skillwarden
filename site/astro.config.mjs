@@ -47,6 +47,7 @@ export default defineConfig({
             { label: 'skillwarden lock', slug: 'docs/cli/lock' },
             { label: 'skillwarden diff', slug: 'docs/cli/diff' },
             { label: 'skillwarden ci', slug: 'docs/cli/ci' },
+            { label: 'skillwarden openclaw-install-policy', slug: 'docs/cli/openclaw-install-policy' },
           ],
         },
         {

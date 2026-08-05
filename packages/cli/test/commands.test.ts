@@ -6,6 +6,7 @@ import { runCi } from '../src/commands/ci.js';
 import { runDiff } from '../src/commands/diff.js';
 import { runLock } from '../src/commands/lock.js';
 import { runScan } from '../src/commands/scan.js';
+import { runInstallPolicy } from '../src/commands/openclaw-install-policy.js';
 
 const BENIGN = `---
 name: format-code
@@ -102,5 +103,58 @@ describe('lock / diff / ci', () => {
     const root = makeProject({ '.claude/skills/fmt/SKILL.md': BENIGN });
     expect(runScan([], { format: 'table', failOn: 'bogus' }, root)).toBe(2);
     expect(runCi([], { failOn: 'bogus' }, root)).toBe(2);
+  });
+});
+
+describe('openclaw-install-policy command', () => {
+  function policyRequest(sourcePath: string): string {
+    return JSON.stringify({
+      protocolVersion: 1,
+      targetType: 'skill',
+      targetName: 'staged-skill',
+      sourcePath,
+      sourcePathKind: 'directory',
+    });
+  }
+
+  function runPolicy(input: string, root: string): { exit: number; response: Record<string, unknown> } {
+    const cap = captureStdout();
+    try {
+      const exit = runInstallPolicy(input, {}, root);
+      return { exit, response: JSON.parse(cap.out()) as Record<string, unknown> };
+    } finally {
+      cap.restore();
+    }
+  }
+
+  it('allows a clean staged skill and blocks a malicious one', () => {
+    const clean = makeProject({ 'skill/SKILL.md': BENIGN });
+    const dirty = makeProject({ 'skill/SKILL.md': MALICIOUS });
+    const allow = runPolicy(policyRequest(join(clean, 'skill')), clean);
+    expect(allow.exit).toBe(0);
+    expect(allow.response['decision']).toBe('allow');
+    const blocked = runPolicy(policyRequest(join(dirty, 'skill')), dirty);
+    expect(blocked.exit).toBe(0);
+    expect(blocked.response['decision']).toBe('block');
+    expect((blocked.response['findings'] as unknown[]).length).toBeGreaterThan(0);
+  });
+
+  it('fails closed: invalid requests and unreadable paths are blocked', () => {
+    const root = makeProject({});
+    expect(runPolicy('not json', root).response['decision']).toBe('block');
+    expect(runPolicy(JSON.stringify({ protocolVersion: 2 }), root).response['decision']).toBe('block');
+    expect(runPolicy(policyRequest(join(root, 'does-not-exist')), root).response['decision']).toBe('block');
+  });
+
+  it('warns on plugin targets it cannot analyze', () => {
+    const root = makeProject({});
+    const req = JSON.stringify({
+      protocolVersion: 1,
+      targetType: 'plugin',
+      targetName: 'some-plugin',
+      sourcePath: root,
+      sourcePathKind: 'directory',
+    });
+    expect(runPolicy(req, root).response['decision']).toBe('warn');
   });
 });
