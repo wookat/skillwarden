@@ -114,6 +114,21 @@ const SPECS: PatternSpec[] = [
     severity: 'high',
     message: 'Package lifecycle script wired to run downloaded or dynamic code',
   },
+  {
+    // Shell startup file appended through a language runtime rather than a
+    // shell redirect: open(bashrc, "a"), fs.appendFile(zshrc, …).
+    pattern:
+      /(?:open|appendFile(?:Sync)?|write_text|File\.write)\s*\([^\n]{0,80}\.(?:bashrc|zshrc|bash_profile|zprofile|profile)[^\n]{0,40}(?:["'`]a["'`+]|append|\{\s*flag)/i,
+    severity: 'high',
+    message: 'Shell startup file appended through a language runtime — persistence across sessions',
+  },
+  {
+    // Environment-variable hooks that make an interpreter run attacker code on
+    // every future start.
+    pattern: /\b(PYTHONSTARTUP|NODE_OPTIONS|PYTHONPATH|LD_PRELOAD|DYLD_INSERT_LIBRARIES|BASH_ENV)\s*=\s*[^\n]{0,80}(?:\.(?:py|js|cjs|mjs|so|dylib|sh)\b|\$\{?\w)/,
+    severity: 'high',
+    message: 'Interpreter/loader hook environment variable set — code injected into every future process',
+  },
 ];
 
 export const dangerousCommandsRule: Rule = {

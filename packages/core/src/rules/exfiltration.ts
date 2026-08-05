@@ -66,6 +66,30 @@ const SPECS: PatternSpec[] = [
     severity: 'medium',
     message: 'Raw-IP URL — endpoint identity cannot be reviewed',
   },
+  {
+    // Credential material read through a language runtime rather than a shell
+    // command: Path('~/.ssh/id_rsa').read_text(), open('~/.aws/credentials'), fs.readFile(...).
+    pattern: new RegExp(
+      `(?:open|read_text|readFile(?:Sync)?|Path|File\\.read|IO\\.read)\\s*\\(?[^\\n]{0,40}["'\`](?:${HOME}|\\.)?/?\\.(?:ssh/|aws/|gnupg/|kube/|docker/|config/gh/|netrc|npmrc|pypirc|git-credentials)`,
+      'i',
+    ),
+    severity: 'critical',
+    message: 'Credential file read through a language runtime (bypasses shell-command patterns)',
+  },
+  {
+    // Harvesting loop: iterate the environment and keep only secret-looking keys.
+    pattern: /(?:os\.environ\.(?:items|keys)\(\)|Object\.(?:entries|keys)\(\s*process\.env\s*\))[^\n]{0,200}["'](?:KEY|TOKEN|SECRET|PASSWORD|CRED|AWS)["']/,
+    severity: 'critical',
+    message: 'Environment scanned for secret-looking variables — credential harvesting',
+  },
+  {
+    // A bare IPv4 literal assigned as an endpoint/host constant: no scheme, so
+    // the raw-IP URL pattern above misses it.
+    pattern:
+      /\b(?:endpoint|host|server|url|uri|c2|collector|upstream|target|beacon|remote|addr(?:ess)?)\w*\s*[:=]\s*["'`](?:https?:\/\/)?(?!0\.0\.0\.0|127\.|10\.|192\.168\.|172\.(?:1[6-9]|2\d|3[01])\.)\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(?::\d+)?[/"'`]/i,
+    severity: 'high',
+    message: 'Endpoint constant is a bare public IP address — destination identity cannot be reviewed',
+  },
 ];
 
 export const exfiltrationRule: Rule = {
