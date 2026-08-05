@@ -1,7 +1,7 @@
 # Agent Skills Threat Model
 
 > **Scope:** threats to a user or organisation that installs and runs third-party Agent
-> Skills (`SKILL.md` packages), and how SkillWarden's six deterministic rule categories map
+> Skills (`SKILL.md` packages), and how SkillWarden's seven deterministic rule categories map
 > onto them.
 > **Method (SOP-02):** every claim below carries a public source link; statements are
 > marked as *observed* (documented by a named researcher, with a link) or *inference*
@@ -143,7 +143,7 @@ Two chains bypass stages 2–3 entirely and are why prose-only scanning matters:
 
 ---
 
-## 6. Mapping to SkillWarden's six rule categories
+## 6. Mapping to SkillWarden's seven rule categories
 
 SkillWarden scans **every text file in the skill directory**, not just `SKILL.md` — the
 `better-polymarket` backdoor sat around line 180 of a bundled Python file.
@@ -156,6 +156,7 @@ SkillWarden scans **every text file in the skill directory**, not just `SKILL.md
 | `credential-leak` | Hardcoded AWS/GitHub/npm/OpenAI/Anthropic/Slack/Google keys, private-key blocks, JWTs, credential assignments (placeholder-aware; findings are redacted in reports) | Snyk found hardcoded secrets in 34 ClawHub skills and 32% of confirmed-malicious samples, including archive passwords used as anti-analysis ([arXiv:2605.28588](https://arxiv.org/abs/2605.28588)) | Yes for known key shapes; generic/rotating secrets are a gap (§7 R6) |
 | `exfiltration` | Network calls carrying env secrets, env dumps piped to network tools, reads of `~/.ssh`/`~/.aws`/`~/.netrc`/`~/.npmrc`, dead-drop services (webhook.site, requestbin, interactsh…), ephemeral tunnels (ngrok, trycloudflare), raw-IP URLs | `rankaj` → `https://webhook.site/…` | Yes — `critical` dead-drop hit (verified locally 2026-08-04). Note the *file path* it read (`~/.clawdbot/.env`) was not itself flagged (§7 R5) |
 | `dangerous-scripts` | `eval`/`exec` of decoded payloads, download-then-execute chains, large base64 blobs, hex-escape and char-code obfuscation, shell built by string interpolation | ClawHavoc staged droppers; obfuscated bundled scripts | Yes for the published shapes |
+| `detection-evasion` | CAPTCHA solving/bypass, anti-bot detection evasion (Cloudflare, DataDome…), automation-fingerprint hiding (`navigator.webdriver` spoofing) | ClawHub skills advertising "automatic CAPTCHA solving" and "hide automation fingerprints" (2 of 8 LLM-labeled malicious eval_holdout cases, verified locally 2026-08-04) | Yes for advertised capability phrasing; covert implementations are a gap (§7) |
 
 Plus two non-rule controls that address threats no scanner can see:
 
@@ -185,7 +186,7 @@ packages, and each real skill contained hundreds of additional lines.
 
 ---
 
-## 7. Residual risk — what the six rules do **not** cover
+## 7. Residual risk — what the seven rules do **not** cover
 
 Stated plainly, because a green scan that is read as "safe" is worse than no scan.
 
