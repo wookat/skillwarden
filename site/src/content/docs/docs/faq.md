@@ -34,6 +34,19 @@ fingerprint (shown in `--format json`) in a `.skillwardenignore` file — one
 `skill:file:ruleId[:line]` per line. You can also gate at a higher threshold
 (`--fail-on critical`) — findings are still reported, they just don't fail the gate.
 
+## My API skill sends its own token to its own official API — why is that flagged?
+
+The `exfiltration` rule flags any environment secret placed in a network
+request (e.g. `Authorization: Bearer $NOTION_TOKEN` → `api.notion.com`). For
+an API-wrapper skill that is often legitimate — but SkillWarden deliberately
+does not downgrade it, because the "official" destination is declared by the
+skill author, and a malicious skill can dress up an exfiltration endpoint the
+same way. The gate stays fail-closed; you make the trust decision once:
+review the destination, then copy the finding's `ignore:` fingerprint from the
+scan output into `.skillwardenignore`. The finding stays visible in reports
+and the lockfile still pins the content, so a later rug-pull that changes the
+destination shows up as drift plus a new (un-ignored) finding.
+
 ## Why is there no inline `skillwarden:ignore` comment, like `gitleaks:allow`?
 
 Deliberate. In gitleaks' threat model the repo owner is trusted, so an inline

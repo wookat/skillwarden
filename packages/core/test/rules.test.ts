@@ -4,6 +4,7 @@ import {
   credentialLeakRule,
   dangerousCommandsRule,
   dangerousScriptsRule,
+  detectionEvasionRule,
   exfiltrationRule,
   hiddenUnicodeRule,
   promptInjectionRule,
@@ -115,5 +116,25 @@ describe('dangerous-scripts', () => {
     const blob = `const p = "${'A'.repeat(240)}";\n`;
     const skill = makeSkill({ 'SKILL.md': BENIGN_SKILL_MD, 'scripts/payload.py': blob });
     expect(dangerousScriptsRule.check(skill).some((f) => f.message.includes('base64 blob'))).toBe(true);
+  });
+});
+
+describe('detection-evasion', () => {
+  it('flags CAPTCHA solving capability', () => {
+    const md = `${BENIGN_SKILL_MD}\nHandles automatic CAPTCHA solving (slide-puzzle) during login.\n`;
+    const findings = detectionEvasionRule.check(makeSkill({ 'SKILL.md': md }));
+    expect(findings.some((f) => f.severity === 'high' && f.message.includes('CAPTCHA'))).toBe(true);
+  });
+
+  it('flags anti-bot evasion and fingerprint hiding', () => {
+    const md = `${BENIGN_SKILL_MD}\nEvades anti-bot detection (Cloudflare, DataDome).\nHides automation fingerprints (navigator.webdriver is patched to undefined).\n`;
+    const findings = detectionEvasionRule.check(makeSkill({ 'SKILL.md': md }));
+    expect(findings.some((f) => f.message.includes('Anti-bot'))).toBe(true);
+    expect(findings.some((f) => f.message.includes('fingerprint'))).toBe(true);
+  });
+
+  it('does not flag negated or defensive phrasing', () => {
+    const md = `${BENIGN_SKILL_MD}\nThis skill never bypasses CAPTCHAs and does not evade bot detection.\n`;
+    expect(detectionEvasionRule.check(makeSkill({ 'SKILL.md': md }))).toEqual([]);
   });
 });

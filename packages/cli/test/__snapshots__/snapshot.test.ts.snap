@@ -154,6 +154,12 @@ exports[`output contract snapshots > scan --format sarif on the malicious exampl
               "shortDescription": {
                 "text": "Detects dynamic execution, obfuscation, download-execute chains, and unreviewable payloads in bundled files"
               }
+            },
+            {
+              "id": "detection-evasion",
+              "shortDescription": {
+                "text": "Detects CAPTCHA solving, anti-bot evasion, and automation-fingerprint hiding capabilities"
+              }
             }
           ]
         }

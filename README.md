@@ -95,7 +95,7 @@ See [packages/action](packages/action/README.md) for all inputs.
 
 ## Scan rules
 
-Six deterministic rule categories, aligned with real-world skills-ecosystem threats:
+Seven deterministic rule categories, aligned with real-world skills-ecosystem threats:
 
 | Rule | Catches |
 |---|---|
@@ -105,6 +105,7 @@ Six deterministic rule categories, aligned with real-world skills-ecosystem thre
 | `credential-leak` | hardcoded AWS/GitHub/npm/OpenAI/Anthropic/Slack/Google tokens, private keys, JWTs (reported redacted) |
 | `exfiltration` | env secrets in network requests, key-material reads (`~/.ssh`, `~/.aws`), dead-drop endpoints (webhook.site & co), ephemeral tunnels |
 | `dangerous-scripts` | eval/exec of decoded payloads, download-then-execute chains, large base64/hex blobs, command injection in bundled scripts |
+| `detection-evasion` | CAPTCHA solving/bypass, anti-bot detection evasion, automation-fingerprint hiding (`navigator.webdriver` spoofing) |
 
 ## Lockfile
 
