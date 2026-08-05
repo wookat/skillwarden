@@ -42,8 +42,9 @@ function isVariationSelector(cp: number): boolean {
 
 /**
  * A single variation selector after a non-ASCII base character is ordinary text
- * (emoji presentation, e.g. `⚠️` = U+26A0 U+FE0F). Runs of two or more, or a
- * selector applied to an ASCII character, are the byte-smuggling pattern.
+ * (emoji presentation, e.g. `⚠️` = U+26A0 U+FE0F), as is VS16 in a keycap
+ * sequence (`1️⃣` = `1` U+FE0F U+20E3). Runs of two or more, or a selector
+ * applied to any other ASCII character, are the byte-smuggling pattern.
  */
 function isBenignVariationSelector(text: string[], i: number): boolean {
   const prev = text[i - 1];
@@ -52,7 +53,8 @@ function isBenignVariationSelector(text: string[], i: number): boolean {
   if (prev === undefined) return false;
   const prevCp = prev.codePointAt(0)!;
   if (isVariationSelector(prevCp)) return false;
-  return prevCp > 0x7f;
+  if (prevCp > 0x7f) return true;
+  return text[i]!.codePointAt(0) === 0xfe0f && /[0-9#*]/.test(prev) && next === '\u20e3';
 }
 
 function checkFile(file: SkillFile): Finding[] {
@@ -83,7 +85,7 @@ function checkFile(file: SkillFile): Finding[] {
     findings.push({
       ruleId: 'hidden-unicode',
       severity: name.startsWith('Unicode tag') || name === VARIATION_SELECTOR ? 'critical' : 'high',
-      message: `${count} ${name}${count > 1 ? 's' : ''} found — invisible to human review`,
+      message: `${name} ×${count} — invisible to human review`,
       file: file.path,
       line: lineOf(file.content, firstIndex),
     });

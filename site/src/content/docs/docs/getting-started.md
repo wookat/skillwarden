@@ -21,7 +21,8 @@ Requires Node.js 22+.
 ## Scan
 
 Scan the skills in your project — `.claude/skills`, `.agents/skills`, `.codex/skills`,
-`.gemini/skills`, `.opencode/skills`, `.cursor/skills`, and `skills/` are discovered
+`.gemini/skills`, `.opencode/skills`, `.cursor/skills`, `skills/`, and nested layouts
+like `plugins/<name>/skills/` are discovered
 automatically:
 
 ```bash

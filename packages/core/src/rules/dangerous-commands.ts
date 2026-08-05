@@ -63,7 +63,7 @@ const SPECS: PatternSpec[] = [
     message: 'World-writable permissions (chmod 777)',
   },
   {
-    pattern: /\b(sudo|doas)\s+(?!-h\b)/,
+    pattern: /\b(sudo|doas)\s+(?!-h\b)(?!(apt(-get)?|apt-cache|yum|dnf|zypper|pacman|apk|brew|snap|port)\s+(install|add|update|upgrade|search|info|list)\b)/,
     severity: 'medium',
     message: 'Privilege escalation via sudo/doas inside a skill',
   },

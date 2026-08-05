@@ -96,6 +96,13 @@ describe('F3 hidden-unicode: full-file coverage and legitimate sequences', () =>
     expect(hiddenUnicodeRule.check(skill)).toEqual([]);
   });
 
+  it('allows keycap sequences but flags a selector on other ASCII', () => {
+    const keycaps = makeSkill({ 'SKILL.md': md('Steps: 1\ufe0f\u20e3 lint, 2\ufe0f\u20e3 test, #\ufe0f\u20e3 done.') });
+    expect(hiddenUnicodeRule.check(keycaps)).toEqual([]);
+    const smuggle = makeSkill({ 'SKILL.md': md('a\ufe0fb') });
+    expect(messages(smuggle, hiddenUnicodeRule)).toContain('variation-selector');
+  });
+
   it('reports non-UTF-8 bytes in a text file', () => {
     const skill = makeBinarySkill({
       'SKILL.md': Buffer.concat([Buffer.from('---\nname: latin\n---\nCaf'), Buffer.from([0xe9]), Buffer.from('\n')]),

@@ -108,7 +108,7 @@ const SPECS: PatternSpec[] = [
     message: 'Jailbreak-style role instruction (pretend restrictions do not exist)',
   },
   {
-    pattern: /you\s+must\s+(always\s+)?(run|execute|call)\s+.{0,80}(before|first|immediately)/i,
+    pattern: /you\s+must\s+(always\s+)?(run|execute)\s+.{0,80}(before|first|immediately)/i,
     severity: 'medium',
     message: 'Unconditional execution demand — review what it forces the agent to run',
   },

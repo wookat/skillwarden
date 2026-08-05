@@ -11,6 +11,8 @@ function makeProject(): string {
     '.claude/skills/deploy/SKILL.md': BENIGN_SKILL_MD,
     '.claude/skills/deploy/scripts/run.sh': 'echo deploy\n',
     '.agents/skills/review/SKILL.md': '---\nname: review\ndescription: Review code\n---\nReview.\n',
+    'plugins/sys/skills/rust-async/SKILL.md': '---\nname: rust-async\ndescription: Rust async patterns\n---\nAsync.\n',
+    'node_modules/dep/skills/hidden/SKILL.md': '---\nname: hidden\n---\nShould be skipped.\n',
   })) {
     mkdirSync(join(root, rel, '..'), { recursive: true });
     writeFileSync(join(root, rel), content, 'utf8');
@@ -19,10 +21,10 @@ function makeProject(): string {
 }
 
 describe('discoverSkills', () => {
-  it('finds skills in well-known directories', () => {
+  it('finds skills in well-known directories and nested layouts, skipping node_modules', () => {
     const root = makeProject();
     const skills = discoverSkills(root);
-    expect(skills.map((s) => s.name).sort()).toEqual(['format-code', 'review']);
+    expect(skills.map((s) => s.name).sort()).toEqual(['format-code', 'review', 'rust-async']);
   });
 });
 
@@ -32,6 +34,11 @@ describe('loadSkillsFromPath', () => {
     expect(loadSkillsFromPath(join(root, '.claude/skills/deploy'))).toHaveLength(1);
     expect(loadSkillsFromPath(join(root, '.claude/skills/deploy/SKILL.md'))).toHaveLength(1);
     expect(loadSkillsFromPath(join(root, '.claude/skills'))).toHaveLength(1);
+  });
+
+  it('recursively finds skills under an arbitrary parent directory', () => {
+    const root = makeProject();
+    expect(loadSkillsFromPath(join(root, 'plugins')).map((s) => s.name)).toEqual(['rust-async']);
   });
 });
 

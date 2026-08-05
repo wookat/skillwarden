@@ -29,14 +29,19 @@ before findings are even considered. See the [lockfile spec](/docs/lockfile/).
 Open a [detection-gap issue](https://github.com/wookat/skillwarden/issues/new/choose)
 with the snippet. Rules are tuned against a corpus of real public skills (negation
 guards, emoji variation-selector handling, script-comment scoping), and false
-positives are treated as bugs. In the meantime you can gate at a higher threshold
+positives are treated as bugs. For a finding you have reviewed and accepted, put its
+fingerprint (shown in `--format json`) in a `.skillwardenignore` file — one
+`skill:file:ruleId[:line]` per line. You can also gate at a higher threshold
 (`--fail-on critical`) — findings are still reported, they just don't fail the gate.
 
 ## Which ecosystems are discovered automatically?
 
 `.claude/skills`, `.agents/skills`, `.agent/skills`, `.codex/skills`,
-`.gemini/skills`, `.opencode/skills`, `.cursor/skills`, and `skills/`. You can also
-pass explicit paths (a skill directory, a `SKILL.md`, or a parent directory).
+`.gemini/skills`, `.opencode/skills`, `.cursor/skills`, and `skills/` are checked
+first, then the working tree is searched recursively (skipping `node_modules`,
+`.git`, and build output), so nested layouts like `plugins/<name>/skills/` are
+found too. You can also pass explicit paths (a skill directory, a `SKILL.md`, or a
+parent directory — skills beneath it are found recursively).
 
 ## Can a skill hide content from the scanner?
 
