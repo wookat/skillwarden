@@ -7,14 +7,14 @@
   },
   "packageManager": "pnpm@11.9.0",
   "scripts": {
-    "build": "pnpm --filter '!@skillwarden/site' -r build",
+    "build": "pnpm --filter \"!@skillwarden/site\" -r build",
     "lint": "eslint .",
-    "typecheck": "pnpm --filter '!@skillwarden/site' -r typecheck",
-    "test": "pnpm --filter '!@skillwarden/site' -r test",
+    "typecheck": "pnpm --filter \"!@skillwarden/site\" -r typecheck",
+    "test": "pnpm --filter \"!@skillwarden/site\" -r test",
     "site:dev": "pnpm --filter @skillwarden/site dev",
     "site:build": "pnpm --filter @skillwarden/site build",
     "changeset": "changeset",
-    "release": "pnpm build && pnpm --filter '!@skillwarden/site' -r publish --access public --no-git-checks"
+    "release": "pnpm build && pnpm --filter \"!@skillwarden/site\" -r publish --access public --no-git-checks"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
