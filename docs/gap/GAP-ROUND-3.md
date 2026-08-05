@@ -20,7 +20,8 @@
 
 ## 回归结论
 
-- 本轮为工程基建轮，无扫描行为变化；`pnpm build/lint/typecheck/test` 全绿，平台矩阵与每周冒烟以 PR CI 首跑为准（windows/macos 结果见 PR checks）。
+- 本轮为工程基建轮，无扫描行为变化；`pnpm build/lint/typecheck/test` 全绿。
+- 平台矩阵首跑即抓到 2 个真实 Windows bug（pnpm filter 单引号在 cmd/pwsh 下不匹配任何项目导致 build/test 静默跳过；SARIF/JSON 快照未归一化 Windows 路径变体），修复后 ubuntu/windows/macos × Node 22/24 全绿 —— 印证「兼容性必须测出来」的判断。
 - 诚实回答：兼容性此前是我们对照 osv-scanner/gitleaks 最大的"无证据声明"，本轮补上 CI 证据；分发形态（单二进制）仍不如 Go 系工具，但对 npm 生态目标用户不构成实际摩擦。
 
 ## ROUND-4 计划
