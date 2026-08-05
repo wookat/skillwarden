@@ -1,6 +1,6 @@
 import Table from 'cli-table3';
 import pc from 'picocolors';
-import type { DriftReport, Severity, SkillScanResult } from 'skillwarden-core';
+import { fingerprint, type DriftReport, type Severity, type SkillScanResult } from 'skillwarden-core';
 
 export function severityLabel(severity: Severity): string {
   switch (severity) {
@@ -26,7 +26,10 @@ export function renderScanTable(results: SkillScanResult[]): string {
     if (count > 0) {
       const table = new Table({ head: ['Severity', 'Rule', 'Location', 'Message'], style: { head: ['cyan'] }, wordWrap: true, colWidths: [12, 20, 28, 60] });
       for (const f of result.findings) {
-        table.push([severityLabel(f.severity), f.ruleId, f.line ? `${f.file}:${f.line}` : f.file, f.message + (f.snippet ? `\n${pc.dim(f.snippet)}` : '')]);
+        const detail = [f.message, f.snippet ? pc.dim(f.snippet) : '', pc.dim(`ignore: ${fingerprint(result.skill.name, f)}`)]
+          .filter(Boolean)
+          .join('\n');
+        table.push([severityLabel(f.severity), f.ruleId, f.line ? `${f.file}:${f.line}` : f.file, detail]);
       }
       lines.push(table.toString());
     }

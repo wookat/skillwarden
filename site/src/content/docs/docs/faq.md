@@ -34,6 +34,14 @@ fingerprint (shown in `--format json`) in a `.skillwardenignore` file — one
 `skill:file:ruleId[:line]` per line. You can also gate at a higher threshold
 (`--fail-on critical`) — findings are still reported, they just don't fail the gate.
 
+## Why is there no inline `skillwarden:ignore` comment, like `gitleaks:allow`?
+
+Deliberate. In gitleaks' threat model the repo owner is trusted, so an inline
+comment is a safe suppression channel. In ours the skill content itself is the
+untrusted input — an inline suppression comment would let a malicious skill
+author exempt their own payload. Suppressions therefore live only in your
+`.skillwardenignore`, outside the scanned content.
+
 ## Which ecosystems are discovered automatically?
 
 `.claude/skills`, `.agents/skills`, `.agent/skills`, `.codex/skills`,
