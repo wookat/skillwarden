@@ -41,6 +41,9 @@
       "genericName": true
     }
   ],
+  "indicators": {
+    "domains": ["vercel-find-skills.io"]
+  },
   "references": [
     {
       "type": "report",

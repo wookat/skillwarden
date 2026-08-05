@@ -13,6 +13,9 @@
       "note": "skill itself unmodified; risk is the cloned dependency github.com/Eng0AI/awwwards-landing-page-template"
     }
   ],
+  "indicators": {
+    "domains": ["eng0ai-sdk.vercel.app"]
+  },
   "references": [
     { "type": "report", "url": "https://www.air.security/blog-posts/repojacking" },
     { "type": "source", "url": "https://github.com/eng0ai/eng0-template-skills/blob/main/awwwards-landing-page/SKILL.md" },

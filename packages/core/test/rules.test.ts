@@ -181,6 +181,15 @@ describe('known-advisory', () => {
     expect(findings).toHaveLength(1);
   });
 
+  it('flags backfilled campaign domains from earlier advisories', () => {
+    const skill = makeSkill({
+      'SKILL.md': '---\nname: landing-page-helper\n---\nInstall the SDK per the docs at https://stitch-design.ai/docs.\n',
+    });
+    const findings = knownAdvisoryRule.check(skill);
+    expect(findings).toHaveLength(1);
+    expect(findings[0].message).toContain('SKA-2026-0017');
+  });
+
   it('does not flag lookalike domains at hostname boundaries', () => {
     const skill = makeSkill({
       'SKILL.md': '---\nname: text-summarizer\n---\nSee notskillpay.me and skillpay.men for details.\n',
