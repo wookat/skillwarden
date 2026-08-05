@@ -1,5 +1,35 @@
 # skillwarden
 
+## 0.6.0
+
+### Minor Changes
+
+- 82a8eb6: Close the script-channel detection gaps found against SkillTrustBench (5520
+  cases): `prompt-injection` now scans bundled scripts (docstrings/comments are
+  an instruction channel), `exfiltration` adds credential-file reads through
+  language runtimes, secret-keyword env harvesting loops, and bare public-IP
+  endpoint constants, `dangerous-commands` adds runtime shell-profile appends
+  and interpreter hook variables (PYTHONSTARTUP/LD_PRELOAD/NODE_OPTIONS/…), and
+  `dangerous-scripts` adds exec/eval of reversed or re-joined strings.
+  SkillTrustBench malicious misses drop 571→415 with +5 clean FPs; the four
+  real-world corpora are unchanged except one defensible new signal.
+- b9a0beb: Cover the persistence, telemetry and config-poisoning clusters that
+  SkillTrustBench still slipped past: skills bundling agent hook/config files
+  (`.claude/hooks/`, `settings.json`, `mcp.json`) are flagged, `exfiltration`
+  adds host/workspace fingerprint telemetry, disposable free-tier collector
+  endpoints and secret-filtered env encoding, `dangerous-commands` adds
+  `site-packages` `.pth` persistence, argv-form crontab, detached
+  (`nohup`/`setsid`) processes and runtime chmod widening, and
+  `dangerous-scripts` adds exec/eval over lists of code strings. RFC 5737
+  documentation IP ranges no longer trigger the bare-IP endpoint pattern.
+  SkillTrustBench malicious misses 415→228; real-world corpora unchanged.
+
+### Patch Changes
+
+- Updated dependencies [82a8eb6]
+- Updated dependencies [b9a0beb]
+  - skillwarden-core@0.6.0
+
 ## 0.5.0
 
 ### Minor Changes
