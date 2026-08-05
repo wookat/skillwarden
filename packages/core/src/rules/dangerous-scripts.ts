@@ -68,6 +68,14 @@ const SPECS: PatternSpec[] = [
     severity: 'critical',
     message: 'Download-then-execute chain',
   },
+  {
+    // exec/eval over a string rebuilt by reversing, joining or slicing:
+    // obfuscation that carries no base64 or hex signature.
+    pattern:
+      /\b(?:exec|eval)\s*\(\s*(?:["'][^"'\n]*["']\s*\.\s*join\s*\(\s*(?:reversed|list)|\w+\s*\[\s*::\s*-1\s*\]|\[\s*\.\.\.[^\n\]]*\]\s*\.\s*reverse|\w+\s*\.\s*split\s*\([^\n)]*\)\s*\.\s*reverse)/,
+    severity: 'critical',
+    message: 'exec/eval of a string rebuilt at runtime (reversed or re-joined) — obfuscated code execution',
+  },
 ];
 
 export const dangerousScriptsRule: Rule = {

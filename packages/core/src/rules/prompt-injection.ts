@@ -1,5 +1,5 @@
 import type { Finding, Rule, Skill } from '../types.js';
-import { isDocFile, isNegated, matchPatterns, type PatternSpec } from './rule.js';
+import { isDocFile, isNegated, isScriptFile, matchPatterns, type PatternSpec } from './rule.js';
 
 /**
  * Prompt-injection and instruction-override attempts inside skill content.
@@ -194,7 +194,9 @@ export const promptInjectionRule: Rule = {
   check(skill: Skill): Finding[] {
     const findings: Finding[] = [];
     for (const file of skill.files) {
-      if (!isDocFile(file.path)) continue;
+      // Agents read bundled scripts too — a docstring or comment is as much an
+      // instruction channel as SKILL.md.
+      if (!isDocFile(file.path) && !isScriptFile(file.path)) continue;
       findings.push(...matchPatterns('prompt-injection', file, SPECS));
     }
     return findings;
