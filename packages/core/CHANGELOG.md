@@ -1,5 +1,34 @@
 # skillwarden-core
 
+## 0.5.0
+
+### Minor Changes
+
+- 726a8d5: `known-advisory` now also matches advisory content indicators: domains
+  recorded under `indicators.domains` in an advisory (e.g. `skillpay.me` from
+  SKA-2026-0020) are flagged when referenced in any skill file, at hostname
+  boundaries with subdomain support. Catches renamed re-uploads of documented
+  campaigns that name-based matching misses — verified on the ClawHub holdout
+  (2 previously-missed SkillPay skills now flagged, zero new false positives on
+  four real corpora).
+- a9ffc5f: New `known-advisory` rule: flags skills whose name matches a publicly
+  documented malicious skill in the bundled SkillWarden advisory database
+  (20 advisories, 64 non-generic names), fully offline. Finding severity is
+  inherited from the advisory; generic names (`update`, `simple`, …) are
+  excluded from matching. Verified against real corpora: detects the documented
+  `brand-landingpage` skill (SKA-2026-0017) in wshobson/agents with zero other
+  new findings.
+
+### Patch Changes
+
+- 7f88ac3: Backfill `indicators.domains` for five more advisories (ClawHavoc
+  `app-distribution.net`, zaycv `setup-service.com`, roin-orca
+  `vercel-find-skills.io`, brand-landingpage `stitch-design.ai` /
+  `google-stitch.com`, Eng0AI takeover `eng0ai-sdk.vercel.app`) — the
+  `known-advisory` rule now matches 7 verified attacker-controlled campaign
+  domains in skill content, so renamed clones of these documented campaigns are
+  still flagged. Zero new findings on the four real reference corpora.
+
 ## 0.4.0
 
 ### Minor Changes
