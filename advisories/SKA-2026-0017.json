@@ -14,6 +14,9 @@
       "note": "merged via PR into a ~38K-star plugin marketplace; still present and widely mirrored as of 2026-08-04"
     }
   ],
+  "indicators": {
+    "domains": ["stitch-design.ai", "google-stitch.com"]
+  },
   "references": [
     { "type": "report", "url": "https://www.air.security/blog-posts/the-story-of-skills" },
     { "type": "advisory", "url": "https://github.com/ossf/malicious-packages/blob/main/osv/malicious/npm/stitch-design/MAL-2026-6456.json" },

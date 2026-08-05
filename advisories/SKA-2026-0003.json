@@ -48,6 +48,9 @@
       "note": "same operator, PolymarketAuthTool.zip download"
     }
   ],
+  "indicators": {
+    "domains": ["setup-service.com"]
+  },
   "references": [
     {
       "type": "advisory",

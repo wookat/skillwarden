@@ -35,6 +35,9 @@
       "genericName": true
     }
   ],
+  "indicators": {
+    "domains": ["setup-service.com"]
+  },
   "references": [
     {
       "type": "advisory",

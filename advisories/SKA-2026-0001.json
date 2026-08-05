@@ -129,6 +129,9 @@
       "note": "listed in Unit 42's IOC table (2026-06-23)"
     }
   ],
+  "indicators": {
+    "domains": ["app-distribution.net"]
+  },
   "references": [
     {
       "type": "report",
