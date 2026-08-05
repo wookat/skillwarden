@@ -46,6 +46,7 @@ rules do *not* catch.
 | [SKA-2026-0017](SKA-2026-0017.json) | prompt-injection | high | `brand-landingpage` (GitHub `wshobson/agents`) — external "Stitch SDK" docs + npm `stitch-design` |
 | [SKA-2026-0018](SKA-2026-0018.json) | supply-chain | high | `seedance2-api` (skills.sh) — deleted GitHub owner re-registered (SkillJacking) |
 | [SKA-2026-0019](SKA-2026-0019.json) | supply-chain | high | `awwwards-landing-page` (skills.sh) — hijacked template repository (RepoJacking) |
+| [SKA-2026-0020](SKA-2026-0020.json) | credential-leak | medium | SkillPay pay-per-call skills (ClawHub) — hardcoded billing keys, undisclosed user-ID transmission, fail-open charge checks |
 
 Primary sources: [Koi Security ClawHavoc audit](https://www.koi.ai/blog/clawhavoc-341-malicious-clawedbot-skills-found-by-the-bot-they-were-targeting),
 [OpenSourceMalware](https://opensourcemalware.com/blog/malicious-clawhub-skills-target-openclaw-users),
