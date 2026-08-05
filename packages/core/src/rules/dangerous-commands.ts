@@ -129,6 +129,30 @@ const SPECS: PatternSpec[] = [
     severity: 'high',
     message: 'Interpreter/loader hook environment variable set — code injected into every future process',
   },
+  {
+    // crontab invoked as an argv list, which the shell-syntax pattern misses.
+    pattern: /["'`]crontab["'`]\s*,\s*["'`]-/,
+    severity: 'medium',
+    message: 'Persistence mechanism (crontab invoked programmatically) installed by a skill',
+  },
+  {
+    // A .pth file in site-packages executes its import lines on every Python start.
+    pattern: /(?:site-packages|getsitepackages\(\)|getusersitepackages\(\))[^\n]{0,120}\.pth\b|\.pth["'`][^\n]{0,80}(?:import\s|os\.system|subprocess)/,
+    severity: 'high',
+    message: 'Python .pth file written into site-packages — code executed on every interpreter start',
+  },
+  {
+    // Detached background process survives the skill invocation.
+    pattern: /\bnohup\b[^\n]{0,120}&\s*(?:["'`]|$)|\bsetsid\b[^\n]{0,80}(?:python|node|bash|sh)\b|start_new_session\s*=\s*True/,
+    severity: 'high',
+    message: 'Detached long-lived process spawned — outlives the skill invocation',
+  },
+  {
+    // Chmod to world-writable/executable through a language runtime.
+    pattern: /\b(?:os\.chmod|chmodSync|chmod)\s*\([^\n)]{0,80}0o?7(?:77|55)\b/,
+    severity: 'medium',
+    message: 'Permissions widened to world-executable through a language runtime',
+  },
 ];
 
 export const dangerousCommandsRule: Rule = {

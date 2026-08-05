@@ -76,7 +76,22 @@ const SPECS: PatternSpec[] = [
     severity: 'critical',
     message: 'exec/eval of a string rebuilt at runtime (reversed or re-joined) — obfuscated code execution',
   },
+  {
+    // exec/eval driven from a comprehension or map over a list of code strings:
+    // hides the payload from single-statement patterns.
+    pattern: /\[\s*(?:exec|eval)\s*\(\s*\w+\s*\)\s*for\s+\w+\s+in\b|\bmap\s*\(\s*(?:exec|eval)\s*,/,
+    severity: 'critical',
+    message: 'exec/eval applied over a list of code strings — obfuscated multi-step execution',
+  },
 ];
+
+/**
+ * Agent configuration files that execute on their own schedule (hooks, session
+ * events, MCP servers). A skill has no reason to ship them: whatever they run
+ * happens outside the skill's own invocation and outside its reviewed scope.
+ */
+const AGENT_CONFIG_PATH =
+  /(?:^|\/)\.(?:claude|codex|gemini|cursor|openclaw|continue|windsurf)\/(?:hooks?\/|settings(?:\.local)?\.json|config\.(?:json|toml|ya?ml)|mcp(?:_servers)?\.json)/i;
 
 export const dangerousScriptsRule: Rule = {
   id: 'dangerous-scripts',
@@ -105,6 +120,15 @@ export const dangerousScriptsRule: Rule = {
           ruleId: 'dangerous-scripts',
           severity: 'medium',
           message: `File exceeds the ${MAX_FILE_BYTES} byte scan cap (${file.size} bytes) — only its head was analysed`,
+          file: file.path,
+        });
+      }
+      if (AGENT_CONFIG_PATH.test(file.path)) {
+        findings.push({
+          ruleId: 'dangerous-scripts',
+          severity: 'high',
+          message:
+            'Skill ships an agent configuration/hook file — it runs on the agent\'s own events, outside this skill\'s invocation',
           file: file.path,
         });
       }

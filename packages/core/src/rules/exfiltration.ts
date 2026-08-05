@@ -39,6 +39,13 @@ const SPECS: PatternSpec[] = [
     message: 'Environment dump piped to a network tool',
   },
   {
+    // Environment filtered for secret-looking names and encoded for transport,
+    // even when the network call is on a later line.
+    pattern: /\b(?:env|printenv)\b[^\n|]{0,20}\|\s*(?:grep|egrep|rg|awk|sed)[^\n]{0,80}(?:key|token|secret|pass|api|cred)[^\n]{0,80}(?:\||\$\()\s*(?:base64|openssl|gzip|xxd|tr)/i,
+    severity: 'critical',
+    message: 'Environment filtered for secrets and encoded for transport',
+  },
+  {
     pattern: /https?:\/\/[^\s"'`]*\b(webhook\.site|requestbin|pipedream\.net|pastebin\.com\/api|hookbin|beeceptor|interactsh|oastify\.com|burpcollaborator)\b/i,
     severity: 'critical',
     message: 'Known dead-drop / callback-catcher endpoint',
@@ -86,9 +93,24 @@ const SPECS: PatternSpec[] = [
     // A bare IPv4 literal assigned as an endpoint/host constant: no scheme, so
     // the raw-IP URL pattern above misses it.
     pattern:
-      /\b(?:endpoint|host|server|url|uri|c2|collector|upstream|target|beacon|remote|addr(?:ess)?)\w*\s*[:=]\s*["'`](?:https?:\/\/)?(?!0\.0\.0\.0|127\.|10\.|192\.168\.|172\.(?:1[6-9]|2\d|3[01])\.)\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(?::\d+)?[/"'`]/i,
+      /\w*(?:endpoint|host|server|url|uri|c2|collector|upstream|target|beacon|remote|addr(?:ess)?)\w*\s*[:=]\s*["'`](?:https?:\/\/)?(?!0\.0\.0\.0|127\.|10\.|192\.168\.|172\.(?:1[6-9]|2\d|3[01])\.|169\.254\.|192\.0\.2\.|198\.51\.100\.|203\.0\.113\.)\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(?::\d+)?[/"'`]/i,
     severity: 'high',
     message: 'Endpoint constant is a bare public IP address — destination identity cannot be reviewed',
+  },
+  {
+    // Throwaway free-tier host whose subdomain is a random hex label: the shape
+    // of a disposable collector, not of a named product endpoint.
+    pattern: /\b[a-z0-9-]*[0-9a-f]{8,}\.(?:workers\.dev|pages\.dev|vercel\.app|netlify\.app|onrender\.com|deno\.dev|fly\.dev)\b/i,
+    severity: 'high',
+    message: 'Endpoint on a free-tier host with a random-looking subdomain — disposable collector shape',
+  },
+  {
+    // Host/workspace fingerprint assembled and posted: identifiers the skill has
+    // no functional need for.
+    pattern:
+      /(?:os\.getcwd\(\)|socket\.gethostname\(\)|os\.uname\(\)|platform\.node\(\)|\bhostname\b|\bwhoami\b)[^\n]{0,200}?(?:urlopen|requests\.post|fetch\s*\(|curl\s+-|axios\.post)|(?:urlopen|requests\.post|curl\s+-[a-zA-Z]*d|axios\.post)[^\n]{0,200}?(?:\$\(hostname\)|\$\(whoami\)|socket\.gethostname\(\)|os\.getcwd\(\))/,
+    severity: 'high',
+    message: 'Host/workspace identifiers sent to a network endpoint — undisclosed fingerprint telemetry',
   },
 ];
 
