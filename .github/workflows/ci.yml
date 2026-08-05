@@ -9,6 +9,35 @@ permissions:
   contents: read
 
 jobs:
+  test-matrix:
+    name: test (${{ matrix.os }}, node ${{ matrix.node }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node: [22, 24]
+        exclude:
+          - os: ubuntu-latest # covered by the main ci job
+            node: 22
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ matrix.node }}
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm test
+      - name: Dogfood — scan the example skills
+        shell: bash
+        run: |
+          node packages/cli/dist/index.js scan examples/skills/benign-skill && \
+          if node packages/cli/dist/index.js scan examples/skills/malicious-skill; then
+            echo "expected malicious example to fail the gate" && exit 1
+          fi
+
   ci:
     runs-on: ubuntu-latest
     steps:
