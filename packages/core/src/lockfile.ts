@@ -73,7 +73,13 @@ export function writeLockfile(path: string, lockfile: Lockfile): void {
 }
 
 export function readLockfile(path: string): Lockfile {
-  const raw = JSON.parse(readFileSync(path, 'utf8')) as Lockfile;
+  const text = readFileSync(path, 'utf8');
+  let raw: Lockfile;
+  try {
+    raw = JSON.parse(text) as Lockfile;
+  } catch {
+    throw new Error(`Lockfile at ${path} is not valid JSON — re-run \`skillwarden lock\` to regenerate it`);
+  }
   if (typeof raw !== 'object' || raw === null || raw.version !== LOCKFILE_VERSION || !Array.isArray(raw.skills)) {
     throw new Error(`Unsupported or corrupt lockfile at ${path} (expected version ${LOCKFILE_VERSION})`);
   }
