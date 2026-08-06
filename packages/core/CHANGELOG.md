@@ -1,5 +1,13 @@
 # skillwarden-core
 
+## 0.7.2
+
+### Patch Changes
+
+- 2ea4154: CLI robustness: usage errors now exit 2 as documented (unknown commands/flags previously exited 1, colliding with the gate-failure code); a corrupt `skillwarden.lock` reports "not valid JSON — re-run `skillwarden lock`" instead of a raw JSON parse error; scanning a nonexistent path reports "Path does not exist: …" instead of a raw ENOENT.
+- 3d0d5fa: known-advisory: add campaign domain indicators laosji.net (SKA-2026-0013, money-radar affiliate injection) and letssendit.fun (SKA-2026-0014, agentic front-running) so renamed clones of these campaigns are still detected by infrastructure reference.
+- 904ad24: prompt-injection: bare Chinese 跳过确认/跳过检查 (e.g. "--force 跳过确认" in CLI help text) now reports at medium instead of critical; explicit bypass phrasing (绕过/规避 + 安全/权限/检查…, or 跳过/关闭/禁用 + quantifier or strong object) stays critical. Fixes a real-world false positive on legitimate Chinese CLI documentation while keeping bypass instructions gate-blocking.
+
 ## 0.7.1
 
 ### Patch Changes
