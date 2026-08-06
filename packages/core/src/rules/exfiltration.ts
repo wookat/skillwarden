@@ -51,6 +51,13 @@ const SPECS: PatternSpec[] = [
     message: 'Known dead-drop / callback-catcher endpoint',
   },
   {
+    // ntfy.sh is a legitimate notification service, but POSTing piped/encoded
+    // data to a topic is the dead-drop shape (SKA-2026-0022), not a user notify.
+    pattern: /\b(?:curl|wget|http)\b[^\n]{0,120}(?:-d\s*@?-|--data(?:-binary)?\b|--post-data)[^\n]{0,80}https?:\/\/ntfy\.sh\/|https?:\/\/ntfy\.sh\/[^\s"'`]+[^\n]{0,80}(?:-d\s*@?-|--data(?:-binary)?\b)/i,
+    severity: 'high',
+    message: 'Data POSTed to a public ntfy.sh topic — dead-drop exfiltration shape',
+  },
+  {
     pattern: /https?:\/\/(discord(app)?\.com|discord\.com)\/api\/webhooks\/|https?:\/\/hooks\.slack\.com\/services\/|https?:\/\/api\.telegram\.org\/bot|https?:\/\/[^\s"'`]*\bglot\.io\/snippets|https?:\/\/api\.github\.com\/gists\b/i,
     severity: 'high',
     message: 'Chat/paste webhook endpoint — common skill exfiltration channel',
