@@ -60,6 +60,8 @@ export default defineConfig({
             { label: 'credential-leak', slug: 'docs/rules/credential-leak' },
             { label: 'exfiltration', slug: 'docs/rules/exfiltration' },
             { label: 'dangerous-scripts', slug: 'docs/rules/dangerous-scripts' },
+            { label: 'detection-evasion', slug: 'docs/rules/detection-evasion' },
+            { label: 'known-advisory', slug: 'docs/rules/known-advisory' },
           ],
         },
         {
