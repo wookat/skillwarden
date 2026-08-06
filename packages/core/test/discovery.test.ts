@@ -40,6 +40,10 @@ describe('loadSkillsFromPath', () => {
     const root = makeProject();
     expect(loadSkillsFromPath(join(root, 'plugins')).map((s) => s.name)).toEqual(['rust-async']);
   });
+
+  it('reports a clear error for a nonexistent path', () => {
+    expect(() => loadSkillsFromPath('/tmp/skillwarden-does-not-exist')).toThrow(/Path does not exist/);
+  });
 });
 
 describe('loadSkill', () => {

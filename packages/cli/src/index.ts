@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { Command } from 'commander';
+import { Command, CommanderError } from 'commander';
 import { EXIT_USAGE_ERROR } from './context.js';
 import { runCi } from './commands/ci.js';
 import { runDiff } from './commands/diff.js';
@@ -81,9 +81,15 @@ program
     process.exitCode = runCi(paths, options, process.cwd());
   });
 
-try {
-  program.parse();
-} catch (error) {
+program.exitOverride();
+for (const command of program.commands) command.exitOverride();
+
+program.parseAsync().catch((error: unknown) => {
+  if (error instanceof CommanderError) {
+    // Commander already printed its message (help, version, or usage error).
+    process.exitCode = error.exitCode === 0 ? 0 : EXIT_USAGE_ERROR;
+    return;
+  }
   process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
   process.exitCode = EXIT_USAGE_ERROR;
-}
+});

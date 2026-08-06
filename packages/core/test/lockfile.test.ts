@@ -20,6 +20,12 @@ describe('lockfile', () => {
     expect(read.skills[0]!.digest).toBe(lock.skills[0]!.digest);
   });
 
+  it('rejects a lockfile that is not valid JSON with a regenerate hint', () => {
+    const path = join(mkdtempSync(join(tmpdir(), 'skillwarden-lock-')), 'skillwarden.lock');
+    writeFileSync(path, 'not json\n', 'utf8');
+    expect(() => readLockfile(path)).toThrow(/not valid JSON.*skillwarden lock/);
+  });
+
   it('rejects unsupported versions', () => {
     const path = join(mkdtempSync(join(tmpdir(), 'skillwarden-lock-')), 'skillwarden.lock');
     writeFileSync(path, JSON.stringify({ version: 99, skills: [] }), 'utf8');

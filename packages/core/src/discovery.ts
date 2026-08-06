@@ -219,6 +219,9 @@ function findSkillDirs(dir: string, depth: number, out: string[]): void {
  *   (e.g. `.claude/skills`, or a plugin marketplace with `plugins/<name>/skills`)
  */
 export function loadSkillsFromPath(path: string): Skill[] {
+  if (!existsSync(path)) {
+    throw new Error(`Path does not exist: ${path}`);
+  }
   const stat = statSync(path);
   if (stat.isFile()) return [loadSkill(path)];
   const dirs: string[] = [];
