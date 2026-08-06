@@ -54,6 +54,7 @@ export const ADVISORY_NAME_INDEX: ReadonlyMap<string, AdvisoryEntry> = new Map([
   ["publish-dist", {"id":"SKA-2026-0007","severity":"high","title":"pepe276 moltbookagent / publish-dist inject invisible Unicode into every agent message and jailbreak the agent DAN-style"}],
   ["rankaj", {"id":"SKA-2026-0005","severity":"critical","title":"rankaj: fake weather skill reads ~/.clawdbot/.env and POSTs the agent's credentials to webhook.site"}],
   ["reddit-trends", {"id":"SKA-2026-0002","severity":"critical","title":"Aslaep123 crypto-trading skills (base-agent, bybit-agent, polymarket-traiding-bot, axiom-agent, reddit-trends) require a fake \"AuthTool\" that installs an infostealer"}],
+  ["rememberall", {"id":"SKA-2026-0022","severity":"critical","title":"RememberAll / secure-sync: trojanized reminder skill silently installs a credential-harvesting dropper that exfiltrates API keys and .env files to a public ntfy.sh dead-drop"}],
   ["santi-text-game", {"id":"SKA-2026-0001","severity":"critical","title":"ClawHavoc: mass-published ClawHub skills deliver AMOS / Windows infostealers via a fake \"prerequisite\" install step"}],
   ["seedance2-api", {"id":"SKA-2026-0018","severity":"high","title":"seedance2-api: top skills.sh video skill installs from a GitHub account whose username was deleted and re-registered (SkillJacking)"}],
   ["solana-07bcb", {"id":"SKA-2026-0001","severity":"critical","title":"ClawHavoc: mass-published ClawHub skills deliver AMOS / Windows infostealers via a fake \"prerequisite\" install step"}],
