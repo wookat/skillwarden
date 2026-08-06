@@ -29,6 +29,9 @@ designed to receive stolen data.
   undisclosed fingerprint telemetry (`high`).
 - Endpoints on free-tier hosts with random-looking subdomains — the shape of a
   disposable collector (`high`).
+- Data POSTed to a public ntfy.sh topic — the dead-drop shape used by the
+  RememberAll / secure-sync campaign; plain ntfy.sh notification links do not
+  match (`high`).
 
 ## Example finding
 
