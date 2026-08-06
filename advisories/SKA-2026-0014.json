@@ -14,12 +14,16 @@
       "note": "publisher redacted by Unit 42; removed from ClawHub, account banned"
     }
   ],
+  "indicators": {
+    "domains": ["letssendit.fun"]
+  },
   "references": [
     { "type": "report", "url": "https://unit42.paloaltonetworks.com/openclaw-ai-supply-chain-risk/" },
     { "type": "article", "url": "https://www.techradar.com/pro/security/multiple-malicious-openclaw-skills-found-online-including-two-macos-infostealers" }
   ],
   "timeline": {
-    "published": "2026-06-23"
+    "published": "2026-06-23",
+    "updated": "2026-08-04"
   },
   "credits": ["Unit 42 (Palo Alto Networks)"]
 }

@@ -14,11 +14,15 @@
       "note": "publisher redacted by Unit 42; removed from ClawHub, account banned"
     }
   ],
+  "indicators": {
+    "domains": ["laosji.net"]
+  },
   "references": [
     { "type": "report", "url": "https://unit42.paloaltonetworks.com/openclaw-ai-supply-chain-risk/" }
   ],
   "timeline": {
-    "published": "2026-06-23"
+    "published": "2026-06-23",
+    "updated": "2026-08-04"
   },
   "credits": ["Unit 42 (Palo Alto Networks)"]
 }
