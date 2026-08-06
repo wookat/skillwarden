@@ -68,6 +68,6 @@ steps:
 ## Next steps
 
 - [CLI reference](/docs/cli/) — every subcommand, flag, and exit code.
-- [Rule reference](/docs/rules/) — the six scan rules with example findings.
+- [Rule reference](/docs/rules/) — the eight scan rules with example findings.
 - [Lockfile spec](/docs/lockfile/) — the `skillwarden.lock` v1 format.
 - [Comparison](/docs/comparison/) — how SkillWarden relates to other skill tools.

@@ -7,7 +7,7 @@ description: Deterministic, offline security analysis of Agent Skills, with tabl
 skillwarden scan [paths...]
 ```
 
-Runs the [six scan rules](/docs/rules/) against every resolved skill. With no paths,
+Runs the [eight scan rules](/docs/rules/) against every resolved skill. With no paths,
 well-known skill directories are [auto-discovered](/docs/cli/#skill-resolution-positional-paths).
 
 ## Flags
