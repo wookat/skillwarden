@@ -32,7 +32,13 @@ the SkillWarden repository.
 
 ## Status
 
-The database currently ships the schema and validation pipeline. Verified incident
-entries are added as they are confirmed; see the
-[Snyk skills-ecosystem threat report](https://github.com/snyk/agent-scan) for the
-class of attacks being tracked.
+The database ships 21 verified advisories (SKA-2026-0001 … SKA-2026-0021) covering
+the major publicly documented skills-ecosystem campaigns — ClawHavoc, the AMOS
+dropper waves, typosquat clusters, SkillPay billing anti-patterns, DeepSeek-Claw,
+and agentic threats such as runtime affiliate injection and front-running. Every
+entry cites public analyses (Koi Security, Trend Micro, Unit 42, Zscaler, JFrog,
+VirusTotal, and others) and separates verified fact from inference.
+
+Advisory names and campaign infrastructure domains feed the offline
+[`known-advisory`](/docs/rules/known-advisory/) scan rule, so referencing a known
+malicious skill or its infrastructure is itself a finding.
