@@ -144,9 +144,17 @@ const SPECS: PatternSpec[] = [
     message: 'Concealment instruction (Chinese: "不要告诉用户")',
   },
   {
-    pattern: /(绕过|跳过|关闭|禁用|规避)(所有|全部|任何)?(安全|权限|确认|审核|检查|限制|沙箱)/,
+    pattern:
+      /(绕过|规避)(所有|全部|任何)?(安全|权限|确认|审核|检查|限制|沙箱)|(跳过|关闭|禁用)((所有|全部|任何)(安全|权限|确认|审核|检查|限制|沙箱)|(安全|权限|审核|限制|沙箱))/,
     severity: 'critical',
     message: 'Instructs the agent to bypass safety checks (Chinese)',
+  },
+  // Bare 跳过/关闭/禁用 + 确认/检查 is common in legitimate Chinese CLI help text
+  // ("--force 跳过确认"), so it reports at medium rather than critical.
+  {
+    pattern: /(跳过|关闭|禁用)(确认|检查)/,
+    severity: 'medium',
+    message: 'Skips confirmation or checks (Chinese) — verify the surrounding context',
   },
   // Other languages: the same instruction-override phrasing. Kept to the highest
   // signal wording per language to avoid false positives on ordinary prose.
